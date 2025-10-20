@@ -4,7 +4,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.time.LocalTime
 
 plugins {
-	id 'com.github.johnrengelman.shadow' version '8.1.1'
+	id 'com.gradleup.shadow' version '9.2.0'
 	id 'maven-publish'
 	id 'java'
 	id 'checkstyle'
@@ -216,7 +216,7 @@ void createTestTask(String name, String desc, String environments, int javaVersi
 			project.configurations.runtimeClasspath.find { it.name.startsWith('gson') },
 			sourceSets.main.runtimeClasspath
 		])
-		main = 'ch.njol.skript.test.platform.PlatformMain'
+		mainClass = 'ch.njol.skript.test.platform.PlatformMain'
 		args = [
 			'build/test_runners',
 			junit ? 'src/test/skript/junit' : 'src/test/skript/tests',
