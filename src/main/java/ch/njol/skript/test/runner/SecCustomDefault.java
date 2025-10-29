@@ -58,11 +58,6 @@ public class SecCustomDefault extends Section {
 	}
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
-		return walk(event, true);
-	}
-
-	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return "run with custom default value " + value.toString(event, debug) + " for " + type.toString(event, debug);
 	}

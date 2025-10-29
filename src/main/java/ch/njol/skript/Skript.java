@@ -1972,7 +1972,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		logEx();
 		logVersionInfo();
 		logEx();
-		logCurrentState(thread, item);
+		//logCurrentState(thread, item);
 		logEx("End of Error.");
 		logEx();
 	}
@@ -2070,7 +2070,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		logEx("Server platform: " + serverPlatform.name + (serverPlatform.supported ? "" : " (unsupported)"));
 	}
 
-	private static void logCurrentState(@Nullable Thread thread, @Nullable TriggerItem item) {
+	/*private static void logCurrentState(@Nullable Thread thread, @Nullable TriggerItem item) {
 		logEx("Current node: " + SkriptLogger.getNode());
 		logEx("Current item: " + (item == null ? "null" : item.toString(null, true)));
 		if (item != null && item.getTrigger() != null) {
@@ -2081,7 +2081,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		logEx("Thread: " + (thread == null ? Thread.currentThread() : thread).getName());
 		logEx("Language: " + Language.getName());
 		logEx("Link parse mode: " + ChatMessages.linkParseMode);
-	}
+	}*/
 
 	static void logEx() {
 		SkriptLogger.LOGGER.severe(EXCEPTION_PREFIX);

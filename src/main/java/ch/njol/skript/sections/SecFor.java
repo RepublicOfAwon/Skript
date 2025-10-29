@@ -138,7 +138,6 @@ public class SecFor extends SecLoop implements SimpleExperimentalSyntax {
 		//</editor-fold>
 
 		this.loadOptionalCode(sectionNode);
-		this.setInternalNext(this);
 		return true;
 	}
 

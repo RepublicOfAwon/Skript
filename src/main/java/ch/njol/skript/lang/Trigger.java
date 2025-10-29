@@ -51,11 +51,6 @@ public class Trigger extends TriggerSection {
 	}
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
-		return walk(event, true);
-	}
-
-	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return name + " (" + this.event.toString(event, debug) + ")";
 	}

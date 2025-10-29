@@ -1079,7 +1079,7 @@ public class ScriptLoader {
 					afterParse.printLog();
 				}
 
-				items.add(item);
+				items.add(item); //이거 어떡하냐
 			} else {
 				continue;
 			}

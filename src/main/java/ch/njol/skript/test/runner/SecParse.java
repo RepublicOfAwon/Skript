@@ -53,9 +53,10 @@ public class SecParse extends Section {
 	}
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
+	protected @Nullable Object walk(Event event) {
 		ExprParseLogs.lastLogs = logs;
-		return walk(event, false);
+		super.walk(event);
+		return null;
 	}
 
 	@Override

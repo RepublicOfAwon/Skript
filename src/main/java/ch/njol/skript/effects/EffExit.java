@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.sections.SecConditional;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.nodes.ControlFlowException;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -97,13 +98,12 @@ public class EffExit extends Effect {
 	}
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
-		debug(event, false);
+	protected @Nullable Object walk(Event event) {
 		for (SectionExitHandler section : sectionsToExit)
 			section.exit(event);
 		if (outerSection == null) // "stop trigger"
-			return null;
-		return outerSection instanceof LoopSection loopSection ? loopSection.getActualNext() : outerSection.getNext();
+			throw new ControlFlowException();
+		throw new LoopSection.BreakException();
 	}
 
 	@Override

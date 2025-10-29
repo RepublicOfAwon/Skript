@@ -42,9 +42,6 @@ public class SecWhile extends LoopSection {
 	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Condition condition;
 
-	@Nullable
-	private TriggerItem actualNext;
-
 	private boolean doWhile;
 	private boolean ranDoWhile = false;
 
@@ -63,38 +60,34 @@ public class SecWhile extends LoopSection {
 
 		doWhile = parseResult.hasTag("do");
 		loadOptionalCode(sectionNode);
-		super.setNext(this);
 		return true;
 	}
 
 	@Nullable
 	@Override
-	protected TriggerItem walk(Event event) {
-		if ((doWhile && !ranDoWhile) || condition.check(event)) {
-			ranDoWhile = true;
-			currentLoopCounter.put(event, (currentLoopCounter.getOrDefault(event, 0L)) + 1);
-			return walk(event, true);
-		} else {
-			exit(event);
-			debug(event, false);
-			return actualNext;
+	protected Object walk(Event event) {
+		while (true) {
+			if ((doWhile && !ranDoWhile) || condition.check(event)) {
+				ranDoWhile = true;
+				currentLoopCounter.put(event, (currentLoopCounter.getOrDefault(event, 0L)) + 1);
+				try {
+					super.walk(event);
+				} catch (ContinueException ignored) {
+					continue;
+				} catch (BreakException ignored) {
+					break;
+				}
+			} else {
+				exit(event);
+				return null;
+			}
 		}
+		return null;
 	}
 
 	@Override
 	public @Nullable ExecutionIntent executionIntent() {
 		return doWhile ? triggerExecutionIntent() : null;
-	}
-
-	@Override
-	public SecWhile setNext(@Nullable TriggerItem next) {
-		actualNext = next;
-		return this;
-	}
-
-	@Nullable
-	public TriggerItem getActualNext() {
-		return actualNext;
 	}
 
 	@Override

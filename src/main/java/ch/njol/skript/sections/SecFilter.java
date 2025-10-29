@@ -114,7 +114,7 @@ public class SecFilter extends Section implements InputSource {
 	}
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
+	protected @Nullable Object walk(Event event) {
 		// get the name only once to avoid issues where the name may change between evaluations.
 		String varName = unfilteredObjects.getName().toString(event);
 		String varSubName = StringUtils.substring(varName, 0, -1);
@@ -124,7 +124,7 @@ public class SecFilter extends Section implements InputSource {
 		// since we just use it for a length optimization at the end, it's ok to be a little unreliable.
 		var rawVariable = ((Map<String, Object>) unfilteredObjects.getRaw(event));
 		if (rawVariable == null)
-			return getNext();
+			return null;
 		int initialSize = rawVariable.size();
 
 		// we save both because we don't yet know which will be cheaper to use.
@@ -165,7 +165,7 @@ public class SecFilter extends Section implements InputSource {
 			for (String index : toRemove)
 				Variables.setVariable(varSubName + index, null, event, local);
 		}
-		return getNext();
+		return null;
 	}
 
 	@Override

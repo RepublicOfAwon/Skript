@@ -97,14 +97,13 @@ public class EffReturn extends Effect {
 
 	@Override
 	protected @Nullable TriggerItem walk(Event event) {
-		debug(event, false);
 		//noinspection rawtypes,unchecked
 		((ReturnHandler) handler).returnValues(event, value);
 
 		for (SectionExitHandler section : sectionsToExit)
 			section.exit(event);
 
-		return ((TriggerSection) handler).getNext();
+		return null;
 	}
 
 	@Override

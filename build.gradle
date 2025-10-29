@@ -46,6 +46,13 @@ dependencies {
 
 	implementation fileTree(dir: 'lib', include: '*.jar')
 
+	implementation 'org.graalvm.polyglot:polyglot:25.0.0'
+	implementation 'org.graalvm.truffle:truffle-api:25.0.0'
+	runtimeOnly 'org.graalvm.truffle:truffle-runtime:25.0.0'
+	annotationProcessor 'org.graalvm.truffle:truffle-dsl-processor:25.0.0'
+
+	testImplementation 'org.graalvm.truffle:truffle-tck:25.0.0'
+
 	testShadow group: 'junit', name: 'junit', version: '4.13.2'
 	testShadow group: 'org.easymock', name: 'easymock', version: '5.5.0'
 }
@@ -102,6 +109,8 @@ tasks.withType(ShadowJar) {
 		include(dependency('org.bstats:bstats-bukkit'))
 		include(dependency('org.bstats:bstats-base'))
 		include(dependency('net.kyori:adventure-text-serializer-bungeecord'))
+		include(dependency('org.graalvm.truffle:truffle-api'))
+		include(dependency('org.graalvm.polyglot:polyglot'))
 	}
 	relocate 'io.papermc.lib', 'ch.njol.skript.paperlib'
 	relocate 'org.bstats', 'ch.njol.skript.bstats'
@@ -254,6 +263,7 @@ def latestJUnitEnv = env
 def latestJUnitJava = latestJava
 
 java {
+	modularity.inferModulePath = true
     toolchain.languageVersion.set(JavaLanguageVersion.of(latestJava))
 }
 

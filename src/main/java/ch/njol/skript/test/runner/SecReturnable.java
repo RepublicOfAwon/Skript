@@ -33,11 +33,6 @@ public class SecReturnable extends Section implements ReturnHandler<Object> {
 	}
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
-		return walk(event, true);
-	}
-
-	@Override
 	public void returnValues(Event event, Expression<?> value) {
 		returnedValues = value.getArray(event);
 	}

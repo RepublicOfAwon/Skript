@@ -90,11 +90,10 @@ public class EffContinue extends Effect {
 	}
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
-		debug(event, false);
+	protected @Nullable Object walk(Event event) {
 		for (SectionExitHandler section : sectionsToExit)
 			section.exit(event);
-		return loop;
+		throw new LoopSection.ContinueException();
 	}
 
 	@Override

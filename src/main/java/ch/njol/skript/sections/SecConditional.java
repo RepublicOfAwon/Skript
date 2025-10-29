@@ -18,7 +18,9 @@ import ch.njol.skript.util.Patterns;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.Iterables;
+import com.oracle.truffle.api.nodes.ControlFlowException;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import org.skriptlang.skript.lang.condition.Conditional;
@@ -100,6 +102,24 @@ public class SecConditional extends Section {
 		parseIf = parseResult.hasTag("parse");
 		multiline = parseResult.regexes.isEmpty() && type != ConditionalType.ELSE;
 		ParserInstance parser = getParser();
+
+		SecIfChain.IfChainData currentChain = parser.getData(SecIfChain.IfChainData.class);
+		SectionNode parent = sectionNode.getParent();
+		assert parent != null;
+		parent.remove(sectionNode);
+
+		if (currentChain == null) {
+			var chainSectionNode = new SectionNode("ichain", "", parent, sectionNode.getLine());
+			parent.add(chainSectionNode);
+			var secChain = new SecIfChain();
+			currentChain = secChain.new IfChainData(getParser(), chainSectionNode);
+			parser.setData(currentChain);
+		}
+
+		SectionNode chainSectionNode = currentChain.sectionNode;
+		SecIfChain secChain = currentChain.chainNode;
+		chainSectionNode.add(sectionNode);
+		secChain.addConditional(this);
 
 		// ensure this conditional is chained correctly (e.g. an else must have an if)
 		if (type != ConditionalType.IF) {
@@ -295,24 +315,18 @@ public class SecConditional extends Section {
 	}
 
 	@Override
-	public @Nullable TriggerItem getNext() {
-		return getSkippedNext();
+	protected @Nullable Object walk(Event event) {
+		if (type == ConditionalType.THEN || (parseIf && !parseIfPassed)) {
+			return null;
+		} else if (parseIf || checkConditions(event)) {
+			super.walk(event);
+			throw new SkipException();
+		}
+		return null;
 	}
 
-	@Override
-	protected @Nullable TriggerItem walk(Event event) {
-		if (type == ConditionalType.THEN || (parseIf && !parseIfPassed)) {
-			return getActualNext();
-		} else if (parseIf || checkConditions(event)) {
-			// if this is a multiline if, we need to run the "then" section instead
-			SecConditional sectionToRun = multiline ? (SecConditional) getActualNext() : this;
-			TriggerItem skippedNext = getSkippedNext();
-			if (sectionToRun.last != null)
-				sectionToRun.last.setNext(skippedNext);
-			return sectionToRun.first != null ? sectionToRun.first : skippedNext;
-		} else {
-			return getActualNext();
-		}
+	public static class SkipException extends ControlFlowException {
+
 	}
 
 	@Override
@@ -326,14 +340,6 @@ public class SecConditional extends Section {
 			// Handled in the 'then' section
 			return null;
 		return super.triggerExecutionIntent();
-	}
-
-	@Nullable
-	private TriggerItem getSkippedNext() {
-		TriggerItem next = getActualNext();
-		while (next instanceof SecConditional nextSecCond && nextSecCond.type != ConditionalType.IF)
-			next = next.getActualNext();
-		return next;
 	}
 
 	@Override

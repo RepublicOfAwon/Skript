@@ -11,6 +11,7 @@ import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.nodes.ControlFlowException;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
@@ -83,9 +84,9 @@ public class EffAssert extends Effect {
 
 	@Nullable
 	@Override
-	public TriggerItem walk(Event event) {
+	public Object walk(Event event) {
 		if (shouldFail && condition == null)
-			return this.getNext();
+			return null;
 
 		if (condition.check(event) == shouldFail) {
 			String message = errorMsg != null ? errorMsg.getOptionalSingle(event).orElse(DEFAULT_ERROR) : DEFAULT_ERROR;
@@ -117,9 +118,9 @@ public class EffAssert extends Effect {
 					TestTracker.testFailed(message, script);
 				}
 			}
-			return null;
+			throw new ControlFlowException();
 		}
-		return this.getNext();
+		return null;
 	}
 
 	@Override

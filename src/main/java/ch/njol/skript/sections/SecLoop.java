@@ -79,7 +79,6 @@ public class SecLoop extends LoopSection {
 	private final transient Map<Event, Iterator<?>> iteratorMap = new WeakHashMap<>();
 	private final transient Map<Event, Object> previous = new WeakHashMap<>();
 
-	protected @Nullable TriggerItem actualNext;
 	private boolean guaranteedToLoop;
 	private Object nextValue = null;
 	private boolean loopPeeking;
@@ -121,51 +120,58 @@ public class SecLoop extends LoopSection {
 		guaranteedToLoop = guaranteedToLoop(expression);
 		keyed = KeyProviderExpression.canReturnKeys(expression);
 		loadOptionalCode(sectionNode);
-		this.setInternalNext(this);
 
 		return true;
 	}
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
-		Iterator<?> iter = iteratorMap.get(event);
-		if (iter == null) {
-			if (iterableSingle) {
-				Object value = expression.getSingle(event);
-				if (value instanceof Container<?> container) {
-					// Container may have special behaviour over regular iterator
-					iter = container.containerIterator();
-				} else if (value instanceof Iterable<?> iterable) {
-					iter = iterable.iterator();
+	protected @Nullable Object walk(Event event) {
+		while (true) {
+			Iterator<?> iter = iteratorMap.get(event);
+			if (iter == null) {
+				if (iterableSingle) {
+					Object value = expression.getSingle(event);
+					if (value instanceof Container<?> container) {
+						// Container may have special behaviour over regular iterator
+						iter = container.containerIterator();
+					} else if (value instanceof Iterable<?> iterable) {
+						iter = iterable.iterator();
+					} else {
+						iter = Collections.singleton(value).iterator();
+					}
 				} else {
-					iter = Collections.singleton(value).iterator();
-				}
-			} else {
-				iter = keyed
-					? ((KeyProviderExpression<?>) expression).keyedIterator(event)
-					: expression.iterator(event);
-				if (iter != null && iter.hasNext()) {
-					iteratorMap.put(event, iter);
-				} else {
-					iter = null;
+					iter = keyed
+						? ((KeyProviderExpression<?>) expression).keyedIterator(event)
+						: expression.iterator(event);
+					if (iter != null && iter.hasNext()) {
+						iteratorMap.put(event, iter);
+					} else {
+						iter = null;
+					}
 				}
 			}
-		}
 
-		if (iter == null || (!iter.hasNext() && nextValue == null)) {
-			exit(event);
-			debug(event, false);
-			return actualNext;
-		} else {
-			previous.put(event, current.get(event));
-			if (nextValue != null) {
-				this.store(event, nextValue);
-				nextValue = null;
-			} else if (iter.hasNext()) {
-				this.store(event, iter.next());
+			if (iter == null || (!iter.hasNext() && nextValue == null)) {
+				exit(event);
+				return null;
+			} else {
+				previous.put(event, current.get(event));
+				if (nextValue != null) {
+					this.store(event, nextValue);
+					nextValue = null;
+				} else if (iter.hasNext()) {
+					this.store(event, iter.next());
+				}
+				try {
+					super.walk(event);
+				} catch (ContinueException ignored) {
+					continue;
+				} catch (BreakException ignored) {
+					break;
+				}
 			}
-			return walk(event, true);
 		}
+		return null;
 	}
 
 	protected void store(Event event, Object next) {
@@ -209,25 +215,6 @@ public class SecLoop extends LoopSection {
 
 	public boolean isKeyedLoop() {
 		return keyed;
-	}
-
-	@Override
-	public SecLoop setNext(@Nullable TriggerItem next) {
-		actualNext = next;
-		return this;
-	}
-
-	/**
-	 * @see LoopSection#setNext(TriggerItem)
-	 */
-	protected void setInternalNext(TriggerItem item) {
-		super.setNext(item);
-	}
-
-	@Nullable
-	@Override
-	public TriggerItem getActualNext() {
-		return actualNext;
 	}
 
 	@Override
