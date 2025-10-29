@@ -90,6 +90,10 @@ public class SecConditional extends Section {
 	private @Nullable Kleenean shouldDelayAfter; // whether the code after this conditional chain, at this point, should be delayed
 	private @Nullable ExecutionIntent executionIntent;
 
+	static {
+		ParserInstance.registerData(SecIfChain.IfChainData.class, SecIfChain.IfChainData::new);
+	}
+
 	@Override
 	public SyntaxElement init(Expression<?>[] exprs,
 							  int matchedPattern,
@@ -102,24 +106,6 @@ public class SecConditional extends Section {
 		parseIf = parseResult.hasTag("parse");
 		multiline = parseResult.regexes.isEmpty() && type != ConditionalType.ELSE;
 		ParserInstance parser = getParser();
-
-		SecIfChain.IfChainData currentChain = parser.getData(SecIfChain.IfChainData.class);
-		SectionNode parent = sectionNode.getParent();
-		assert parent != null;
-		parent.remove(sectionNode);
-
-		if (currentChain == null) {
-			var chainSectionNode = new SectionNode("ichain", "", parent, sectionNode.getLine());
-			parent.add(chainSectionNode);
-			var secChain = new SecIfChain();
-			currentChain = secChain.new IfChainData(getParser(), chainSectionNode);
-			parser.setData(currentChain);
-		}
-
-		SectionNode chainSectionNode = currentChain.sectionNode;
-		SecIfChain secChain = currentChain.chainNode;
-		chainSectionNode.add(sectionNode);
-		secChain.addConditional(this);
 
 		// ensure this conditional is chained correctly (e.g. an else must have an if)
 		if (type != ConditionalType.IF) {
@@ -250,10 +236,20 @@ public class SecConditional extends Section {
 			conditional = Conditional.compound(ifAny ? Operator.OR : Operator.AND, conditionals);
 		}
 
+		SecIfChain.IfChainData data = parser.getData(SecIfChain.IfChainData.class);
+		SyntaxElement result = null;
+		if (type == ConditionalType.IF) {
+			data.chainNode = new SecIfChain();
+			result = data.chainNode;
+		}
+
+		SecIfChain nowChain = data.chainNode;
+		nowChain.addConditional(this);
+
 		// ([else] parse if) If condition is valid and false, do not parse the section
 		if (parseIf) {
 			if (!checkConditions(ContextlessEvent.get())) {
-				return this;
+				return result;
 			}
 			parseIfPassed = true;
 		}
@@ -310,8 +306,9 @@ public class SecConditional extends Section {
 					executionIntent = triggerIntent;
 			}
 		}
+		data.chainNode = nowChain;
 
-		return this;
+		return result;
 	}
 
 	@Override

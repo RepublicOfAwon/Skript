@@ -47,19 +47,13 @@ public class SecIfChain extends Section {
 		return conditionals;
 	}
 
-	public class IfChainData extends ParserInstance.Data {
+	public static class IfChainData extends ParserInstance.Data {
 
-		final SecIfChain chainNode;
-		final SectionNode sectionNode;
+		SecIfChain chainNode;
 
-		public IfChainData(ParserInstance parserInstance, SectionNode sectionNode) {
+		public IfChainData(ParserInstance parserInstance) {
 			super(parserInstance);
-			this.chainNode = SecIfChain.this;
-			this.sectionNode = sectionNode;
-		}
-
-		public SecIfChain getChainNode() {
-			return chainNode;
+			this.chainNode = null;
 		}
 	}
 }
