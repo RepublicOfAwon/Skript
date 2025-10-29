@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.EventValues;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -42,18 +43,18 @@ public class ExprTimeState extends WrapperExpression<Object> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		Expression<?> expr = expressions[0];
 		if (isDelayed == Kleenean.TRUE) {
 			Skript.error("Cannot use time states after the event has already passed");
-			return false;
+			return null;
 		}
 		if (!expr.setTime(matchedPattern >= 2 ? EventValues.TIME_FUTURE : EventValues.TIME_PAST)) {
 			Skript.error(expr + " does not have a " + (matchedPattern >= 2 ? "future" : "past") + " state");
-			return false;
+			return null;
 		}
 		setExpr(expr);
-		return true;
+		return this;
 	}
 
 	@Override

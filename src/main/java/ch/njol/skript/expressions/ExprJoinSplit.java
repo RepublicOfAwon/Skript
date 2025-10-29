@@ -6,11 +6,8 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
@@ -50,7 +47,7 @@ public class ExprJoinSplit extends SimpleExpression<String> {
 	private @Nullable Pattern pattern;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		join = matchedPattern == 0;
 		regex = matchedPattern >= 3;
 		caseSensitivity = SkriptConfig.caseSensitive.value() || parseResult.hasTag("case");
@@ -65,10 +62,10 @@ public class ExprJoinSplit extends SimpleExpression<String> {
 				this.pattern = compilePattern(stringPattern);
 			} catch (PatternSyntaxException e) {
 				Skript.error("'" + stringPattern + "' is not a valid regular expression");
-				return false;
+				return null;
 			}
 		}
-		return true;
+		return this;
 	}
 
 	@Override

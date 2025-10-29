@@ -41,10 +41,10 @@ public class EffAssert extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (isDelayed == Kleenean.TRUE && !parseResult.hasTag("unsafely") && !TestMode.JUNIT && !TestMode.DEV_MODE) {
 			Skript.error("Assertions cannot be delayed");
-			return false;
+			return null;
 		}
 
 		String conditionString = parseResult.regexes.get(0).group();
@@ -65,7 +65,7 @@ public class EffAssert extends Effect {
 			this.condition = Condition.parse(conditionString, "Can't understand this condition: " + conditionString);
 
 			if (shouldFail)
-				return true;
+				return this;
 
 			if (condition == null) {
 				logHandler.printError();
@@ -74,7 +74,7 @@ public class EffAssert extends Effect {
 			}
 		}
 
-		return (condition != null) && canInit;
+		return (condition != null) && canInit ? this : null;
 	}
 
 	@Override

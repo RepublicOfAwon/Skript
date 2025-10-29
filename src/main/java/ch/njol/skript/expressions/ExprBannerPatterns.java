@@ -12,6 +12,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
@@ -60,7 +61,7 @@ public class ExprBannerPatterns extends PropertyExpression<Object, Pattern> {
 	private Expression<Integer> patternNumber = null;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (matchedPattern <= 1) {
 			objects = exprs[0];
 		} else if (matchedPattern == 2) {
@@ -73,7 +74,7 @@ public class ExprBannerPatterns extends PropertyExpression<Object, Pattern> {
 			objects = exprs[0];
 		}
 		setExpr(objects);
-		return true;
+		return this;
 	}
 
 	@Override

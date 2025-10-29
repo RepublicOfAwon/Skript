@@ -6,11 +6,8 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.util.Date;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -46,7 +43,7 @@ public class ExprFormatDate extends PropertyExpression<Date, String> {
 
 	@Override
 	@SuppressWarnings({"null", "unchecked"})
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setExpr((Expression<? extends Date>) exprs[0]);
 		customFormat = (Expression<String>) exprs[1];
 
@@ -64,14 +61,14 @@ public class ExprFormatDate extends PropertyExpression<Date, String> {
 					format = new SimpleDateFormat(customFormatValue);
 				} catch (IllegalArgumentException e) {
 					Skript.error("Invalid date format: " + customFormatValue);
-					return false;
+					return null;
 				}
 			}
 		} else if (customFormat == null) {
 			format = DEFAULT_FORMAT;
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

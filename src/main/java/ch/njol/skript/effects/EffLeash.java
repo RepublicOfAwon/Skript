@@ -1,5 +1,6 @@
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
@@ -43,7 +44,7 @@ public class EffLeash extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		leash = matchedPattern != 2;
 		if (leash) {
 			holder = (Expression<Entity>) exprs[1 - matchedPattern];
@@ -51,7 +52,7 @@ public class EffLeash extends Effect {
 		} else {
 			targets = (Expression<LivingEntity>) exprs[0];
 		}
-		return true;
+		return this;
 	}
 
 	@Override

@@ -272,18 +272,22 @@ public final class SkriptParser {
 					if (!checkExperimentalSyntax(element))
 						continue;
 
-					boolean success = element.preInit() && element.init(parseResult.exprs, matchedPattern, getParser().getHasDelayBefore(), parseResult);
-					if (success) {
+					if (!element.preInit()) {
+						continue;
+					}
+
+					T success = (T) element.init(parseResult.exprs, matchedPattern, getParser().getHasDelayBefore(), parseResult);
+					if (success != null) {
 						// Check if any expressions are 'UnparsedLiterals' and if applicable for multiple info warning.
 						for (Expression<?> expr : parseResult.exprs) {
 							if (expr instanceof UnparsedLiteral unparsedLiteral && unparsedLiteral.multipleWarning())
 								break;
 						}
 						log.printLog();
-						if (doSimplification && element instanceof Simplifiable<?> simplifiable)
+						if (doSimplification && success instanceof Simplifiable<?> simplifiable)
 							//noinspection unchecked
 							return (T) simplifiable.simplify();
-						return element;
+						return success;
 					}
 				}
 			}

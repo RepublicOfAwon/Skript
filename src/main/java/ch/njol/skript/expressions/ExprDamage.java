@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
@@ -18,7 +19,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -47,13 +47,13 @@ public class ExprDamage extends SimpleExpression<Number> {
 	private Kleenean delay;
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(EntityDamageEvent.class, VehicleDamageEvent.class, PlayerItemDamageEvent.class)) {
 			Skript.error("The 'damage' expression may only be used in damage events");
-			return false;
+			return null;
 		}
 		delay = isDelayed;
-		return true;
+		return this;
 	}
 	
 	@Override

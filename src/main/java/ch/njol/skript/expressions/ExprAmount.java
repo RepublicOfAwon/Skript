@@ -11,6 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.util.common.AnyAmount;
 import ch.njol.skript.util.LiteralUtils;
@@ -44,11 +45,11 @@ public class ExprAmount extends SimpleExpression<Number> {
 	private @Nullable Expression<AnyAmount> any;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (matchedPattern == 0) {
 			//noinspection unchecked
 			this.any = (Expression<AnyAmount>) exprs[0];
-			return true;
+			return this;
 		}
 
 		this.exprs = exprs[0] instanceof ExpressionList<?> exprList
@@ -57,15 +58,15 @@ public class ExprAmount extends SimpleExpression<Number> {
 
 		this.exprs = (ExpressionList<?>) LiteralUtils.defendExpression(this.exprs);
 		if (!LiteralUtils.canInitSafely(this.exprs)) {
-			return false;
+			return null;
 		}
 
 		if (this.exprs.isSingle()) {
 			Skript.error("'" + this.exprs.toString(null, Skript.debug()) + "' can only ever have one value at most, thus the 'amount of ...' expression is useless. Use '... exists' instead to find out whether the expression has a value.");
-			return false;
+			return null;
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

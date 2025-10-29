@@ -10,6 +10,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 
 import org.bukkit.entity.LivingEntity;
@@ -44,11 +45,11 @@ public class CondHasPotion extends Condition {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		livingEntities = (Expression<LivingEntity>) exprs[0];
 		potionEffects = (Expression<PotionEffectType>) exprs[1];
 		setNegated(matchedPattern == 1);
-		return true;
+		return this;
 	}
 
 	@Override

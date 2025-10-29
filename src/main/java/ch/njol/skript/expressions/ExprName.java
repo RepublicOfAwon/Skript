@@ -12,6 +12,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.function.DynamicFunctionReference;
 import ch.njol.skript.lang.util.common.AnyNamed;
 import ch.njol.skript.registrations.Feature;
@@ -123,11 +124,11 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	private boolean scriptResolvedName;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		this.mark = (matchedPattern / 2) + 1;
 		this.setExpr(exprs[0]);
 		this.scriptResolvedName = this.getParser().hasExperiment(Feature.SCRIPT_REFLECTION);
-		return true;
+		return this;
 	}
 
 	@Override

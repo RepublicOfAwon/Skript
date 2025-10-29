@@ -6,6 +6,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
@@ -35,13 +36,13 @@ public class ExprFishingBiteTime extends SimpleExpression<Timespan> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern,
-						Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern,
+                              Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(PlayerFishEvent.class)) {
 			Skript.error("The 'fishing bite time' expression can only be used in a fishing event.");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

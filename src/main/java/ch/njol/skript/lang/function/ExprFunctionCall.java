@@ -2,9 +2,8 @@ package ch.njol.skript.lang.function;
 
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.KeyProviderExpression;
-import ch.njol.skript.lang.KeyedValue;
-import ch.njol.skript.lang.KeyedValue.UnzippedKeyValues;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
@@ -122,9 +121,9 @@ public class ExprFunctionCall<T> extends SimpleExpression<T> implements KeyProvi
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		assert false;
-		return false;
+		return null;
 	}
 
 	private static String[] generateNumericalKeys(int length) {

@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
@@ -35,11 +36,11 @@ public class EffTextDisplaySeeThroughBlocks extends Effect {
 	boolean canSee;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		displays = (Expression<Display>) expressions[0];
 		canSee = matchedPattern != 2;
-		return true;
+		return this;
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -46,7 +47,7 @@ public class EffWorldLoad extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		worlds = exprs[0];
 		load = matchedPattern == 0;
 		if (load) {
@@ -54,7 +55,7 @@ public class EffWorldLoad extends Effect {
 		} else {
 			save = !parseResult.hasTag("without saving");
 		}
-		return true;
+		return this;
 	}
 
 	@Override

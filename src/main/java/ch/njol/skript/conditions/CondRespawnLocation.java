@@ -10,6 +10,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -34,14 +35,14 @@ public class CondRespawnLocation extends Condition {
 	private boolean bedSpawn;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(PlayerRespawnEvent.class)) {
 			Skript.error("The 'respawn location' condition may only be used in a respawn event");
-			return false;
+			return null;
 		}
 		setNegated(parseResult.mark == 1);
 		bedSpawn = parseResult.hasTag("bed");
-		return true;
+		return this;
 	}
 
 	@Override

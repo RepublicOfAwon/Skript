@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Display;
 import org.bukkit.event.Event;
@@ -69,7 +70,7 @@ public class EffRotate extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		toRotate = exprs[0];
 		this.matchedPattern = matchedPattern;
 		switch (matchedPattern) {
@@ -91,7 +92,7 @@ public class EffRotate extends Effect {
 				z = (Expression<Number>) exprs[3];
 			}
 		}
-		return true;
+		return this;
 	}
 
 	@Override

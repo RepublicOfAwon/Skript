@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
@@ -75,17 +76,17 @@ public class ExprBannerItem extends SimpleExpression<ItemType> {
 	private Literal<PatternType> literalPattern;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		literalPattern = (Literal<PatternType>) exprs[0];
 		patternTypes = literalPattern.getArray();
 		for (PatternType type : patternTypes) {
 			if (!bannerMaterials.containsKey(type)) {
 				Skript.error("There is no item for the banner pattern type '" + type + "'.");
-				return false;
+				return null;
 			}
 		}
-		return true;
+		return this;
 	}
 
 	@Override

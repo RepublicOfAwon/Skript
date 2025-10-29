@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
@@ -33,10 +34,10 @@ public class ExprDistance extends SimpleExpression<Number> {
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] vars, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] vars, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		loc1 = (Expression<Location>) vars[0];
 		loc2 = (Expression<Location>) vars[1];
-		return true;
+		return this;
 	}
 	
 	@Override

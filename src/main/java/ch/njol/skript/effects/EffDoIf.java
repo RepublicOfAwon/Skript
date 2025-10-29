@@ -1,6 +1,6 @@
 package ch.njol.skript.effects;
 
-import ch.njol.skript.lang.ExecutionIntent;
+import ch.njol.skript.lang.*;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,11 +9,6 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 
 @Name("Do If")
@@ -35,18 +30,18 @@ public class EffDoIf extends Effect  {
 
 	@SuppressWarnings("null")
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		String eff = parseResult.regexes.get(0).group();
 		String cond = parseResult.regexes.get(1).group();
 		effect = Effect.parse(eff, "Can't understand this effect: " + eff);
 		if (effect instanceof EffDoIf) {
 			Skript.error("Do if effects may not be nested!");
-			return false;
+			return null;
 		}
 		condition = Condition.parse(cond, "Can't understand this condition: " + cond);
 
 		if (effect == null || condition == null) {
-			return false;
+			return null;
 		}
 
 		// handle special hint cases
@@ -56,7 +51,7 @@ public class EffDoIf extends Effect  {
 			getParser().getHintManager().mergeScope(0, intent.levels(), true);
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

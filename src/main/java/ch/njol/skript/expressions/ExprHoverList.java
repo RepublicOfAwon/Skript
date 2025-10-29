@@ -6,6 +6,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -49,15 +50,15 @@ public class ExprHoverList extends SimpleExpression<String> {
 	private static final boolean HAS_NEW_LISTED_PLAYER_INFO = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent$ListedPlayerInfo");
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!PAPER_EVENT_EXISTS) {
 			Skript.error("The hover list expression requires Paper 1.12.2 or newer");
-			return false;
+			return null;
 		} else if (!getParser().isCurrentEvent(PaperServerListPingEvent.class)) {
 			Skript.error("The hover list expression can't be used outside of a server list ping event");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

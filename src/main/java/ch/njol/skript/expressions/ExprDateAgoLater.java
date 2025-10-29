@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Timespan;
@@ -39,11 +40,11 @@ public class ExprDateAgoLater extends SimpleExpression<Date> {
 
     @Override
     @SuppressWarnings({"unchecked", "null"})
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+    public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         timespan = (Expression<Timespan>) exprs[0];
         date = (Expression<Date>) exprs[1];
         ago = matchedPattern == 0;
-        return true;
+        return this;
     }
 
     @Override

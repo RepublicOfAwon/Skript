@@ -67,26 +67,25 @@ public abstract class SectionExpression<Value> extends SimpleExpression<Value> {
 	/**
 	 * Called just after the constructor.
 	 *
-	 * @param expressions all %expr%s included in the matching pattern in the order they appear in the pattern. If an optional value was left out, it will still be included in this list
-	 *            holding the default value of the desired type, which usually depends on the event
-	 * @param pattern The index of the pattern which matched
-	 * @param delayed Whether this expression is used after a delay or not (i.e. if the event has already passed when this expression will be called)
-	 * @param result Additional information about the match
-	 * @param node The section node representing the un-handled code in the body of the approaching section. If this expression does not start a section, the node will be null.
+	 * @param expressions  all %expr%s included in the matching pattern in the order they appear in the pattern. If an optional value was left out, it will still be included in this list
+	 *                     holding the default value of the desired type, which usually depends on the event
+	 * @param pattern      The index of the pattern which matched
+	 * @param delayed      Whether this expression is used after a delay or not (i.e. if the event has already passed when this expression will be called)
+	 * @param result       Additional information about the match
+	 * @param node         The section node representing the un-handled code in the body of the approaching section. If this expression does not start a section, the node will be null.
 	 * @param triggerItems A list of preceding trigger nodes before this line
-	 *
 	 * @return Whether this expression was initialised successfully. An error should be printed prior to returning false to specify the cause.
 	 */
-	public abstract boolean init(Expression<?>[] expressions,
-								 int pattern,
-								 Kleenean delayed,
-								 ParseResult result,
-								 @Nullable SectionNode node,
-								 @Nullable List<TriggerItem> triggerItems);
+	public abstract SyntaxElement init(Expression<?>[] expressions,
+									   int pattern,
+									   Kleenean delayed,
+									   ParseResult result,
+									   @Nullable SectionNode node,
+									   @Nullable List<TriggerItem> triggerItems);
 
 	@Override
-	public final boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed,
-                              ParseResult parseResult) {
+	public final SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed,
+									ParseResult parseResult) {
 		return section.init(expressions, matchedPattern, isDelayed, parseResult);
 	}
 

@@ -10,6 +10,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -38,13 +39,13 @@ public class ExprConfig extends SimpleExpression<Config> implements ReflectionEx
 	private @Nullable Config config;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		this.config = SkriptConfig.getConfig();
 		if (config == null) {
 			Skript.warning("The main config is unavailable here!");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

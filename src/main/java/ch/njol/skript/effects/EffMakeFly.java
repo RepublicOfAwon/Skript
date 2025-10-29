@@ -1,6 +1,7 @@
 package ch.njol.skript.effects;
 
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -35,10 +36,10 @@ public class EffMakeFly extends Effect {
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		players = (Expression<Player>) exprs[0];
 		flying = parseResult.mark != 1;
-		return true;
+		return this;
 	}
 
 	@Override

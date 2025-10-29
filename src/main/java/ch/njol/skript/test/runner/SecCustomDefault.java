@@ -3,12 +3,8 @@ package ch.njol.skript.test.runner;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.lang.DefaultExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.Section;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.DefaultValueData;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
@@ -29,8 +25,8 @@ public class SecCustomDefault extends Section {
 	ClassInfo<?> type;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
-						SectionNode sectionNode, List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
+                              SectionNode sectionNode, List<TriggerItem> triggerItems) {
 		value = (Literal<?>) LiteralUtils.defendExpression(expressions[0]);
 		//noinspection unchecked
 		this.type = ((Literal<ClassInfo<?>>) expressions[1]).getSingle();
@@ -39,7 +35,7 @@ public class SecCustomDefault extends Section {
 		if (!type.isAssignableFrom(value.getReturnType())) {
 			Skript.error("The value expression returns an invalid type: expected " + type.getSimpleName() +
 				", got " + value.getReturnType().getSimpleName());
-			return true;
+			return this;
 		}
 
 		DefaultValueData data = getParser().getData(DefaultValueData.class);
@@ -54,7 +50,7 @@ public class SecCustomDefault extends Section {
 		// remove custom value
 		data.removeDefaultValue(type);
 
-		return true;
+		return this;
 	}
 
 	@Override

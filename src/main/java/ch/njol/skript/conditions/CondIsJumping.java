@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
@@ -29,10 +30,10 @@ public class CondIsJumping extends PropertyCondition<LivingEntity> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (HumanEntity.class.isAssignableFrom(exprs[0].getReturnType())) {
 			Skript.error("The 'is jumping' condition only works on mobs.");
-			return false;
+			return null;
 		}
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

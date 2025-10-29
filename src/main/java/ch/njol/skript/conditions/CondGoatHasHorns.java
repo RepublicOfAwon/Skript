@@ -5,6 +5,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.effects.EffGoatHorns.GoatHorn;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Goat;
 import org.bukkit.entity.LivingEntity;
@@ -32,7 +33,7 @@ public class CondGoatHasHorns extends PropertyCondition<LivingEntity> {
 	private GoatHorn goatHorn = GoatHorn.ANY;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (parseResult.hasTag("left")) {
 			goatHorn = GoatHorn.LEFT;
 		} else if (parseResult.hasTag("right")) {

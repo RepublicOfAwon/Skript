@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.event.Event;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
@@ -55,10 +56,10 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(PrepareItemEnchantEvent.class)) {
 			Skript.error("Enchantment offers are only usable in enchant prepare events", ErrorQuality.SEMANTIC_ERROR);
-			return false;
+			return null;
 		}
 		if (matchedPattern == 0) {
 			all = true;
@@ -66,7 +67,7 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 			exprOfferNumber = (Expression<Number>) exprs[0];
 			all = false;
 		}
-		return true;
+		return this;
 	}
 
 	@SuppressWarnings({"null", "unused"})

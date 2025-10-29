@@ -1,5 +1,6 @@
 package ch.njol.skript.literals;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,8 +27,8 @@ public class LitAt extends SimpleLiteral<Direction> {
 	}
 	
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		return true;
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+		return this;
 	}
 	
 	@Override

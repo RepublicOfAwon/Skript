@@ -1,5 +1,6 @@
 package ch.njol.skript.conditions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import ch.njol.skript.Skript;
@@ -38,7 +39,7 @@ public class CondItemEnchantmentGlint extends PropertyCondition<ItemType> {
 	private boolean glint;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		this.matchedPattern = matchedPattern;
 		glint = !parseResult.hasTag("not");
 		return super.init(expressions, matchedPattern, isDelayed, parseResult);

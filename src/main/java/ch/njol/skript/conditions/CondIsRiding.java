@@ -1,6 +1,7 @@
 package ch.njol.skript.conditions;
 
 import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -36,12 +37,12 @@ public class CondIsRiding extends Condition {
 	private @Nullable Expression<?> riding;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		riders = (Expression<Entity>) exprs[0];
 		riding = exprs[1];
 		setNegated(matchedPattern == 1);
-		return true;
+		return this;
 	}
 
 	@Override

@@ -88,17 +88,17 @@ public class ExprIndicesOfValue extends SimpleExpression<Object> {
 	private Expression<?> value, objects;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (exprs[1].isSingle() && (matchedPattern > 0)) {
 			Skript.error("'" + exprs[1] + "' can only ever have one value at most, "
 				+ "thus the 'indices of x in list' expression has no effect.");
-			return false;
+			return null;
 		}
 
 		if (!KeyProviderExpression.canReturnKeys(exprs[1]) && matchedPattern == 2) {
 			Skript.error("'" + exprs[1] + "' is not a keyed expression. "
 				+ "You can only get the indices of a keyed expression.");
-			return false;
+			return null;
 		}
 
 		indexType = IndexType.values()[parseResult.mark == 0 ? 0 : parseResult.mark - 1];
@@ -110,7 +110,7 @@ public class ExprIndicesOfValue extends SimpleExpression<Object> {
 		value = LiteralUtils.defendExpression(exprs[0]);
 		objects = exprs[1];
 
-		return LiteralUtils.canInitSafely(value);
+		return LiteralUtils.canInitSafely(value) ? this : null;
 	}
 
 	@Override

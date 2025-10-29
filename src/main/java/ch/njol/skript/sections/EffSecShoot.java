@@ -7,11 +7,8 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.lang.EffectSection;
-import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SectionUtils;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Direction;
@@ -180,7 +177,7 @@ public class EffSecShoot extends EffectSection {
 	private @Nullable Trigger trigger;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
 		//noinspection unchecked
 		types = (Expression<EntityData<?>>) exprs[matchedPattern];
 		shooters = exprs[1 - matchedPattern];
@@ -192,10 +189,10 @@ public class EffSecShoot extends EffectSection {
 		if (sectionNode != null) {
 			trigger = SectionUtils.loadLinkedCode("shoot", (beforeLoading, afterLoading)
 					-> loadCode(sectionNode, "shoot", beforeLoading, afterLoading, ShootEvent.class));
-			return trigger != null;
+			return trigger != null ? this : null;
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

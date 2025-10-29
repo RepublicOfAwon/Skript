@@ -3,6 +3,7 @@ package ch.njol.skript.effects;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.server.ServerListPingEvent;
@@ -41,18 +42,18 @@ public class EffHidePlayerFromServerList extends Effect {
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		boolean isServerPingEvent = getParser().isCurrentEvent(ServerListPingEvent.class) ||
 				(PAPER_EVENT_EXISTS && getParser().isCurrentEvent(PaperServerListPingEvent.class));
 		if (!isServerPingEvent) {
 			Skript.error("The hide player from server list effect can't be used outside of a server list ping event");
-			return false;
+			return null;
 		} else if (isDelayed == Kleenean.TRUE) {
 			Skript.error("Can't hide players from the server list anymore after the server list ping event has already passed");
-			return false;
+			return null;
 		}
 		players = (Expression<Player>) exprs[0];
-		return true;
+		return this;
 	}
 
 	@Override

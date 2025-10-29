@@ -8,6 +8,7 @@ import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.log.LogEntry;
 import ch.njol.skript.log.RetainingLogHandler;
@@ -31,10 +32,10 @@ public class SecParse extends Section {
 	private String[] logs;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
 		if (Iterables.size(sectionNode) == 0) {
 			Skript.error("A parse section must contain code");
-			return false;
+			return null;
 		}
 
 		RetainingLogHandler handler = SkriptLogger.startRetainingLog();
@@ -49,7 +50,7 @@ public class SecParse extends Section {
 					.toArray(String[]::new);
 		}
 		handler.stop();
-		return true;
+		return this;
 	}
 
 	@Override

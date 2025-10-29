@@ -8,6 +8,7 @@ import ch.njol.skript.effects.Delay;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.util.slot.Slot;
@@ -72,12 +73,12 @@ public class ExprBrewingSlot extends PropertyExpression<Block, Slot> {
 	private boolean isEvent = false;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		selectedSlot = BREWING_SLOTS[matchedPattern / 2];
 		//noinspection unchecked
 		setExpr((Expression<? extends Block>) exprs[0]);
 		isEvent = getParser().isCurrentEvent(BrewEvent.class, BrewingStartEvent.class, BrewingStandFuelEvent.class);
-		return true;
+		return this;
 	}
 
 	@Override

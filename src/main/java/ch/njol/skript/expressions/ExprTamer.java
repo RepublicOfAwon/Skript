@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityTameEvent;
@@ -29,12 +30,12 @@ public class ExprTamer extends SimpleExpression<Player> {
 	}
 	
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		if (!getParser().isCurrentEvent(EntityTameEvent.class)) {
 			Skript.error("the expression 'tamer' may only be used in the entity tame event.");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

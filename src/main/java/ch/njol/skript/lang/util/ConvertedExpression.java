@@ -6,6 +6,7 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.KeyProviderExpression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
@@ -134,7 +135,7 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 	}
 
 	@Override
-	public final boolean init(Expression<?>[] vars, int matchedPattern, Kleenean isDelayed, ParseResult matcher) {
+	public final SyntaxElement init(Expression<?>[] vars, int matchedPattern, Kleenean isDelayed, ParseResult matcher) {
 		throw new UnsupportedOperationException();
 	}
 

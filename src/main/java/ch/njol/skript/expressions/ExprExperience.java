@@ -7,6 +7,7 @@ import ch.njol.skript.events.bukkit.ExperienceSpawnEvent;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
@@ -15,10 +16,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
-import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Experience")
@@ -51,16 +49,16 @@ public class ExprExperience extends SimpleExpression<Experience> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern,
-						Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern,
+                              Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(ExperienceSpawnEvent.class, BlockBreakEvent.class,
 			PlayerExpChangeEvent.class, EntityBreedEvent.class, PlayerFishEvent.class)) {
 			Skript.error("The 'experience' expression can only be used in experience spawn, " +
 				"block break, player experience change, entity breeding or fishing events");
-			return false;
+			return null;
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

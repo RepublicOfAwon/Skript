@@ -5,6 +5,7 @@ import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import org.bukkit.damage.DamageSource;
@@ -32,11 +33,11 @@ public class CondScalesWithDifficulty extends PropertyCondition<DamageSource> im
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		setExpr((Expression<? extends DamageSource>) exprs[0]);
 		setNegated(matchedPattern % 2 == 1);
-		return true;
+		return this;
 	}
 
 	@Override

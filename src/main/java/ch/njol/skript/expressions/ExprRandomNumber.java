@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Math2;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -46,12 +47,12 @@ public class ExprRandomNumber extends SimpleExpression<Number> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		amount = (Expression<Integer>) exprs[0];
 		lower = (Expression<Number>) exprs[1];
 		upper = (Expression<Number>) exprs[2];
 		isInteger = parseResult.hasTag("integer");
-		return true;
+		return this;
 	}
 
 	@Override

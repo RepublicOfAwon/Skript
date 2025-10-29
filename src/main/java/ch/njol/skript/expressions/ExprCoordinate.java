@@ -10,6 +10,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
@@ -35,10 +36,10 @@ public class ExprCoordinate extends SimplePropertyExpression<Location, Number> {
 	private int axis;
 	
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		super.init(exprs, matchedPattern, isDelayed, parseResult);
 		axis = parseResult.mark;
-		return true;
+		return this;
 	}
 	
 	@Override

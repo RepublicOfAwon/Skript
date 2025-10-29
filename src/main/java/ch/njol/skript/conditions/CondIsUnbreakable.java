@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 
 @Name("Is Unbreakable")
@@ -28,7 +29,7 @@ public class CondIsUnbreakable extends PropertyCondition<ItemType> {
 	private boolean breakable;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		breakable = !parseResult.hasTag("un");
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

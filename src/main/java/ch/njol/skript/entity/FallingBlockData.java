@@ -5,6 +5,7 @@ import ch.njol.skript.aliases.ItemData;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.localization.Adjective;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Message;
@@ -40,7 +41,7 @@ public class FallingBlockData extends EntityData<FallingBlock> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		if (matchedPattern == 1) {
 			assert exprs[0] != null;
 			//noinspection unchecked
@@ -65,17 +66,17 @@ public class FallingBlockData extends EntityData<FallingBlock> {
 				.toArray(ItemType[]::new);
 			if (types.length == 0) {
 				Skript.error(m_not_a_block_error.toString());
-				return false;
+				return null;
 			}
 		}
-		return true;
+		return this;
 	}
 	
 	@Override
-	protected boolean init(@Nullable Class<? extends FallingBlock> entityClass, @Nullable FallingBlock fallingBlock) {
+	protected SyntaxElement init(@Nullable Class<? extends FallingBlock> entityClass, @Nullable FallingBlock fallingBlock) {
 		if (fallingBlock != null) // TODO material data support
 			types = new ItemType[] {new ItemType(fallingBlock.getBlockData())};
-		return true;
+		return this;
 	}
 
 	@Override

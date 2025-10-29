@@ -1,5 +1,6 @@
 package ch.njol.skript.conditions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.jetbrains.annotations.Nullable;
@@ -32,13 +33,13 @@ public class CondLeashWillDrop extends Condition {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(EntityUnleashEvent.class)) {
 			Skript.error("The 'leash will drop' condition can only be used in an 'unleash' event");
-			return false;
+			return null;
 		}
 		setNegated(parseResult.hasTag("not"));
-		return true;
+		return this;
 	}
 
 	@Override

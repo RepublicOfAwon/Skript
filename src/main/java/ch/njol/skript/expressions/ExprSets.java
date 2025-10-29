@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,19 +47,19 @@ public class ExprSets extends SimpleExpression<Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		// This check makes sure that "color" is not a valid pattern, and the type the user inputted has to be plural, unless it's "every %classinfo%"
 		boolean plural = Utils.getEnglishPlural(parser.expr).getSecond();
 		if (!plural && !parser.expr.startsWith("every"))
-			return false;
+			return null;
 
 		classInfo = ((Literal<ClassInfo<?>>) exprs[0]).getSingle();
 		supplier = classInfo.getSupplier();
 		if (supplier == null) {
 			Skript.error("You cannot get all values of type '" + classInfo.getName().getSingular() + "'");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

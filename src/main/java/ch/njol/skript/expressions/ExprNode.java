@@ -13,6 +13,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
@@ -57,7 +58,7 @@ public class ExprNode extends PropertyExpression<Node, Node> implements Reflecti
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] expressions, int pattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int pattern, Kleenean isDelayed, ParseResult parseResult) {
 		this.isPath = pattern < 2;
 		switch (pattern) {
 			case 0:
@@ -71,7 +72,7 @@ public class ExprNode extends PropertyExpression<Node, Node> implements Reflecti
 			default:
 				this.setExpr((Expression<? extends Node>) expressions[0]);
 		}
-		return true;
+		return this;
 	}
 
 	@Override

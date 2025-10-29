@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
@@ -31,7 +32,7 @@ public class ExprNoDamageTicks extends SimplePropertyExpression<LivingEntity, Lo
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		ScriptWarning.printDeprecationWarning("This expression is deprecated. Please use 'invulnerability time' instead of 'invulnerability ticks'.");
 		return super.init(expressions, matchedPattern, isDelayed, parseResult);
 	}

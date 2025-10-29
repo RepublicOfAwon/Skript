@@ -5,6 +5,7 @@ import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Entity;
 
@@ -24,10 +25,10 @@ public class CondFromMobSpawner extends PropertyCondition<Entity> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setNegated(matchedPattern == 1 || matchedPattern == 3);
 		setExpr((Expression<Entity>) exprs[0]);
-		return true;
+		return this;
 	}
 
 	@Override
@@ -41,4 +42,3 @@ public class CondFromMobSpawner extends PropertyCondition<Entity> {
 	}
 
 }
-

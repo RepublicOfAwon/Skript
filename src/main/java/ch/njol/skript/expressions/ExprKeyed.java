@@ -7,6 +7,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.KeyProviderExpression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -58,13 +59,13 @@ public class ExprKeyed extends WrapperExpression<Object> implements KeyProviderE
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!KeyProviderExpression.canReturnKeys(expressions[0])) {
 			Skript.error(expressions[0] + " is not a keyed expression.");
-			return false;
+			return null;
 		}
 		setExpr(expressions[0]);
-		return true;
+		return this;
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.Location;
@@ -47,7 +48,7 @@ public class ExprYawPitch extends SimplePropertyExpression<Object, Float> {
 	private boolean usesYaw;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		usesYaw = parseResult.hasTag("yaw");
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

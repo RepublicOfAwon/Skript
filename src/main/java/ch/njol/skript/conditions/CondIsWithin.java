@@ -5,6 +5,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.AABB;
@@ -63,7 +64,7 @@ public class CondIsWithin extends Condition {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setNegated(matchedPattern % 2 == 1);
 		locsToCheck = (Expression<Location>) exprs[0];
 		if (matchedPattern <= 1) {
@@ -76,7 +77,7 @@ public class CondIsWithin extends Condition {
 			withinLocations = false;
 			area = exprs[1];
 		}
-		return true;
+		return this;
 	}
 
 	@Override

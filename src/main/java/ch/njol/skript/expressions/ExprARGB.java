@@ -5,6 +5,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Color;
 import ch.njol.util.Kleenean;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
@@ -32,7 +33,7 @@ public class ExprARGB extends SimplePropertyExpression<Color, Integer> {
 	private RGB color;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		color = RGB.valueOf(parseResult.tags.get(0).toUpperCase(Locale.ENGLISH));
 		return super.init(expressions, matchedPattern, isDelayed, parseResult);
 	}

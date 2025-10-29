@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import org.bukkit.GameRule;
@@ -34,12 +35,12 @@ public class ExprGameRule extends SimpleExpression<GameruleValue> {
 	private Expression<World> worlds;
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		// noinspection unchecked
 		gamerule = (Expression<GameRule<?>>) exprs[0];
 		// noinspection unchecked
 		worlds = (Expression<World>) exprs[1];
-		return true;
+		return this;
 	}
 
 	@Override

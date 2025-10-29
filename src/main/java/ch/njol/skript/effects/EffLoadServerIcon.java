@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.AsyncEffect;
 import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
@@ -47,14 +48,14 @@ public class EffLoadServerIcon extends AsyncEffect {
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		getParser().setHasDelayBefore(Kleenean.TRUE);
 		if (!PAPER_EVENT_EXISTS) {
 			Skript.error("The load server icon effect requires Paper 1.12.2 or newer");
-			return false;
+			return null;
 		}
 		path = (Expression<String>) exprs[0];
-		return true;
+		return this;
 	}
 
     @Override

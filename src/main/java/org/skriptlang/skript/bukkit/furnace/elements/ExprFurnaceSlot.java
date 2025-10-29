@@ -10,6 +10,7 @@ import ch.njol.skript.effects.Delay;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.slot.InventorySlot;
@@ -80,7 +81,7 @@ public class ExprFurnaceSlot extends SimpleExpression<Slot> {
 	private boolean isEvent;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		selectedSlot = furnaceSlots[(int) Math2.floor(matchedPattern / 2)];
 		if (exprs[0] != null) {
 			//noinspection unchecked
@@ -88,11 +89,11 @@ public class ExprFurnaceSlot extends SimpleExpression<Slot> {
 		} else {
 			if (!getParser().isCurrentEvent(FurnaceBurnEvent.class, FurnaceStartSmeltEvent.class, FurnaceExtractEvent.class, FurnaceSmeltEvent.class)) {
 				Skript.error("There's no furnace in a " + getParser().getCurrentEventName() + " event.");
-				return false;
+				return null;
 			}
 			isEvent = true;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

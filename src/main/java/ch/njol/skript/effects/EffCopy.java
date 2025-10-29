@@ -7,11 +7,8 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Keywords;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionList;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Variable;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.variables.HintManager;
 import ch.njol.skript.variables.Variables;
@@ -47,7 +44,7 @@ public class EffCopy extends Effect {
 	private List<Variable<?>> destinations;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		source = exprs[0];
 		rawDestination = exprs[1];
 		if (exprs[1] instanceof Variable<?>) {
@@ -57,12 +54,12 @@ public class EffCopy extends Effect {
 		}
 		if (destinations == null) {
 			Skript.error("You can only copy objects into variables");
-			return false;
+			return null;
 		}
 		for (Variable<?> destination : destinations) {
 			if (!source.isSingle() && destination.isSingle()) {
 				Skript.error("Cannot copy multiple objects into a single variable");
-				return false;
+				return null;
 			}
 		}
 
@@ -75,7 +72,7 @@ public class EffCopy extends Effect {
 			}
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

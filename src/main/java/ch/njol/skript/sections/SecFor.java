@@ -66,12 +66,12 @@ public class SecFor extends SecLoop implements SimpleExperimentalSyntax {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs,
-						int matchedPattern,
-						Kleenean isDelayed,
-						ParseResult parseResult,
-						SectionNode sectionNode,
-						List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] exprs,
+                              int matchedPattern,
+                              Kleenean isDelayed,
+                              ParseResult parseResult,
+                              SectionNode sectionNode,
+                              List<TriggerItem> triggerItems) {
 		//<editor-fold desc="Set the key/value expressions based on the pattern" defaultstate="collapsed">
 		switch (matchedPattern) {
 			case 0:
@@ -91,15 +91,15 @@ public class SecFor extends SecLoop implements SimpleExperimentalSyntax {
 		//<editor-fold desc="Check our input expressions are safe/correct" defaultstate="collapsed">
 		if (keyStore != null && !(keyStore instanceof Variable)) {
 			Skript.error("The 'key' input for a for-loop must be a variable to store the value.");
-			return false;
+			return null;
 		}
 		if (!(valueStore instanceof Variable || valueStore == null)) {
 			Skript.error("The 'value' input for a for-loop must be a variable to store the value.");
-			return false;
+			return null;
 		}
 		if (!LiteralUtils.canInitSafely(expression)) {
 			Skript.error("Can't understand this loop: '" + parseResult.expr + "'");
-			return false;
+			return null;
 		}
 		if (!(expression instanceof Variable) && Container.class.isAssignableFrom(expression.getReturnType())) {
 			ContainerType type = expression.getReturnType().getAnnotation(ContainerType.class);
@@ -115,7 +115,7 @@ public class SecFor extends SecLoop implements SimpleExperimentalSyntax {
 			super.iterableSingle = true;
 		} else if (expression.isSingle()) {
 			Skript.error("Can't loop '" + expression + "' because it's only a single value");
-			return false;
+			return null;
 		}
 		keyed = KeyProviderExpression.canReturnKeys(expression);
 		//</editor-fold>
@@ -139,7 +139,7 @@ public class SecFor extends SecLoop implements SimpleExperimentalSyntax {
 
 		this.loadOptionalCode(sectionNode);
 		this.setInternalNext(this);
-		return true;
+		return this;
 	}
 
 	@Override

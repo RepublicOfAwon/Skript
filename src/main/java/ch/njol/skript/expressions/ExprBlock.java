@@ -10,6 +10,7 @@ import ch.njol.skript.expressions.base.WrapperExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.ConvertedExpression;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
@@ -42,15 +43,15 @@ public class ExprBlock extends WrapperExpression<Block> {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		if (exprs.length > 0) {
 			setExpr(new ConvertedExpression<>(Direction.combine((Expression<? extends Direction>) exprs[0],
 					(Expression<? extends Location>) exprs[1]), Block.class,
 					new ConverterInfo<>(Location.class, Block.class, Location::getBlock, 0)));
-			return true;
+			return this;
 		} else {
 			setExpr(new EventValueExpression<>(Block.class));
-			return ((EventValueExpression<Block>) getExpr()).init();
+			return ((EventValueExpression<Block>) getExpr()).init() ? this : null;
 		}
 	}
 	

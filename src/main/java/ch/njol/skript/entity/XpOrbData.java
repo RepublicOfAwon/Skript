@@ -2,6 +2,7 @@ package ch.njol.skript.entity;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.localization.ArgsMessage;
 import org.bukkit.Location;
 import org.bukkit.entity.ExperienceOrb;
@@ -27,15 +28,15 @@ public class XpOrbData extends EntityData<ExperienceOrb> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
-		return true;
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+		return this;
 	}
 
 	@Override
-	protected boolean init(@Nullable Class<? extends ExperienceOrb> entityClass, @Nullable ExperienceOrb orb) {
+	protected SyntaxElement init(@Nullable Class<? extends ExperienceOrb> entityClass, @Nullable ExperienceOrb orb) {
 		if (orb != null)
 			xp = orb.getExperience();
-		return true;
+		return this;
 	}
 
 	@Override

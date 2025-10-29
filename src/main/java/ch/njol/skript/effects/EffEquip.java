@@ -10,6 +10,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -136,7 +137,7 @@ public class EffEquip extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		if (matchedPattern == 0 || matchedPattern == 1) {
 			entities = (Expression<LivingEntity>) exprs[0];
 			itemTypes = (Expression<ItemType>) exprs[1];
@@ -148,7 +149,7 @@ public class EffEquip extends Effect {
 			entities = (Expression<LivingEntity>) exprs[0];
 			equip = false;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

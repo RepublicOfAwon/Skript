@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
@@ -53,10 +54,10 @@ public class ExprQueue extends SimpleExpression<SkriptQueue> implements QueueExp
 	private @Nullable Expression<?> contents;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int pattern, Kleenean delayed, ParseResult result) {
+	public SyntaxElement init(Expression<?>[] expressions, int pattern, Kleenean delayed, ParseResult result) {
 		if (expressions[0] != null)
 			this.contents = LiteralUtils.defendExpression(expressions[0]);
-		return contents == null || LiteralUtils.canInitSafely(contents);
+		return contents == null || LiteralUtils.canInitSafely(contents) ? this : null;
 	}
 
 	@Override

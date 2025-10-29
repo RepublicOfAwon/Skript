@@ -9,11 +9,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.localization.Noun;
-import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import ch.njol.util.NonNullPair;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -32,14 +30,14 @@ public class ExprEventExpression extends WrapperExpression<Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		ClassInfo<?> classInfo = ((Literal<ClassInfo<?>>) exprs[0]).getSingle();
 		Class<?> c = classInfo.getC();
 
 		boolean plural = Utils.getEnglishPlural(parser.expr).getSecond();
 		EventValueExpression<?> eventValue = new EventValueExpression<>(plural ? CollectionUtils.arrayType(c) : c);
 		setExpr(eventValue);
-		return eventValue.init();
+		return eventValue.init() ? this : null;
 	}
 
 	@Override

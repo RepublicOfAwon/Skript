@@ -1,5 +1,6 @@
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,13 +41,13 @@ public class EffCancelCooldown extends Effect {
 	private boolean cancel;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(ScriptCommandEvent.class)) {
 			Skript.error("The cancel cooldown effect may only be used in a command", ErrorQuality.SEMANTIC_ERROR);
-			return false;
+			return null;
 		}
 		cancel = matchedPattern == 0;
-		return true;
+		return this;
 	}
 
 	@Override

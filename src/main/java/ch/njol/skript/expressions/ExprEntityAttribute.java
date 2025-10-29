@@ -10,6 +10,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.attribute.Attributable;
@@ -48,11 +49,11 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		attributes = (Expression<Attribute>) exprs[matchedPattern];
 		setExpr((Expression<? extends Entity>) exprs[matchedPattern ^ 1]);
 		withModifiers = parseResult.mark == 1;
-		return true;
+		return this;
 	}
 
 	@Override

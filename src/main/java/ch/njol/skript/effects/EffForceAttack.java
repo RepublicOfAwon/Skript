@@ -6,6 +6,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Damageable;
@@ -52,13 +53,13 @@ public class EffForceAttack extends Effect implements SyntaxRuntimeErrorProducer
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		attackers = (Expression<LivingEntity>) exprs[0];
 		victims = (Expression<Entity>) exprs[1];
 		if (matchedPattern >= 2)
 			amount = (Expression<Number>) exprs[2];
 		node = getParser().getNode();
-		return true;
+		return this;
 	}
 	
 	@Override

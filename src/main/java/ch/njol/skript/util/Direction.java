@@ -3,6 +3,7 @@ package ch.njol.skript.util;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.localization.GeneralWords;
 import ch.njol.skript.localization.Language;
@@ -418,7 +419,7 @@ public class Direction implements YggdrasilRobustSerializable {
 			}
 			
 			@Override
-			public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+			public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 				throw new UnsupportedOperationException();
 			}
 			
@@ -432,7 +433,7 @@ public class Direction implements YggdrasilRobustSerializable {
 				if (dirs instanceof Literal && dirs.isSingle() && Direction.ZERO.equals(((Literal<?>) dirs).getSingle())) {
 					return new SimpleExpression<>() {
 						@Override
-						public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+						public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 							throw new UnsupportedOperationException();
 						}
 

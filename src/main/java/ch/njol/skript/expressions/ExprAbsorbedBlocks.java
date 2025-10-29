@@ -3,6 +3,7 @@ package ch.njol.skript.expressions;
 import java.util.Iterator;
 import java.util.List;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.SpongeAbsorbEvent;
@@ -34,12 +35,12 @@ public class ExprAbsorbedBlocks extends SimpleExpression<BlockStateBlock> {
 	}
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(SpongeAbsorbEvent.class)) {
 			Skript.error("The 'absorbed blocks' are only usable in sponge absorb events", ErrorQuality.SEMANTIC_ERROR);
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

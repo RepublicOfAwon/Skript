@@ -1,5 +1,6 @@
 package org.skriptlang.skript.test.junit.registration;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,8 +28,8 @@ public class ExprJUnitTestName extends SimpleExpression<String>  {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		return true;
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		return this;
 	}
 
 	@Override

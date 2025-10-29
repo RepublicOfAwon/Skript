@@ -13,6 +13,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -40,7 +41,7 @@ public class ExprXOf extends PropertyExpression<Object, Object> {
 	private Expression<Number> amount;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		amount = (Expression<Number>) exprs[0];
 		Expression<?> type = exprs[1];
@@ -49,7 +50,7 @@ public class ExprXOf extends PropertyExpression<Object, Object> {
 		// "x of y" is also an ItemType syntax
 		if (amount instanceof Literal && amount.getSource() instanceof Literal &&
 				type instanceof Literal && type.getSource() instanceof Literal) {
-			return false;
+			return null;
 		}
 
 		// build possible return types
@@ -65,7 +66,7 @@ public class ExprXOf extends PropertyExpression<Object, Object> {
 		}
 		this.possibleReturnTypes = possibleReturnTypes.toArray(new Class[0]);
 
-		return true;
+		return this;
 	}
 
 	@Override

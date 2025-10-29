@@ -10,6 +10,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.hooks.VaultHook;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Player;
@@ -39,7 +40,7 @@ public class ExprPrefixSuffix extends SimplePropertyExpression<Player, String> {
 	private boolean prefix;
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		prefix = parseResult.mark == 1;
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

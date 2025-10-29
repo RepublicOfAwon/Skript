@@ -3,6 +3,7 @@ package ch.njol.skript.expressions;
 import java.util.Arrays;
 import java.util.List;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,9 +34,9 @@ public class ExprRawName extends SimpleExpression<String> {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		this.types = (Expression<ItemType>) exprs[0];
-		return true;
+		return this;
 	}
 	
 	@Override

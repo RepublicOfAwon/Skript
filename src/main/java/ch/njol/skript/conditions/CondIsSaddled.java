@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractHorse;
@@ -30,7 +31,7 @@ public class CondIsSaddled extends PropertyCondition<LivingEntity> {
 	private boolean properly;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		properly = parseResult.hasTag("properly");
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SectionExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SectionUtils;
@@ -80,14 +81,14 @@ public class ExprSecBlankEquipComp extends SectionExpression<EquippableWrapper> 
 	private Trigger trigger;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int pattern, Kleenean delayed, ParseResult result, @Nullable SectionNode node, @Nullable List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] exprs, int pattern, Kleenean delayed, ParseResult result, @Nullable SectionNode node, @Nullable List<TriggerItem> triggerItems) {
 		if (node != null) {
 			trigger = SectionUtils.loadLinkedCode("blank equippable component", (beforeLoading, afterLoading) ->
 				loadCode(node, "blank equippable component", beforeLoading, afterLoading, BlankEquippableSectionEvent.class)
 			);
-			return trigger != null;
+			return trigger != null ? this : null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

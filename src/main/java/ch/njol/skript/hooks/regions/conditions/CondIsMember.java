@@ -10,12 +10,11 @@ import ch.njol.skript.hooks.regions.classes.Region;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Predicate;
 
 /**
  * @author Peter Güttinger
@@ -47,12 +46,12 @@ public class CondIsMember extends Condition {
 
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		players = (Expression<OfflinePlayer>) exprs[0];
 		regions = (Expression<Region>) exprs[1];
 		owner = parseResult.mark == 1;
 		setNegated(matchedPattern == 1);
-		return true;
+		return this;
 	}
 
 	@Override

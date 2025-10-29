@@ -1,5 +1,6 @@
 package ch.njol.skript.conditions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -43,7 +44,7 @@ public class CondCanHold extends Condition {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		invis = (Expression<Inventory>) exprs[0];
 		items = (Expression<ItemType>) exprs[1];
 		if (items instanceof Literal) {
@@ -51,12 +52,12 @@ public class CondCanHold extends Condition {
 				t = t.getItem();
 				if (!(t.isAll() || t.getTypes().size() == 1)) {
 					Skript.error("The condition 'can hold' can currently only be used with aliases that start with 'every' or 'all', or only represent one item.", ErrorQuality.SEMANTIC_ERROR);
-					return false;
+					return null;
 				}
 			}
 		}
 		setNegated(matchedPattern == 1);
-		return true;
+		return this;
 	}
 	
 	@Override

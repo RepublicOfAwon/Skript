@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.inventory.ItemStack;
 import ch.njol.skript.lang.Expression;
@@ -38,12 +39,12 @@ public class ExprLoot extends SimpleExpression<ItemStack> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(LootGenerateEvent.class)) {
 			Skript.error("The 'loot' expression can only be used in a 'loot generate' event");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
@@ -35,10 +36,10 @@ public class ExprVectorBetweenLocations extends SimpleExpression<Vector> {
 
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		from = (Expression<Location>) exprs[0];
 		to = (Expression<Location>) exprs[1];
-		return true;
+		return this;
 	}
 
 	@Override

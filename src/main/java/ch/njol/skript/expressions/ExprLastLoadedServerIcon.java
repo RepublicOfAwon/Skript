@@ -9,6 +9,7 @@ import ch.njol.skript.effects.EffLoadServerIcon;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -29,12 +30,12 @@ public class ExprLastLoadedServerIcon extends SimpleExpression<CachedServerIcon>
 	private static final boolean PAPER_EVENT_EXISTS = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent");
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!PAPER_EVENT_EXISTS) {
 			Skript.error("The last loaded server icon expression requires Paper 1.12.2+");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

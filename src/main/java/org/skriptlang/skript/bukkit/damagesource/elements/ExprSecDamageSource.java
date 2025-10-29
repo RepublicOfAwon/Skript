@@ -8,11 +8,8 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SectionExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SectionUtils;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.variables.Variables;
@@ -90,14 +87,14 @@ public class ExprSecDamageSource extends SectionExpression<DamageSource> impleme
 	private Trigger trigger = null;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int pattern, Kleenean delayed, ParseResult result, @Nullable SectionNode node, @Nullable List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] exprs, int pattern, Kleenean delayed, ParseResult result, @Nullable SectionNode node, @Nullable List<TriggerItem> triggerItems) {
 		if (exprs[0] == null) {
 			if (node == null) {
 				Skript.error("You must contain a section for this expression.");
-				return false;
+				return null;
 			} else if (node.isEmpty()) {
 				Skript.error("You must contain code inside this section.");
-				return false;
+				return null;
 			}
 		} else {
 			//noinspection unchecked
@@ -108,9 +105,9 @@ public class ExprSecDamageSource extends SectionExpression<DamageSource> impleme
 			AtomicBoolean isDelayed = new AtomicBoolean(false);
 			trigger = SectionUtils.loadLinkedCode("custom damage source", (beforeLoading, afterLoading)
 					-> loadCode(node, "custom damage source", beforeLoading, afterLoading, DamageSourceSectionEvent.class));
-			return trigger != null;
+			return trigger != null ? this : null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

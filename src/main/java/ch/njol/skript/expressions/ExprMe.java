@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -28,8 +29,8 @@ public class ExprMe extends SimpleExpression<Player> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		return getParser().isCurrentEvent(EffectCommandEvent.class);
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		return getParser().isCurrentEvent(EffectCommandEvent.class) ? this : null;
 	}
 
 	@Override

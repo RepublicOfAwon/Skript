@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerEggThrowEvent;
@@ -32,13 +33,13 @@ public class CondWillHatch extends Condition {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(PlayerEggThrowEvent.class)) {
 			Skript.error("You can't use the 'egg will hatch' condition outside of a Player Egg Throw event.");
-			return false;
+			return null;
 		}
 		setNegated(!parseResult.hasTag("will"));
-		return true;
+		return this;
 	}
 
 	@Override

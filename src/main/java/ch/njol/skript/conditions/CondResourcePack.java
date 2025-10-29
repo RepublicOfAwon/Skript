@@ -1,5 +1,6 @@
 package ch.njol.skript.conditions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent.Status;
@@ -36,14 +37,14 @@ public class CondResourcePack extends Condition {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(PlayerResourcePackStatusEvent.class)) {
 			Skript.error("The resource pack condition can't be used outside of a resource pack response event");
-			return false;
+			return null;
 		}
 		states = (Expression<Status>) exprs[0];
 		setNegated(matchedPattern == 1);
-		return true;
+		return this;
 	}
 	
 	@Override

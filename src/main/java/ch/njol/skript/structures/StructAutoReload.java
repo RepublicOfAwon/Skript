@@ -71,10 +71,10 @@ public class StructAutoReload extends Structure {
 	private Task task;
 
 	@Override
-	public boolean init(Literal<?> @NotNull [] arguments, int pattern, ParseResult result, EntryContainer container) {
+	public SyntaxElement init(Literal<?> @NotNull [] arguments, int pattern, ParseResult result, EntryContainer container) {
 		if (!ScriptLoader.isAsync()) {
 			Skript.error(Language.get("log.auto reload.async required"));
-			return false;
+			return null;
 		}
 
 		String[] recipients = null;
@@ -103,10 +103,10 @@ public class StructAutoReload extends Structure {
 		File file = script.getConfig().getFile();
 		if (file == null || !file.exists()) {
 			Skript.error(Language.get("log.auto reload.file not found"));
-			return false;
+			return null;
 		}
 		script.addData(new AutoReload(file.lastModified(), permission, recipients));
-		return true;
+		return this;
 	}
 
 	@Override

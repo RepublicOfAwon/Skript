@@ -54,24 +54,24 @@ public class EffContinue extends Effect {
 	private int breakLevels;
 
 	@Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+    public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		ParserInstance parser = getParser();
 		int loops = parser.getCurrentSections(LoopSection.class).size();
 		if (loops == 0) {
 			Skript.error("The 'continue' effect may only be used in loops");
-			return false;
+			return null;
 		}
 
 		level = matchedPattern == 0 ? loops : Integer.parseInt(parseResult.regexes.get(0).group());
 		if (level < 1)
-			return false;
+			return null;
 
 		// ParserInstance#getSections counts from the innermost section, so we need to invert the level 
 		int levels = loops - level + 1;
 		if (levels <= 0) {
 			Skript.error("Can't continue the " + StringUtils.fancyOrderNumber(level) + " loop as there " +
 				(loops == 1 ? "is only 1 loop" : "are only " + loops + " loops") + " present");
-			return false;
+			return null;
 		}
 
         List<TriggerSection> innerSections = parser.getSections(levels, LoopSection.class);
@@ -81,7 +81,7 @@ public class EffContinue extends Effect {
 			.filter(SectionExitHandler.class::isInstance)
 			.map(SectionExitHandler.class::cast)
 			.toList();
-		return true;
+		return this;
 	}
 
 	@Override

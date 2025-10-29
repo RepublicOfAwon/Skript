@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.Event;
@@ -32,7 +33,7 @@ public class ExprMinecartDerailedFlyingVelocity extends SimplePropertyExpression
 	private boolean flying;
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		flying = parseResult.mark == 2;
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

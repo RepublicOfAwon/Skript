@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.server.ServerListPingEvent;
@@ -37,15 +38,15 @@ public class ExprMOTD extends SimpleExpression<String> {
 	private boolean isDefault;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		boolean isServerPingEvent = getParser().isCurrentEvent(ServerListPingEvent.class) ||
 				(PAPER_EVENT_EXISTS && getParser().isCurrentEvent(PaperServerListPingEvent.class));
 		if (parseResult.mark == 2 && !isServerPingEvent) {
 			Skript.error("The 'shown' MOTD expression can't be used outside of a server list ping event");
-			return false;
+			return null;
 		}
 		isDefault = (parseResult.mark == 0 && !isServerPingEvent) || parseResult.mark == 1;
-		return true;
+		return this;
 	}
 
 	@Override

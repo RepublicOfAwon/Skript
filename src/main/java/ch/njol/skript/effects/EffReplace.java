@@ -9,11 +9,8 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionList;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 import org.bukkit.event.Event;
@@ -65,8 +62,8 @@ public class EffReplace extends Effect {
 	private boolean caseSensitive = false;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern,
-						Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern,
+                              Kleenean isDelayed, ParseResult parseResult) {
 		haystack = expressions[1 + matchedPattern % 2];
 		replaceString = matchedPattern < 4;
 		replaceFirst = parseResult.hasTag("first");
@@ -74,7 +71,7 @@ public class EffReplace extends Effect {
 
 		if (replaceString && !ChangerUtils.acceptsChange(haystack, ChangeMode.SET, String.class)) {
 			Skript.error(haystack + " cannot be changed and can thus not have parts replaced");
-			return false;
+			return null;
 		}
 
 		if (SkriptConfig.caseSensitive.value() || parseResult.hasTag("case")) {
@@ -83,7 +80,7 @@ public class EffReplace extends Effect {
 
 		needles = expressions[0];
 		replacement = expressions[2 - matchedPattern % 2];
-		return true;
+		return this;
 	}
 
 	@Override

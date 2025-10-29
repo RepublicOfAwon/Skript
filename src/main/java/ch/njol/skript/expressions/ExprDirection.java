@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -85,14 +86,14 @@ public class ExprDirection extends SimpleExpression<Direction> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		amount = (Expression<Number>) exprs[0];
 		switch (matchedPattern) {
 			case 0:
 				direction = new Vector(byMark[parseResult.mark].getModX(), byMark[parseResult.mark].getModY(), byMark[parseResult.mark].getModZ());
 				if (exprs[1] != null) {
 					if (!(exprs[1] instanceof ExprDirection) || ((ExprDirection) exprs[1]).direction == null)
-						return false;
+						return null;
 					next = (ExprDirection) exprs[1];
 				}
 				break;
@@ -107,7 +108,7 @@ public class ExprDirection extends SimpleExpression<Direction> {
 				yaw = Math.PI / 2 * parseResult.mark;
 				horizontal = matchedPattern == 4;
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

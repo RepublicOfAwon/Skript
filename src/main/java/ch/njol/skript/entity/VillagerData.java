@@ -2,6 +2,7 @@ package ch.njol.skript.entity;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.coll.CollectionUtils;
@@ -59,18 +60,18 @@ public class VillagerData extends EntityData<Villager> {
 	}
 	
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		profession = PATTERNS.getInfo(matchedCodeName);
-		return true;
+		return this;
 	}
 	
 	@Override
-	protected boolean init(@Nullable Class<? extends Villager> villagerClass, @Nullable Villager villager) {
+	protected SyntaxElement init(@Nullable Class<? extends Villager> villagerClass, @Nullable Villager villager) {
 		if (villager != null) {
 			profession = villager.getProfession();
 			super.codeNameIndex = PATTERNS.getMatchedPattern(profession, 0).orElse(0);
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

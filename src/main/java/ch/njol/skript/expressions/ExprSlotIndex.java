@@ -2,6 +2,7 @@ package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +42,7 @@ public class ExprSlotIndex extends SimplePropertyExpression<Slot, Long> {
 	private boolean isRaw;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		isRaw = parseResult.hasTag("raw");
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

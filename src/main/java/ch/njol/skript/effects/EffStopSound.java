@@ -6,6 +6,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -51,12 +52,12 @@ public class EffStopSound extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		allSounds = parseResult.hasTag("all");
 		sounds = (Expression<String>) exprs[0];
 		category = (Expression<SoundCategory>) exprs[1];
 		players = (Expression<Player>) exprs[2];
-		return true;
+		return this;
 	}
 
 	@Override

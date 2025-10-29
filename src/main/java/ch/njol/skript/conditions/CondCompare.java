@@ -6,14 +6,8 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionList;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SimplifiedCondition;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.UnparsedLiteral;
-import ch.njol.skript.lang.VerboseAssert;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.log.ParseLogHandler;
@@ -90,7 +84,7 @@ public class CondCompare extends Condition implements VerboseAssert {
 	private Comparator comparator;
 
 	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+	public SyntaxElement init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		first = vars[0];
 		second = vars[1];
 		if (vars.length == 3)
@@ -110,10 +104,10 @@ public class CondCompare extends Condition implements VerboseAssert {
 		final Expression<?> third = this.third;
 		if (!b) {
 			if (third == null && first.getReturnType() == Object.class && second.getReturnType() == Object.class) {
-				return false;
+				return null;
 			} else {
 				Skript.error("Can't compare " + f(first) + " with " + f(second) + (third == null ? "" : " and " + f(third)), ErrorQuality.NOT_AN_EXPRESSION);
-				return false;
+				return null;
 			}
 		}
 		@SuppressWarnings("rawtypes")
@@ -122,17 +116,17 @@ public class CondCompare extends Condition implements VerboseAssert {
 			if (third == null) {
 				if (!relation.isImpliedBy(Relation.EQUAL, Relation.NOT_EQUAL) && !comp.supportsOrdering()) {
 					Skript.error("Can't test " + f(first) + " for being '" + relation + "' " + f(second), ErrorQuality.NOT_AN_EXPRESSION);
-					return false;
+					return null;
 				}
 			} else {
 				if (!comp.supportsOrdering()) {
 					Skript.error("Can't test " + f(first) + " for being 'between' " + f(second) + " and " + f(third), ErrorQuality.NOT_AN_EXPRESSION);
-					return false;
+					return null;
 				}
 			}
 		}
 
-		return true;
+		return this;
 	}
 
 	public static String f(final Expression<?> e) {

@@ -2,6 +2,7 @@ package ch.njol.skript.effects;
 
 import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.EventRestrictedSyntax;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.entity.Item;
 import org.bukkit.event.Event;
@@ -51,14 +52,14 @@ public class EffCancelDrops extends Effect implements EventRestrictedSyntax {
 	private boolean cancelItems, cancelExps;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		cancelItems = !parseResult.hasTag("xp");
 		cancelExps = !parseResult.hasTag("items");
 		if (isDelayed.isTrue()) {
 			Skript.error("Can't cancel the drops anymore after the event has already passed");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

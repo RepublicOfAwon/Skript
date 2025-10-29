@@ -11,6 +11,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.Keyed;
 import org.bukkit.Tag;
@@ -43,12 +44,12 @@ public class CondIsTagged extends Condition {
 	private Expression<?> elements;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		this.elements = expressions[0];
 		//noinspection unchecked
 		this.tags = (Expression<Tag<Keyed>>) expressions[1];
 		setNegated(matchedPattern == 1);
-		return true;
+		return this;
 	}
 
 	@Override

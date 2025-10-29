@@ -9,6 +9,7 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -34,11 +35,11 @@ public class EffVehicle extends Effect {
 	private @Nullable Expression<?> vehicles;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		passengers = matchedPattern == 2 ? null : (Expression<Entity>) exprs[0];
 		vehicles = matchedPattern == 1 ? null : exprs[exprs.length - 1];
-		return true;
+		return this;
 	}
 	
 	@Override

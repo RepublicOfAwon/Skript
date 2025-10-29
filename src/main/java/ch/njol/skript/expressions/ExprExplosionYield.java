@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.jetbrains.annotations.Nullable;
@@ -37,12 +38,12 @@ public class ExprExplosionYield extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(ExplosionPrimeEvent.class)) {
 			Skript.error("The explosion radius is only usable in explosion prime events", ErrorQuality.SEMANTIC_ERROR);
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

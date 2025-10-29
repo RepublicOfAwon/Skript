@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
@@ -32,10 +33,10 @@ public class ExprItemWithEnchantmentGlint extends PropertyExpression<ItemType, I
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setExpr((Expression<ItemType>) expressions[0]);
 		glint = !parseResult.hasTag("out");
-		return true;
+		return this;
 	}
 
 	@Override

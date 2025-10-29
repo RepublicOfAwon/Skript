@@ -11,6 +11,7 @@ import ch.njol.skript.events.EvtPlayerCommandSend;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.Lists;
@@ -45,19 +46,19 @@ public class ExprSentCommands extends SimpleExpression<String> {
 	private EvtPlayerCommandSend parent;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		Structure structure = getParser().getCurrentStructure();
 		if (!(structure instanceof EvtPlayerCommandSend)) {
 			Skript.error("The 'command list' expression can only be used in a 'send command list' event");
-			return false;
+			return null;
 		}
 
 		if (!isDelayed.isFalse()) {
 			Skript.error("Can't change the command list after the event has already passed");
-			return false;
+			return null;
 		}
 		parent = (EvtPlayerCommandSend) structure;
-		return true;
+		return this;
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import org.bukkit.World;
@@ -39,13 +40,13 @@ public class CondIsSpawnable extends Condition {
 	private Expression<World> world = null;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		datas = (Expression<EntityData<?>>) exprs[0];
 		//noinspection unchecked
 		world = (Expression<World>) exprs[1];
 		setNegated(matchedPattern >= 2);
-		return true;
+		return this;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -41,15 +42,15 @@ public class ExprBarterDrops extends SimpleExpression<ItemType> {
 	private Kleenean delay;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult result) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult result) {
 		if (!getParser().isCurrentEvent(PiglinBarterEvent.class)) {
 			Skript.error("The expression 'barter drops' can only be used in the piglin bartering event");
-			return false;
+			return null;
 		}
 
 		delay = isDelayed;
 
-		return true;
+		return this;
 	}
 	
 	@Override

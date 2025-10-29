@@ -5,6 +5,7 @@ import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
@@ -21,9 +22,9 @@ public class EffRunRunnable extends Effect {
 	private Expression<?> task;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int pattern, Kleenean delayed, ParseResult result) {
+	public SyntaxElement init(Expression<?>[] expressions, int pattern, Kleenean delayed, ParseResult result) {
 		this.task = LiteralUtils.defendExpression(expressions[0]);
-		return LiteralUtils.canInitSafely(task);
+		return LiteralUtils.canInitSafely(task) ? this : null;
 	}
 
 	@Override

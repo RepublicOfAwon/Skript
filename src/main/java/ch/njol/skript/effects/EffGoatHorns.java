@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Goat;
@@ -42,7 +43,7 @@ public class EffGoatHorns extends Effect {
 	private boolean remove;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (parseResult.hasTag("right")) {
 			goatHorn = GoatHorn.RIGHT;
 		} else if (parseResult.hasTag("both")) {
@@ -51,7 +52,7 @@ public class EffGoatHorns extends Effect {
 		//noinspection unchecked
 		entities = (Expression<LivingEntity>) exprs[0];
 		remove = matchedPattern <= 1;
-		return true;
+		return this;
 	}
 
 	@Override

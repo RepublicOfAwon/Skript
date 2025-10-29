@@ -378,14 +378,14 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 	/**
 	 * Performs initial setup for this {@link EntityData} before passing control to the more specific {@link #init(Expression[], int, Kleenean, ParseResult)}.
 	 * <p>
-	 *     This method handles common behaviors such as tracking plurality (e.g. "a pig" vs "all pigs")
-	 *     and entity age (e.g. "baby zombie") based on the {@link ParseResult}'s marker value.
+	 * This method handles common behaviors such as tracking plurality (e.g. "a pig" vs "all pigs")
+	 * and entity age (e.g. "baby zombie") based on the {@link ParseResult}'s marker value.
 	 * </p>
-	 *
+	 * <p>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public final SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		this.plural = parseResult.hasTag("unknown_plural") ? Kleenean.UNKNOWN : Kleenean.get(parseResult.hasTag("plural"));
 		if (parseResult.hasTag("baby")) {
 			this.baby = Kleenean.TRUE;
@@ -404,21 +404,21 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 	/**
 	 * Initializes this {@link EntityData}.
 	 * <p>
-	 *     As of Skript 2.13, code names can have multiple patterns registered in the default.lang file.
-	 *     {@code matchedCodeName} will be the index of the code name the matched pattern is linked to.
-	 *     		(e.g. {@link PigData} "unsaddled pig' = 0, "pig" = 1, "saddled pig" = 2)
-	 *     {@code matchedPattern} will be the index of the pattern used from the patterns of the code name in the lang file.
+	 * As of Skript 2.13, code names can have multiple patterns registered in the default.lang file.
+	 * {@code matchedCodeName} will be the index of the code name the matched pattern is linked to.
+	 * (e.g. {@link PigData} "unsaddled pig' = 0, "pig" = 1, "saddled pig" = 2)
+	 * {@code matchedPattern} will be the index of the pattern used from the patterns of the code name in the lang file.
 	 * </p>
 	 *
-	 * @param exprs An array of {@link Literal} expressions from the matched pattern, in the order they appear.
-	 *              If an optional value was omitted by the user, it will still be present in the array
-	 *              with a value of {@code null}.
+	 * @param exprs           An array of {@link Literal} expressions from the matched pattern, in the order they appear.
+	 *                        If an optional value was omitted by the user, it will still be present in the array
+	 *                        with a value of {@code null}.
 	 * @param matchedCodeName The index of the code name which matched.
-	 * @param matchedPattern The index of the pattern of the code name which matched.
-	 * @param parseResult Additional information from the parser.
+	 * @param matchedPattern  The index of the pattern of the code name which matched.
+	 * @param parseResult     Additional information from the parser.
 	 * @return {@code true} if initialization was successful, otherwise {@code false}.
 	 */
-	protected abstract boolean init(
+	protected abstract SyntaxElement init(
 		Literal<?>[] exprs,
 		int matchedCodeName,
 		int matchedPattern,
@@ -428,8 +428,8 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 	/**
 	 * Initializes this {@link EntityData} from either an entity class or a specific {@link Entity}.
 	 * <p>
-	 *     Example usage:
-	 *     	<pre>
+	 * Example usage:
+	 * <pre>
 	 *     	    <code>
 	 *     	        spawn a pig at location(0, 0, 0):
 	 *     	        	set {_entity} to event-entity
@@ -437,11 +437,12 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 	 *     	    </code>
 	 *     	</pre>
 	 * </p>
+	 *
 	 * @param entityClass An entity's class, e.g. Player
-	 * @param entity An actual entity, or null to get an entity data for an entity class
+	 * @param entity      An actual entity, or null to get an entity data for an entity class
 	 * @return {@code true} if initialization was successful, otherwise {@code false}.
 	 */
-	protected abstract boolean init(@Nullable Class<? extends E> entityClass, @Nullable E entity);
+	protected abstract SyntaxElement init(@Nullable Class<? extends E> entityClass, @Nullable E entity);
 
 	/**
 	 * Applies this {@link EntityData} to a newly spawned {@link Entity}.
@@ -795,7 +796,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 					//noinspection unchecked
 					entityData = (EntityData<E>) info.getElementClass().newInstance();
 				} catch (Exception ignored) {}
-				if (entityData != null && entityData.init(entityClass, entity)) {
+				if (entityData != null && entityData.init(entityClass, entity) != null) {
 					if (closestInfo == null || closestInfo.entityClass.isAssignableFrom(info.entityClass)) {
 						closestInfo = info;
 						closestData = entityData;

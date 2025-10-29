@@ -6,12 +6,8 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.InputSource;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.InputSource.InputData;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.skript.util.ClassInfoReference;
@@ -77,23 +73,23 @@ public class ExprInput<T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		inputSource = getParser().getData(InputData.class).getSource();
 		if (inputSource == null)
-			return false;
+			return null;
 		switch (matchedPattern) {
 			case 1:
 				ClassInfoReference classInfoReference = ((Literal<ClassInfoReference>) ClassInfoReference.wrap((Expression<ClassInfo<?>>) exprs[0])).getSingle();
 				if (classInfoReference.isPlural().isTrue()) {
 					Skript.error("An input can only be a single value! Please use a singular type (for example: players input -> player input).");
-					return false;
+					return null;
 				}
 				specifiedType = classInfoReference.getClassInfo();
 				break;
 			case 2:
 				if (!inputSource.hasIndices()) {
 					Skript.error("You cannot use 'input index' on expressions without indices!");
-					return false;
+					return null;
 				}
 				specifiedType = DefaultClasses.STRING;
 				isIndex = true;
@@ -106,7 +102,7 @@ public class ExprInput<T> extends SimpleExpression<T> {
 			superType = (Class<T>) specifiedType.getC();
 			types = new Class[]{superType};
 		}
-		return true;
+		return this;
 	}
 
 	@Override

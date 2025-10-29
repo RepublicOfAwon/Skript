@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -36,11 +37,11 @@ public class CondHasLineOfSight extends Condition {
 	private Expression<?> targets;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		viewers = (Expression<LivingEntity>) exprs[0];
 		targets = exprs[1];
 		setNegated(matchedPattern > 0);
-		return true;
+		return this;
 	}
 
 	@Override

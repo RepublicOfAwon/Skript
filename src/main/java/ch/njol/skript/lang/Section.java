@@ -56,18 +56,19 @@ public abstract class Section extends TriggerSection implements SyntaxElement, S
 	 * This method should not be overridden unless you know what you are doing!
 	 */
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		SectionContext sectionContext = getParser().getData(SectionContext.class);
-		return init(expressions, matchedPattern, isDelayed, parseResult, sectionContext.sectionNode, sectionContext.triggerItems)
-			&& sectionContext.claim(this);
+		var result = this.init(expressions, matchedPattern, isDelayed, parseResult, sectionContext.sectionNode, sectionContext.triggerItems);
+		if (result == null) return null;
+		return sectionContext.claim(this) ? result : null;
 	}
 
-	public abstract boolean init(Expression<?>[] expressions,
-								 int matchedPattern,
-								 Kleenean isDelayed,
-								 ParseResult parseResult,
-								 SectionNode sectionNode,
-								 List<TriggerItem> triggerItems);
+	public abstract SyntaxElement init(Expression<?>[] expressions,
+									   int matchedPattern,
+									   Kleenean isDelayed,
+									   ParseResult parseResult,
+									   SectionNode sectionNode,
+									   List<TriggerItem> triggerItems);
 
 	/**
 	 * Loads the code in the given {@link SectionNode},

@@ -2,13 +2,13 @@ package ch.njol.skript.conditions;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
-import ch.njol.skript.SkriptCommand;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.parser.ParserInstance;
 import org.skriptlang.skript.lang.script.Script;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -41,7 +41,7 @@ public class CondScriptLoaded extends Condition {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		scripts = (Expression<String>) exprs[0];
 
 		ParserInstance parser = getParser();
@@ -50,12 +50,12 @@ public class CondScriptLoaded extends Condition {
 				currentScript = parser.getCurrentScript();
 			} else { // parser is inactive but no scripts were provided
 				Skript.error("The condition 'script loaded' requires a script name argument when used outside of script files");
-				return false;
+				return null;
 			}
 		}
 
 		setNegated(matchedPattern == 1);
-		return true;
+		return this;
 	}
 
 	@Override

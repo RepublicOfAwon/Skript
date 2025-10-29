@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.stream.Stream;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -53,7 +54,7 @@ public class ExprIP extends SimpleExpression<String> {
 
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		isProperty = matchedPattern < 2;
 		boolean isConnectEvent = getParser().isCurrentEvent(PlayerLoginEvent.class);
 		boolean isServerPingEvent = getParser().isCurrentEvent(ServerListPingEvent.class) ||
@@ -62,9 +63,9 @@ public class ExprIP extends SimpleExpression<String> {
 			players = (Expression<Player>) exprs[0];
 		} else if (!isConnectEvent && !isServerPingEvent) {
 			Skript.error("You must specify players whose IP addresses to get outside of server list ping and connect events.");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

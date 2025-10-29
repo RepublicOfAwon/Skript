@@ -3,6 +3,7 @@ package ch.njol.skript.expressions;
 import java.lang.reflect.Array;
 
 import ch.njol.skript.effects.EffFireworkLaunch;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.sections.EffSecShoot;
 import ch.njol.skript.sections.EffSecSpawn;
 import org.bukkit.entity.Entity;
@@ -58,7 +59,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		from = parseResult.mark;
 		if (from == 2) { // It's just to make an extra expression for item only
 			type = EntityData.fromClass(Item.class);
@@ -69,7 +70,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
 		} else {
 			type = ((Literal<EntityData<?>>) exprs[0]).getSingle();
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

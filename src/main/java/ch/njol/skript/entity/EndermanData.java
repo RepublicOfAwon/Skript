@@ -3,6 +3,7 @@ package ch.njol.skript.entity;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.registrations.Classes;
@@ -33,16 +34,16 @@ public class EndermanData extends EntityData<Enderman> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		if (exprs[0] != null) {
 			//noinspection unchecked
 			hand = ((Literal<ItemType>) exprs[0]).getAll();
 		}
-		return true;
+		return this;
 	}
 
 	@Override
-	protected boolean init(@Nullable Class<? extends Enderman> entityClass, @Nullable Enderman enderman) {
+	protected SyntaxElement init(@Nullable Class<? extends Enderman> entityClass, @Nullable Enderman enderman) {
 		if (enderman != null) {
 			BlockData data = enderman.getCarriedBlock();
 			if (data != null) {
@@ -50,7 +51,7 @@ public class EndermanData extends EntityData<Enderman> {
 				hand = new ItemType[] {new ItemType(type)};
 			}
 		}
-		return true;
+		return this;
 	}
 
 	@Override

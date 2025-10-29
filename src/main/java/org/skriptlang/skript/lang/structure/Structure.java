@@ -88,7 +88,7 @@ public abstract class Structure implements SyntaxElement, Debuggable {
 	}
 
 	@Override
-	public final boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public final SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		Literal<?>[] literals = Arrays.copyOf(expressions, expressions.length, Literal[].class);
 
 		StructureData structureData = getParser().getData(StructureData.class);
@@ -106,7 +106,7 @@ public abstract class Structure implements SyntaxElement, Debuggable {
 		} else { // Validation required
 			EntryContainer entryContainer = entryValidator.validate((SectionNode) structureData.node);
 			if (entryContainer == null)
-				return false;
+				return null;
 			this.entryContainer = entryContainer;
 		}
 
@@ -117,14 +117,14 @@ public abstract class Structure implements SyntaxElement, Debuggable {
 	 * The initialization phase of a Structure.
 	 * Typically, this should be used for preparing fields (e.g. handling arguments, parse tags)
 	 * Logic such as trigger loading should be saved for a loading phase (e.g. {@link #load()}).
-	 * 
-	 * @param args The arguments of the Structure.
+	 *
+	 * @param args           The arguments of the Structure.
 	 * @param matchedPattern The matched pattern of the Structure.
-	 * @param parseResult The parse result of the Structure.
+	 * @param parseResult    The parse result of the Structure.
 	 * @param entryContainer The EntryContainer of the Structure. Will not be null if the Structure provides a {@link EntryValidator}.
 	 * @return Whether initialization was successful.
 	 */
-	public abstract boolean init(
+	public abstract SyntaxElement init(
 		Literal<?>[] args, int matchedPattern, ParseResult parseResult,
 		@UnknownNullability EntryContainer entryContainer
 	);

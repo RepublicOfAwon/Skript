@@ -49,22 +49,22 @@ public class SecWhile extends LoopSection {
 	private boolean ranDoWhile = false;
 
 	@Override
-	public boolean init(Expression<?>[] exprs,
-						int matchedPattern,
-						Kleenean isDelayed,
-						ParseResult parseResult,
-						SectionNode sectionNode,
-						List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] exprs,
+                              int matchedPattern,
+                              Kleenean isDelayed,
+                              ParseResult parseResult,
+                              SectionNode sectionNode,
+                              List<TriggerItem> triggerItems) {
 		String expr = parseResult.regexes.get(0).group();
 
 		condition = Condition.parse(expr, "Can't understand this condition: " + expr);
 		if (condition == null)
-			return false;
+			return null;
 
 		doWhile = parseResult.hasTag("do");
 		loadOptionalCode(sectionNode);
 		super.setNext(this);
-		return true;
+		return this;
 	}
 
 	@Nullable

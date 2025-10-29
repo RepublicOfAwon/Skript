@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.localization.Adjective;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Noun;
@@ -45,27 +46,27 @@ public class DroppedItemData extends EntityData<Item> {
 	}
 	
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		if (exprs.length > 0 && exprs[0] != null) {
 			//noinspection unchecked
 			types = ((Literal<ItemType>) exprs[0]).getAll();
 			for (ItemType type : types) {
 				if (!type.getMaterial().isItem()) {
 					Skript.error("'" + type + "' cannot represent a dropped item");
-					return false;
+					return null;
 				}
 			}
 		}
-		return true;
+		return this;
 	}
 	
 	@Override
-	protected boolean init(@Nullable Class<? extends Item> entityClass, @Nullable Item item) {
+	protected SyntaxElement init(@Nullable Class<? extends Item> entityClass, @Nullable Item item) {
 		if (item != null) {
 			ItemStack itemStack = item.getItemStack();
 			types = new ItemType[] {new ItemType(itemStack)};
 		}
-		return true;
+		return this;
 	}
 
 	@Override

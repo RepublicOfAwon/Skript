@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.Utils;
@@ -49,11 +50,11 @@ public class ExprDifference extends SimpleExpression<Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		Expression<?> first = LiteralUtils.defendExpression(exprs[0]);
 		Expression<?> second = LiteralUtils.defendExpression(exprs[1]);
 		if (!LiteralUtils.canInitSafely(first, second)) {
-			return false;
+			return null;
 		}
 
 		Class<?> firstReturnType = first.getReturnType();
@@ -121,13 +122,13 @@ public class ExprDifference extends SimpleExpression<Object> {
 
 		if (fail) {
 			Skript.error("Can't get the difference of " + CondCompare.f(first) + " and " + CondCompare.f(second));
-			return false;
+			return null;
 		}
 
 		this.first = first;
 		this.second = second;
 
-		return true;
+		return this;
 	}
 
 	@Override

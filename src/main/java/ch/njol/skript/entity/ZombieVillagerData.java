@@ -2,6 +2,7 @@ package ch.njol.skript.entity;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.entity.Villager.Profession;
@@ -51,18 +52,18 @@ public class ZombieVillagerData extends EntityData<ZombieVillager> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		profession = PATTERNS.getInfo(matchedCodeName);
-		return true;
+		return this;
 	}
 
 	@Override
-	protected boolean init(@Nullable Class<? extends ZombieVillager> entityClass, @Nullable ZombieVillager zombieVillager) {
+	protected SyntaxElement init(@Nullable Class<? extends ZombieVillager> entityClass, @Nullable ZombieVillager zombieVillager) {
 		if (zombieVillager != null) {
 			profession = zombieVillager.getVillagerProfession();
 			super.codeNameIndex = PATTERNS.getMatchedPattern(profession, 0).orElse(0);
 		}
-		return true;
+		return this;
 	}
 
 	@Override

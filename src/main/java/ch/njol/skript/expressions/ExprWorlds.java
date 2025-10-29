@@ -2,6 +2,7 @@ package ch.njol.skript.expressions;
 
 import java.util.Iterator;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.Event;
@@ -33,8 +34,8 @@ public class ExprWorlds extends SimpleExpression<World> {
 	}
 	
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		return true;
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+		return this;
 	}
 	
 	@Override

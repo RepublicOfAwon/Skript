@@ -53,7 +53,7 @@ public abstract class SkriptEvent extends Structure {
 	protected Trigger trigger;
 
 	@Override
-	public final boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
+	public final SyntaxElement init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
 		this.expr = parseResult.expr;
 
 		EventData eventData = getParser().getData(EventData.class);
@@ -61,7 +61,7 @@ public abstract class SkriptEvent extends Structure {
 		EventPriority priority = eventData.getPriority();
 		if (priority != null && !isEventPrioritySupported()) {
 			Skript.error("This event doesn't support event priority");
-			return false;
+			return null;
 		}
 		eventPriority = priority;
 
@@ -78,7 +78,7 @@ public abstract class SkriptEvent extends Structure {
 
 		// initialize implementation
 		if (!init(args, matchedPattern, parseResult))
-			return false;
+			return null;
 
 		// evaluate whether this event supports listening to cancelled events
 		for (Class<? extends Event> eventClass : getEventClasses()) {
@@ -92,10 +92,10 @@ public abstract class SkriptEvent extends Structure {
 		if (listeningBehavior != null && !isListeningBehaviorSupported()) {
 			String eventName = skriptEventInfo.name.toLowerCase(Locale.ENGLISH);
 			Skript.error(Utils.A(eventName) + " event does not support listening for cancelled or uncancelled events.");
-			return false;
+			return null;
 		}
 
-		return true;
+		return this;
 	}
 
 	/**

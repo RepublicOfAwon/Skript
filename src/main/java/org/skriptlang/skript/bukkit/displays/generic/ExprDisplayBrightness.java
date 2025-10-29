@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
@@ -51,12 +52,12 @@ public class ExprDisplayBrightness extends SimpleExpression<Integer> {
 	private boolean skyLight;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		blockLight = parseResult.hasTag("block");
 		skyLight = parseResult.hasTag("sky");
 		//noinspection unchecked
 		displays = (Expression<Display>) expressions[0];
-		return true;
+		return this;
 	}
 
 	@Override

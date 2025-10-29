@@ -9,10 +9,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.EventRestrictedSyntax;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
@@ -69,7 +66,7 @@ public class ExprArgument extends SimpleExpression<Object> implements EventRestr
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		boolean scriptCommand = getParser().isCurrentEvent(ScriptCommandEvent.class);
 
 		switch (matchedPattern) {
@@ -95,13 +92,13 @@ public class ExprArgument extends SimpleExpression<Object> implements EventRestr
 
 		if (!scriptCommand && what == CLASSINFO) {
 			Skript.error("Command event arguments are strings, meaning type specification is useless");
-			return false;
+			return null;
 		}
 
 		List<Argument<?>> currentArguments = Commands.currentArguments;
 		if (scriptCommand && (currentArguments == null || currentArguments.isEmpty())) {
 			Skript.error("This command doesn't have any arguments", ErrorQuality.SEMANTIC_ERROR);
-			return false;
+			return null;
 		}
 
 		if (what == ORDINAL) {
@@ -118,7 +115,7 @@ public class ExprArgument extends SimpleExpression<Object> implements EventRestr
 			ordinal = Utils.parseInt(argMatch);
 			if (scriptCommand && ordinal > currentArguments.size()) { // Only check if it's a script command as we know nothing of command event arguments
 				Skript.error("This command doesn't have a " + StringUtils.fancyOrderNumber(ordinal) + " argument", ErrorQuality.SEMANTIC_ERROR);
-				return false;
+				return null;
 			}
 		}
 
@@ -135,19 +132,19 @@ public class ExprArgument extends SimpleExpression<Object> implements EventRestr
 						argument = currentArguments.get(0);
 					} else {
 						Skript.error("This command has multiple arguments, meaning it is not possible to get the 'argument'. Use 'argument 1', 'argument 2', etc. instead", ErrorQuality.SEMANTIC_ERROR);
-						return false;
+						return null;
 					}
 					break;
 				case ALL:
 					Skript.error("'arguments' cannot be used for script commands. Use 'argument 1', 'argument 2', etc. instead", ErrorQuality.SEMANTIC_ERROR);
-					return false;
+					return null;
 				case CLASSINFO:
 					ClassInfo<?> c = ((Literal<ClassInfo<?>>) exprs[0]).getSingle();
 					if (parseResult.regexes.size() > 0) {
 						ordinal = Utils.parseInt(parseResult.regexes.get(0).group());
 						if (ordinal > currentArguments.size()) {
 							Skript.error("This command doesn't have a " + StringUtils.fancyOrderNumber(ordinal) + " " + c + " argument", ErrorQuality.SEMANTIC_ERROR);
-							return false;
+							return null;
 						}
 					}
 
@@ -159,7 +156,7 @@ public class ExprArgument extends SimpleExpression<Object> implements EventRestr
 
 						if (ordinal == -1 && argAmount == 2) { // The user said '<type> argument' without specifying which, and multiple arguments for the type exist
 							Skript.error("There are multiple " + c + " arguments in this command", ErrorQuality.SEMANTIC_ERROR);
-							return false;
+							return null;
 						}
 
 						arg = a;
@@ -172,14 +169,14 @@ public class ExprArgument extends SimpleExpression<Object> implements EventRestr
 
 					if (argAmount == 0) {
 						Skript.error("There is no " + c + " argument in this command", ErrorQuality.SEMANTIC_ERROR);
-						return false;
+						return null;
 					} else if (ordinal > argAmount) { // The user wanted an argument number that didn't exist for the given type
 						if (argAmount == 1) {
 							Skript.error("There is only one " + c + " argument in this command", ErrorQuality.SEMANTIC_ERROR);
 						} else {
 							Skript.error("There are only " + argAmount + " " + c + " arguments in this command", ErrorQuality.SEMANTIC_ERROR);
 						}
-						return false;
+						return null;
 					}
 
 					// 'arg' will never be null here
@@ -187,11 +184,11 @@ public class ExprArgument extends SimpleExpression<Object> implements EventRestr
 					break;
 				default:
 					assert false : what;
-					return false;
+					return null;
 			}
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

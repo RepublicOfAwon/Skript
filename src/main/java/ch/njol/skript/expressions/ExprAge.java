@@ -9,12 +9,12 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,15 +44,15 @@ public class ExprAge extends SimplePropertyExpression<Object, Integer> {
 	private boolean isMax;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		isMax = parseResult.hasTag("max");
 		setExpr(exprs[0]);
 		if (isMax && !getExpr().canReturn(Block.class)) {
 			Skript.error("Cannot use 'max age' expression with entities, use just the 'age' expression instead");
-			return false;
+			return null;
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

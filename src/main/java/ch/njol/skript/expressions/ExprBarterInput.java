@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -33,12 +34,12 @@ public class ExprBarterInput extends SimpleExpression<ItemType> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult result) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult result) {
 		if (!getParser().isCurrentEvent(PiglinBarterEvent.class)) {
 			Skript.error("The expression 'barter input' can only be used in the piglin bartering event");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

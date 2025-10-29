@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -38,9 +39,9 @@ public class ExprEnchantments extends SimpleExpression<EnchantmentType> {
 
 	@SuppressWarnings({"null","unchecked"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		items = (Expression<ItemType>) exprs[0];
-		return true;
+		return this;
 	}
 
 	@Override

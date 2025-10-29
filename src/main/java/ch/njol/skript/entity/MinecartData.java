@@ -2,6 +2,7 @@ package ch.njol.skript.entity;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.variables.Variables;
 import org.bukkit.entity.Minecart;
@@ -62,13 +63,13 @@ public class MinecartData extends EntityData<Minecart> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		type = PATTERNS.getInfo(matchedCodeName);
-		return true;
+		return this;
 	}
 
 	@Override
-	protected boolean init(@Nullable Class<? extends Minecart> entityClass, @Nullable Minecart minecart) {
+	protected SyntaxElement init(@Nullable Class<? extends Minecart> entityClass, @Nullable Minecart minecart) {
 		for (MinecartType type : TYPES) {
 			if (type == MinecartType.ANY)
 				continue;
@@ -81,7 +82,7 @@ public class MinecartData extends EntityData<Minecart> {
 		if (this.type == null)
 			this.type = MinecartType.ANY;
 		super.codeNameIndex = PATTERNS.getMatchedPattern(type, 0).orElse(0);
-		return true;
+		return this;
 	}
 	
 	@Override

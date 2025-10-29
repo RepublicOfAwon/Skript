@@ -11,6 +11,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
@@ -129,7 +130,7 @@ public class ExprEntitySound extends SimpleExpression<String> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		soundType = patterns.getInfo(matchedPattern);
 		bigOrSpeedy = parseResult.hasTag("high") || parseResult.hasTag("fast");
 		if (soundType == SoundType.FALL)
@@ -137,7 +138,7 @@ public class ExprEntitySound extends SimpleExpression<String> {
 		if (soundType == SoundType.EAT || soundType == SoundType.DRINK)
 			item = (Expression<ItemType>) exprs[1];
 		entities = (Expression<LivingEntity>) ((soundType == SoundType.FALL) ? exprs[1] : exprs[0]);
-		return true;
+		return this;
 	}
 
 	@Override

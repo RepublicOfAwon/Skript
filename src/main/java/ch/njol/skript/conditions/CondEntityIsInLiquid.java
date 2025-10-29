@@ -5,6 +5,7 @@ import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Entity;
 
@@ -33,11 +34,11 @@ public class CondEntityIsInLiquid extends PropertyCondition<Entity> {
 
 	@Override
 	@SuppressWarnings({"unchecked"})
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setExpr((Expression<? extends Entity>) exprs[0]);
 		setNegated(matchedPattern == 1);
 		mark = parseResult.mark;
-		return true;
+		return this;
 	}
 	
 	@Override

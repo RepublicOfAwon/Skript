@@ -2,6 +2,7 @@ package ch.njol.skript.expressions;
 
 import java.util.Set;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -47,12 +48,12 @@ public class ExprChatRecipients extends SimpleExpression<Player> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!(getParser().isCurrentEvent(AsyncPlayerChatEvent.class))) {
 			Skript.error("Cannot use chat recipients expression outside of a chat event", ErrorQuality.SEMANTIC_ERROR);
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

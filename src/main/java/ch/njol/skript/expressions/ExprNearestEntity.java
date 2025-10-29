@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
@@ -49,14 +50,14 @@ public class ExprNearestEntity extends SimpleExpression<Entity> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		entityDatas = ((Literal<EntityData<?>>) exprs[0]).getArray();
 		if (entityDatas.length != Arrays.stream(entityDatas).distinct().count()) {
 			Skript.error("Entity list may not contain duplicate entities");
-			return false;
+			return null;
 		}
 		relativeTo = exprs[1];
-		return true;
+		return this;
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import ch.njol.skript.config.Node;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.slot.Slot;
@@ -50,15 +51,15 @@ public class ExprInventory extends SimpleExpression<Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		// prevent conflict with ExprItemsIn (https://github.com/SkriptLang/Skript/issues/6290)
 		if (exprs[0].getSource() instanceof ExprItemsIn)
-			return false;
+			return null;
 		// if we're dealing with a loop of just this expression
 		Node n = SkriptLogger.getNode();
 		inLoop = n != null && ("loop " + parseResult.expr).equals(n.getKey());
 		holders = exprs[0];
-		return true;
+		return this;
 	}
 
 	@Override
@@ -123,8 +124,8 @@ public class ExprInventory extends SimpleExpression<Object> {
 						}
 
 						@Override
-						public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-							return true;
+						public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+							return this;
 						}
 					}
 			}, 0, Kleenean.FALSE, null);

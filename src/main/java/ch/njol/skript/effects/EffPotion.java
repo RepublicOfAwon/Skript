@@ -1,5 +1,6 @@
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffect;
@@ -68,7 +69,7 @@ public class EffPotion extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		potionEffect = matchedPattern == 0;
 		replaceExisting = parseResult.hasTag("replacing");
 		noParticles = parseResult.hasTag("noparticles");
@@ -85,7 +86,7 @@ public class EffPotion extends Effect {
 			if (!infinite)
 				duration = (Expression<Timespan>) exprs[3];
 		}
-		return true;
+		return this;
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +24,7 @@ public class CondHasDelayBefore extends Condition {
 	private boolean success;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setNegated(parseResult.hasTag("negated"));
 		if (parseResult.hasTag("true")) {
 			expected = Kleenean.TRUE;
@@ -35,7 +36,7 @@ public class CondHasDelayBefore extends Condition {
 			throw new IllegalStateException("missing kleenean type parse tag");
 		}
 		success = (getParser().getHasDelayBefore() == expected) ^ isNegated();
-		return !parseResult.hasTag("init") || success;
+		return !parseResult.hasTag("init") || success ? this : null;
 	}
 
 	@Override

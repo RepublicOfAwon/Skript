@@ -5,6 +5,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -33,7 +34,7 @@ public class PropExprNumber extends PropertyBaseExpression<ExpressionPropertyHan
 	private boolean useProperties;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		// size[s] of x -> property
 		// sizes of x, y -> property
 		// size of x, y -> list length
@@ -43,7 +44,7 @@ public class PropExprNumber extends PropertyBaseExpression<ExpressionPropertyHan
 		} else {
 			// if exprlist or varlist, count elements
 			this.exprs = PropExprAmount.asExprList(expressions[0]);
-			return LiteralUtils.canInitSafely(this.exprs);
+			return LiteralUtils.canInitSafely(this.exprs) ? this : null;
 		}
 	}
 

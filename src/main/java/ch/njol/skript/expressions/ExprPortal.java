@@ -3,6 +3,7 @@ package ch.njol.skript.expressions;
 import java.util.Iterator;
 import java.util.List;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.Event;
@@ -40,11 +41,11 @@ public class ExprPortal extends SimpleExpression<Block> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		if (getParser().isCurrentEvent(PortalCreateEvent.class))
-			return true;
+			return this;
 		Skript.error("The 'portal' expression may only be used in a portal creation event.");
-		return false;
+		return null;
 	}
 
 	@Nullable

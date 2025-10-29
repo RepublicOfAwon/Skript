@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
@@ -60,14 +61,14 @@ public class EffBan extends Effect {
 
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		players = exprs[0];
 		reason = exprs.length > 1 ? (Expression<String>) exprs[1] : null;
 		expires = exprs.length > 1 ? (Expression<Timespan>) exprs[2] : null;
 		ban = matchedPattern % 2 == 0;
 		ipBan = matchedPattern >= 2;
 		kick = parseResult.hasTag("kick");
-		return true;
+		return this;
 	}
 
 	@SuppressWarnings("null")

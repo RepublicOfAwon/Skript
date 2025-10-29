@@ -1,5 +1,6 @@
 package ch.njol.skript.conditions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Entity;
 
 import ch.njol.skript.conditions.base.PropertyCondition;
@@ -29,7 +30,7 @@ public class CondIsAlive extends PropertyCondition<Entity> {
 	private boolean isNegated;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		isNegated = parseResult.mark == 1;
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

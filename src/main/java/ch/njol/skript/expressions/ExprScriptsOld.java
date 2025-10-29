@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Feature;
 import ch.njol.util.Kleenean;
@@ -52,11 +53,11 @@ public class ExprScriptsOld extends SimpleExpression<String> implements SimpleEx
 	private boolean noPaths;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		includeEnabled = matchedPattern <= 1;
 		includeDisabled = matchedPattern != 1;
 		noPaths = parseResult.mark == 1;
-		return true;
+		return this;
 	}
 
 	@Override

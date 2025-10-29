@@ -5,6 +5,7 @@ import ch.njol.skript.bukkitutil.BukkitUtils;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
@@ -69,24 +70,24 @@ public class PigData extends EntityData<Pig> {
 	}
 	
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		saddled = PATTERNS.getInfo(matchedCodeName);
 		if (VARIANTS_ENABLED && exprs[0] != null) {
 			//noinspection unchecked
 			variant = ((Literal<Pig.Variant>) exprs[0]).getSingle();
 		}
-		return true;
+		return this;
 	}
 	
 	@Override
-	protected boolean init(@Nullable Class<? extends Pig> entityClass, @Nullable Pig pig) {
+	protected SyntaxElement init(@Nullable Class<? extends Pig> entityClass, @Nullable Pig pig) {
 		if (pig != null) {
 			saddled = Kleenean.get(pig.hasSaddle());
 			super.codeNameIndex = PATTERNS.getMatchedPattern(saddled, 0).orElse(0);
 			if (VARIANTS_ENABLED)
 				variant = pig.getVariant();
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

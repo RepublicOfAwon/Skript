@@ -1,5 +1,6 @@
 package ch.njol.skript.conditions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.jetbrains.annotations.Nullable;
@@ -47,11 +48,11 @@ public class CondDamageCause extends Condition {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		cause = new EventValueExpression<>(DamageCause.class);
 		expected = (Expression<DamageCause>) exprs[0];
 		setNegated(parseResult.mark == 1);
-		return ((EventValueExpression<DamageCause>) cause).init();
+		return ((EventValueExpression<DamageCause>) cause).init() ? this : null;
 	}
 	
 	@Override

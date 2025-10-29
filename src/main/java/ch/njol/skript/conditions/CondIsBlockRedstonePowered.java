@@ -1,5 +1,6 @@
 package ch.njol.skript.conditions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -38,11 +39,11 @@ public class CondIsBlockRedstonePowered extends Condition {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		blocks = (Expression<Block>) exprs[0];
 		isIndirectlyPowered = matchedPattern % 2 == 1;
 		setNegated(matchedPattern > 1);
-		return true;
+		return this;
 	}
 	
 	@Override

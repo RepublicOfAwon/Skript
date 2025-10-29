@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.block.Block;
 import org.bukkit.block.Lidded;
@@ -37,12 +38,12 @@ public class CondLidState extends PropertyCondition<Block> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		checkOpen = !parseResult.hasTag("close");
 		blocks = (Expression<Block>) exprs[0];
 		setExpr(blocks);
 		setNegated(matchedPattern == 1 || matchedPattern == 3);
-		return true;
+		return this;
 	}
 
 	@Override

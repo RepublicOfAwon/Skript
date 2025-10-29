@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.BlockingLogHandler;
 import ch.njol.skript.log.LogHandler;
@@ -70,12 +71,12 @@ public class ExprEntities extends SimpleExpression<Entity> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		types = (Expression<? extends EntityData<?>>) exprs[0];
 		if (matchedPattern % 2 == 0) {
 			for (EntityData<?> entityType : ((Literal<EntityData<?>>) types).getAll()) {
 				if (entityType.isPlural().isFalse() || entityType.isPlural().isUnknown() && !StringUtils.startsWithIgnoreCase(parseResult.expr, "all"))
-					return false;
+					return null;
 			}
 		}
 		isUsingRadius = matchedPattern == 2 || matchedPattern == 3;
@@ -95,7 +96,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 		}
 		if (types instanceof Literal && ((Literal<EntityData<?>>) types).getAll().length == 1)
 			returnType = ((Literal<EntityData<?>>) types).getSingle().getType();
-		return true;
+		return this;
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package ch.njol.skript.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
@@ -50,7 +51,7 @@ public class ExprLocationFromVector extends SimpleExpression<Location> {
 
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (exprs.length > 3)
 			hasDirection = true;
 		vector = (Expression<Vector>) exprs[0];
@@ -59,7 +60,7 @@ public class ExprLocationFromVector extends SimpleExpression<Location> {
 			yaw = (Expression<Number>) exprs[2];
 			pitch = (Expression<Number>) exprs[3];
 		}
-		return true;
+		return this;
 	}
 
 	@SuppressWarnings("null")

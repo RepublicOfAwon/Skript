@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
@@ -40,7 +41,7 @@ public class CondIsLeftHanded extends PropertyCondition<LivingEntity> {
 	private MainHand hand;
 
 	@Override
-	public boolean init(Expression[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		hand = parseResult.hasTag("left") ? MainHand.LEFT : MainHand.RIGHT;
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

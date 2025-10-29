@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -41,17 +42,17 @@ public class ExprMaxPlayers extends SimpleExpression<Integer> {
 	private boolean isReal;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		boolean isServerPingEvent = getParser().isCurrentEvent(ServerListPingEvent.class) ||
 				(PAPER_EVENT_EXISTS && getParser().isCurrentEvent(PaperServerListPingEvent.class));
 		
 		if (parseResult.mark == 2 && !isServerPingEvent) {
 			Skript.error("The 'shown' max players count expression can't be used outside of a server list ping event");
-			return false;
+			return null;
 		}
 		
 		isReal = (parseResult.mark == 0 && !isServerPingEvent) || parseResult.mark == 1;
-		return true;
+		return this;
 	}
 
 	@Override

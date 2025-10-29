@@ -253,7 +253,7 @@ public class UnparsedLiteral implements Literal<Object> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		throw invalidAccessException();
 	}
 

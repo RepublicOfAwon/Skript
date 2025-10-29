@@ -10,6 +10,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.slot.EquipmentSlot;
 import ch.njol.skript.util.slot.Slot;
@@ -77,7 +78,7 @@ public class ExprArmorSlot extends PropertyExpression<LivingEntity, Slot> {
 	private boolean explicitSlot;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		Expression<?> slots = exprs[0];
 		Expression<?> expr = exprs[1];
 		if (matchedPattern == 1) {
@@ -90,7 +91,7 @@ public class ExprArmorSlot extends PropertyExpression<LivingEntity, Slot> {
 		explicitSlot = !parseResult.hasTag("item");
 		//noinspection unchecked
 		setExpr((Expression<? extends LivingEntity>) expr);
-		return true;
+		return this;
 	}
 
 	@Override

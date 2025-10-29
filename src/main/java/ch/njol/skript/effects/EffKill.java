@@ -10,6 +10,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.EnderDragonPart;
@@ -38,10 +39,10 @@ public class EffKill extends Effect {
 	private Expression<Entity> entities;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		//noinspection unchecked
 		this.entities = (Expression<Entity>) exprs[0];
-		return true;
+		return this;
 	}
 
 	@Override

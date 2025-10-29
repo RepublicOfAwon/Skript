@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +33,7 @@ public class ExprLastLoginTime extends SimplePropertyExpression<OfflinePlayer, D
 	private boolean first;
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		first = parseResult.mark == 2;
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

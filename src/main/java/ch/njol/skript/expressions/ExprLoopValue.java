@@ -5,10 +5,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.KeyProviderExpression;
-import ch.njol.skript.lang.KeyedValue;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
@@ -89,7 +86,7 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 	private static final Pattern LOOP_PATTERN = Pattern.compile("^(.+)-(\\d+)$");
 
 	@Override
-	public boolean init(Expression<?>[] vars, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] vars, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		selectedState = loopStates[matchedPattern];
 		name = parser.expr;
 		String loopOf = parser.regexes.get(0).group();
@@ -101,7 +98,7 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 		}
 
 		if ("counter".equalsIgnoreCase(loopOf) || "iteration".equalsIgnoreCase(loopOf)) // ExprLoopIteration - in case of classinfo conflicts
-			return false;
+			return null;
 
 		Class<?> expectedClass = Classes.getClassFromUserInput(loopOf);
 		int candidateDepth = 1;
@@ -118,7 +115,7 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 				}
 				if (loop != null) {
 					Skript.error("There are multiple loops that match loop-" + loopOf + ". Use loop-" + loopOf + "-1/2/3/etc. to specify which loop's value you want.");
-					return false;
+					return null;
 				}
 				loop = candidate;
 				if (candidateDepth == expectedDepth)
@@ -127,11 +124,11 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 		}
 		if (loop == null) {
 			Skript.error("There's no loop that matches 'loop-" + loopOf + "'");
-			return false;
+			return null;
 		}
 		if (selectedState == LoopState.NEXT && !loop.supportsPeeking()) {
 			Skript.error("The expression '" + loop.getExpression().toString() + "' does not allow the usage of 'next loop-" + loopOf + "'.");
-			return false;
+			return null;
 		}
 		if (loop.isKeyedLoop()) {
 			isKeyedLoop = true;
@@ -139,7 +136,7 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 				isIndex = true;
 		}
 		this.loop = loop;
-		return true;
+		return this;
 	}
 	
 	@Override

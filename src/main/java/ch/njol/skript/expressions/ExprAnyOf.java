@@ -9,6 +9,7 @@ import ch.njol.skript.expressions.base.WrapperExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -28,10 +29,10 @@ public class ExprAnyOf extends WrapperExpression<Object> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		Expression<?> expr = LiteralUtils.defendExpression(expressions[0]);
 		setExpr(expr);
-		return LiteralUtils.canInitSafely(expr);
+		return LiteralUtils.canInitSafely(expr) ? this : null;
 	}
 
 	@Override

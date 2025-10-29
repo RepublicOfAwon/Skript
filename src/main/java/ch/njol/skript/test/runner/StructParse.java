@@ -12,6 +12,7 @@ import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.ContextlessEvent;
 import ch.njol.skript.log.LogEntry;
 import ch.njol.skript.log.RetainingLogHandler;
@@ -44,8 +45,8 @@ public class StructParse extends Structure {
 	private Expression<?> resultsExpression;
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern,
-						ParseResult parseResult, EntryContainer entryContainer) {
+	public SyntaxElement init(Literal<?>[] args, int matchedPattern,
+                              ParseResult parseResult, EntryContainer entryContainer) {
 		SectionNode parseStructureSectionNode = entryContainer.getSource();
 
 		Class<? extends Event>[] originalEvents = getParser().getCurrentEvents();
@@ -55,25 +56,25 @@ public class StructParse extends Structure {
 
 		if (validatedEntries == null) {
 			Skript.error("A parse structure must have a result entry and a code section");
-			return false;
+			return null;
 		}
 
 		Expression<?> maybeResultsExpression = (Expression<?>) validatedEntries.get("results", false);
 		if (!ChangerUtils.acceptsChange(maybeResultsExpression, ChangeMode.SET, String[].class)) {
 			Skript.error(maybeResultsExpression.toString(null, false) + " cannot be set to strings");
-			return false;
+			return null;
 		}
 
 		SectionNode codeSectionNode = (SectionNode) validatedEntries.get("code", false);
 		Node maybeStructureSectionNodeToParse = Iterables.getFirst(codeSectionNode, null);
 		if (Iterables.size(codeSectionNode) != 1 || !(maybeStructureSectionNodeToParse instanceof SectionNode)) {
 			Skript.error("The code section must contain a single section to parse as a structure");
-			return false;
+			return null;
 		}
 
 		resultsExpression = maybeResultsExpression;
 		structureSectionNodeToParse = (SectionNode) maybeStructureSectionNodeToParse;
-		return true;
+		return this;
 	}
 
 	@Override

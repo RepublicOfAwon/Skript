@@ -5,6 +5,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
@@ -50,13 +51,13 @@ public class EffReleaseEntityStorage extends Effect {
 	private @Nullable Expression<Timespan> timespan;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		blocks = (Expression<Block>) exprs[0];
 		if (exprs[1] != null)
 			//noinspection unchecked
 			timespan = (Expression<Timespan>) exprs[1];
-		return true;
+		return this;
 	}
 
 	@Override

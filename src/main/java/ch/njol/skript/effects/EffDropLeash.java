@@ -1,5 +1,6 @@
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.jetbrains.annotations.Nullable;
@@ -35,13 +36,13 @@ public class EffDropLeash extends Effect {
 	private boolean allowLeashDrop;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(EntityUnleashEvent.class)) {
 			Skript.error("The 'drop leash' effect can only be used in an 'unleash' event");
-			return false;
+			return null;
 		}
 		allowLeashDrop = matchedPattern == 0;
-		return true;
+		return this;
 	}
 
 	@Override

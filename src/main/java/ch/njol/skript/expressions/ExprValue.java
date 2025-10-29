@@ -13,6 +13,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.common.AnyValued;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -61,7 +62,7 @@ public class ExprValue extends SimplePropertyExpression<Object, Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] expressions, int pattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int pattern, Kleenean isDelayed, ParseResult parseResult) {
 		@NotNull Literal<ClassInfo<?>> format;
 		switch (pattern) {
 			case 0:
@@ -77,7 +78,7 @@ public class ExprValue extends SimplePropertyExpression<Object, Object> {
 				this.setExpr(expressions[0]);
 		}
 		this.classInfo = format.getSingle();
-		return true;
+		return this;
 	}
 
 	@Override

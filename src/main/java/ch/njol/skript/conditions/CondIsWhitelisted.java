@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -41,13 +42,13 @@ public class CondIsWhitelisted extends Condition {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setNegated(parseResult.hasTag("not"));
 		isServer = matchedPattern != 1;
 		isEnforce = matchedPattern == 2;
 		if (matchedPattern == 1)
 			players = (Expression<OfflinePlayer>) exprs[0];
-		return true;
+		return this;
 	}
 
 	@Override

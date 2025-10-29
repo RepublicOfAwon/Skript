@@ -53,10 +53,10 @@ public class EffSort extends Effect implements InputSource {
 	private @UnknownNullability String currentIndex;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (expressions[0].isSingle() || !(expressions[0] instanceof Variable<?> variable)) {
 			Skript.error("You can only sort list variables!");
-			return false;
+			return null;
 		}
 		unsortedObjects = variable;
 		descendingOrder = parseResult.hasTag("descending");
@@ -67,13 +67,13 @@ public class EffSort extends Effect implements InputSource {
 			assert unparsedExpression != null;
 			mappingExpr = parseExpression(unparsedExpression, getParser(), SkriptParser.PARSE_EXPRESSIONS);
 			if (mappingExpr == null)
-				return false;
+				return null;
 			if (!mappingExpr.isSingle()) {
 				Skript.error("The mapping expression in the sort effect must only return a single value for a single input.");
-				return false;
+				return null;
 			}
 		}
-		return true;
+		return this;
 	}
 
 	@Override

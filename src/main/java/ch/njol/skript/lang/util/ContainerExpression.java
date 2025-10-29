@@ -2,6 +2,7 @@ package ch.njol.skript.lang.util;
 
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Container;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -75,7 +76,7 @@ public class ContainerExpression extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -17,7 +17,7 @@ public class EffectSectionEffect extends Effect {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		return effectSection.init(expressions, matchedPattern, isDelayed, parseResult);
 	}
 

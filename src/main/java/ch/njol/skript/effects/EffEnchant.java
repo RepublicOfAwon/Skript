@@ -8,6 +8,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
@@ -57,11 +58,11 @@ public class EffEnchant extends Effect {
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		items = (Expression<ItemType>) exprs[0];
 		if (!ChangerUtils.acceptsChange(items, ChangeMode.SET, ItemStack.class)) {
 			Skript.error(items + " cannot be changed, thus it cannot be (dis)enchanted");
-			return false;
+			return null;
 		}
 		if (matchedPattern == 0) {
 			enchantments = (Expression<EnchantmentType>) exprs[1];
@@ -70,7 +71,7 @@ public class EffEnchant extends Effect {
 			treasure = parseResult.hasTag("treasure");
 		}
 		operation = patterns.getInfo(matchedPattern);
-		return true;
+		return this;
 	}
 	
 	@Override

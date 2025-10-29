@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -39,12 +40,12 @@ public class ExprWithItemFlags extends SimpleExpression<ItemType> {
 	private boolean allFlags;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		itemTypes = (Expression<ItemType>) exprs[0];
 		if (matchedPattern <= 1)
 			itemFlags = (Expression<ItemFlag>) exprs[1];
 		allFlags = matchedPattern == 2;
-		return true;
+		return this;
 	}
 
 	@Override

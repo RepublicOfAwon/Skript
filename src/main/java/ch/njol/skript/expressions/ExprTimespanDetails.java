@@ -8,6 +8,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.Kleenean;
@@ -33,7 +34,7 @@ public class ExprTimespanDetails extends SimplePropertyExpression<Timespan, Long
 	private TimePeriod type;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		type = TimePeriod.valueOf(parseResult.tags.get(0).toUpperCase(Locale.ENGLISH));
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

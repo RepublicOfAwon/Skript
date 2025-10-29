@@ -1,5 +1,6 @@
 package ch.njol.skript.conditions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Explosive;
 import org.bukkit.event.Event;
@@ -40,16 +41,16 @@ public class CondIncendiary extends Condition {
 
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		isEvent = matchedPattern == 2;
 		if (isEvent && !getParser().isCurrentEvent(ExplosionPrimeEvent.class)) {
 			Skript.error("Checking if 'the explosion' is fiery is only possible in an explosion prime event", ErrorQuality.SEMANTIC_ERROR);
-			return false;
+			return null;
 		}
 		if (!isEvent)
 			entities = (Expression<Entity>) exprs[0];
 		setNegated(matchedPattern == 1 || parseResult.mark == 1);
-		return true;
+		return this;
 	}
 
 	@Override

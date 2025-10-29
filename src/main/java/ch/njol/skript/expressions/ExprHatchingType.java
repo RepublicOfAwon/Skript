@@ -12,6 +12,7 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -38,12 +39,12 @@ public class ExprHatchingType extends SimpleExpression<EntityData<?>> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(PlayerEggThrowEvent.class)) {
 			Skript.error("You can't use 'the hatching entity type' outside of a Player Egg Throw event.");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

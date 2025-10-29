@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -44,13 +45,13 @@ public class CondIsDivisibleBy extends Condition implements SyntaxRuntimeErrorPr
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		dividend = (Expression<Number>) exprs[0];
 		divisor = (Expression<Number>) exprs[1];
 		epsilon = (Expression<Number>) exprs[2];
 		setNegated(matchedPattern == 1 || matchedPattern == 3);
 		node = getParser().getNode();
-		return true;
+		return this;
 	}
 
 	@Override

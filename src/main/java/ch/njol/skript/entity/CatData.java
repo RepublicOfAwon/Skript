@@ -6,6 +6,7 @@ import ch.njol.skript.classes.EnumClassInfo;
 import ch.njol.skript.classes.registry.RegistryClassInfo;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import com.google.common.collect.Iterators;
@@ -45,19 +46,19 @@ public class CatData extends EntityData<Cat> {
 	private @Nullable Type type = null;
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		if (exprs.length > 0 && exprs[0] != null) {
 			//noinspection unchecked
 			type = ((Literal<Type>) exprs[0]).getSingle();
 		}
-		return true;
+		return this;
 	}
 
 	@Override
-	protected boolean init(@Nullable Class<? extends Cat> entityClass, @Nullable Cat cat) {
+	protected SyntaxElement init(@Nullable Class<? extends Cat> entityClass, @Nullable Cat cat) {
 		if (cat != null)
 			type = cat.getCatType();
-		return true;
+		return this;
 	}
 	
 	@Override

@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Leaves;
@@ -50,14 +51,14 @@ public class EffPersistent extends Effect {
 	private boolean persist;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		source = exprs[0];
 		if (matchedPattern < 2) {
 			persist = !parseResult.hasTag("not");
 		} else {
 			persist = false;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

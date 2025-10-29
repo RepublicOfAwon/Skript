@@ -8,6 +8,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ColorRGB;
@@ -78,12 +79,12 @@ public class ExprCustomModelData extends PropertyExpression<ItemType, Object> {
 	private Class<?> returnType;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		dataType = CMDType.values()[parseResult.mark];
 		returnType = Classes.getSuperClassInfo(dataType.types).getC();
 		//noinspection unchecked
 		setExpr((Expression<? extends ItemType>) expressions[0]);
-		return true;
+		return this;
 	}
 
 

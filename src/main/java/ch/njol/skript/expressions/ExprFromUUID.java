@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
@@ -49,13 +50,13 @@ public class ExprFromUUID extends SimpleExpression<Object> {
 	private boolean player, offline, world;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		uuids = (Expression<UUID>) exprs[0];
 		player = matchedPattern == 0;
 		offline = parseResult.hasTag("offline");
 		world = matchedPattern == 2;
-		return true;
+		return this;
 	}
 
 	@Override

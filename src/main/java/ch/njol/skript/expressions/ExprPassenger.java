@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
@@ -83,9 +84,9 @@ public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create '
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		vehicle = (Expression<Entity>) exprs[0];
-		return true;
+		return this;
 	}
 
 	@Override

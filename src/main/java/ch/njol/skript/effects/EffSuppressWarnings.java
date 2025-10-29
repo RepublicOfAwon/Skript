@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -37,10 +38,10 @@ public class EffSuppressWarnings extends Effect {
 	private @UnknownNullability ScriptWarning warning;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		if (!getParser().isActive()) {
 			Skript.error("You can't suppress warnings outside of a script!");
-			return false;
+			return null;
 		}
 
 		warning = ScriptWarning.values()[parseResult.mark];
@@ -49,7 +50,7 @@ public class EffSuppressWarnings extends Effect {
 		} else {
 			getParser().getCurrentScript().suppressWarning(warning);
 		}
-		return true;
+		return this;
 	}
 
 	@Override

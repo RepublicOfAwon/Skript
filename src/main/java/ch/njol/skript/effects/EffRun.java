@@ -6,6 +6,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.function.DynamicFunctionReference;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
@@ -40,7 +41,7 @@ public class EffRun extends Effect implements ReflectionExperimentSyntax {
 	private boolean hasArguments;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int pattern, Kleenean isDelayed, ParseResult result) {
+	public SyntaxElement init(Expression<?>[] expressions, int pattern, Kleenean isDelayed, ParseResult result) {
 		this.executable = ((Expression<Executable>) expressions[0]);
 		this.hasArguments = result.hasTag("arguments");
 		if (hasArguments) {
@@ -52,11 +53,11 @@ public class EffRun extends Effect implements ReflectionExperimentSyntax {
 				arguments = new Expression[]{this.arguments};
 			}
 			this.input = new DynamicFunctionReference.Input(arguments);
-			return LiteralUtils.canInitSafely(this.arguments);
+			return LiteralUtils.canInitSafely(this.arguments) ? this : null;
 		} else {
 			this.input = new DynamicFunctionReference.Input();
 		}
-		return true;
+		return this;
 	}
 
 	@Override

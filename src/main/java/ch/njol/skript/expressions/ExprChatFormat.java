@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -47,12 +48,12 @@ public class ExprChatFormat extends SimpleExpression<String>{
 	}
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(AsyncPlayerChatEvent.class)){
 			Skript.error("The expression 'chat format' may only be used in chat events");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

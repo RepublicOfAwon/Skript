@@ -5,11 +5,8 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Example;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RelatedProperty;
-import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.SyntaxStringBuilder;
-import ch.njol.skript.lang.VerboseAssert;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
@@ -99,12 +96,12 @@ public class PropCondContains extends Condition implements PropertyBaseSyntax<Co
 	int matchedPattern;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		this.haystack = LiteralUtils.defendExpression(expressions[0]);
 		this.needles = LiteralUtils.defendExpression(expressions[1]);
 		this.matchedPattern = matchedPattern;
 		if (!LiteralUtils.canInitSafely(haystack, needles))
-			return false;
+			return null;
 		allowContainmentCheck = parseResult.mark != 1 || haystack.isSingle();
 		allowDirectCheck = matchedPattern < 2;
 		setNegated(matchedPattern % 2 == 1);
@@ -144,7 +141,7 @@ public class PropCondContains extends Condition implements PropertyBaseSyntax<Co
 				// attempt direct contains
 				return initDirect("'" + tempHaystack + "'  cannot contain " + Classes.toString(Arrays.stream(needles.possibleReturnTypes()).map(Classes::getSuperClassInfo).toArray(), false));
 			}
-			return LiteralUtils.canInitSafely(haystack, needles);
+			return LiteralUtils.canInitSafely(haystack, needles) ? this : null;
 		} else {
 			return initDirect(null);
 		}
@@ -156,7 +153,7 @@ public class PropCondContains extends Condition implements PropertyBaseSyntax<Co
 	 * @param error The error to print if init fails. If null, a default error will be printed.
 	 * @return whether intialization succeeded
 	 */
-	private boolean initDirect(@Nullable String error) {
+	private SyntaxElement initDirect(@Nullable String error) {
 		// check if types are reasonable:
 		boolean validType = false;
 		nextType:
@@ -170,10 +167,10 @@ public class PropCondContains extends Condition implements PropertyBaseSyntax<Co
 		}
 		if (!validType) {
 			Skript.error(error != null ? error : "'" + haystack.toString() + "' cannot contain " + Classes.toString(needles.possibleReturnTypes(), false));
-			return false;
+			return null;
 		}
 		allowContainmentCheck = false;
-		return LiteralUtils.canInitSafely(haystack, needles);
+		return LiteralUtils.canInitSafely(haystack, needles) ? this : null;
 	}
 
 	/**

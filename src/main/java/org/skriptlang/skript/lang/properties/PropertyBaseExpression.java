@@ -7,6 +7,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.Utils;
@@ -54,21 +55,21 @@ public abstract class PropertyBaseExpression<Handler extends ExpressionPropertyH
 
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!LiteralUtils.canInitSafely(LiteralUtils.defendExpression(expressions[0])))
-			return false; // don't use bad types error message if it's just a nonsense expression.
+			return null; // don't use bad types error message if it's just a nonsense expression.
 
 		this.expr = PropertyBaseSyntax.asProperty(property, expressions[0]);
 		if (expr == null) {
 			Skript.error(getBadTypesErrorMessage(expressions[0]));
-			return false;
+			return null;
 		}
 
 		// get all possible property infos for the expression's return types
 		properties = PropertyBaseSyntax.getPossiblePropertyInfos(property, expr);
 		if (properties.isEmpty()) {
 			Skript.error(getBadTypesErrorMessage(expr));
-			return false; // no name property found
+			return null; // no name property found
 		}
 
 		// determine CIP usage
@@ -82,7 +83,7 @@ public abstract class PropertyBaseExpression<Handler extends ExpressionPropertyH
 		// determine possible return types
 		returnTypes = getPropertyReturnTypes(properties, Handler::possibleReturnTypes);
 		returnType = Utils.getSuperType(returnTypes);
-		return LiteralUtils.canInitSafely(expr);
+		return LiteralUtils.canInitSafely(expr) ? this : null;
 	}
 
 	protected Class<?> @NotNull [] getPropertyReturnTypes(@NotNull PropertyMap<Handler> properties, Function<Handler, Class<?>[]> getReturnType) {

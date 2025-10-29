@@ -1,5 +1,6 @@
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -47,7 +48,7 @@ public class EffColorItems extends Effect {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		items = (Expression<ItemType>) exprs[0];
 		if (matchedPattern == 0) {
 			color = (Expression<Color>) exprs[1];
@@ -59,11 +60,11 @@ public class EffColorItems extends Effect {
 				private Expression<Number> blue;
 				
 				@Override
-				public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+				public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 					red = (Expression<Number>) exprs[0];
 					green = (Expression<Number>) exprs[1];
 					blue = (Expression<Number>) exprs[2];
-					return true;
+					return this;
 				}
 				
 				@Nullable
@@ -96,7 +97,7 @@ public class EffColorItems extends Effect {
 			};
 			color.init(CollectionUtils.array(exprs[1], exprs[2], exprs[3]), 0, isDelayed, parser);
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

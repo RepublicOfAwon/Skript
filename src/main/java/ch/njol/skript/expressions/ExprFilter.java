@@ -57,10 +57,10 @@ public class ExprFilter extends SimpleExpression<Object> implements InputSource,
 	private @UnknownNullability String currentIndex;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		unfilteredObjects = LiteralUtils.defendExpression(expressions[0]);
 		if (unfilteredObjects.isSingle() || !LiteralUtils.canInitSafely(unfilteredObjects))
-			return false;
+			return null;
 		keyed = KeyProviderExpression.canReturnKeys(unfilteredObjects);
 		unparsedCondition = parseResult.regexes.get(0).group();
 		InputData inputData = getParser().getData(InputData.class);
@@ -68,7 +68,7 @@ public class ExprFilter extends SimpleExpression<Object> implements InputSource,
 		inputData.setSource(this);
 		filterCondition = Condition.parse(unparsedCondition, "Can't understand this condition: " + unparsedCondition);
 		inputData.setSource(originalSource);
-		return filterCondition != null;
+		return filterCondition != null ? this : null;
 	}
 
 	@Override

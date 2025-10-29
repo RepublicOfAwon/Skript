@@ -8,6 +8,7 @@ import ch.njol.skript.lang.EventRestrictedSyntax;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
@@ -44,10 +45,10 @@ public class ExprDrops extends SimpleExpression<ItemType> implements EventRestri
 	private boolean isDeathEvent;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (getParser().isCurrentEvent(EntityDeathEvent.class))
 			isDeathEvent = true;
-		return true;
+		return this;
 	}
 
 	@Override
