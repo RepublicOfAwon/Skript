@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.OfflinePlayer;
 
@@ -44,11 +45,11 @@ public class CondIsOnline extends PropertyCondition<OfflinePlayer> {
 	
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		this.setExpr((Expression<OfflinePlayer>) exprs[0]);
 		this.setNegated(matchedPattern == 1 ^ parseResult.hasTag("offline"));
 		this.connected = parseResult.hasTag("connected");
-		return true;
+		return this;
 	}
 	
 	@Override

@@ -6,6 +6,7 @@ import ch.njol.skript.effects.Delay;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -50,7 +51,7 @@ public class CondIsPressingKey extends Condition {
 	private boolean delayed;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		players = (Expression<Player>) expressions[0];
 		//noinspection unchecked
@@ -65,7 +66,7 @@ public class CondIsPressingKey extends Condition {
 			}
 		}
 		setNegated(matchedPattern == 1 || matchedPattern == 3);
-		return true;
+		return this;
 	}
 
 	@Override

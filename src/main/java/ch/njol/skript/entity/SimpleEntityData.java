@@ -3,6 +3,7 @@ package ch.njol.skript.entity;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.yggdrasil.Fields;
 import org.bukkit.World;
@@ -335,16 +336,16 @@ public class SimpleEntityData extends EntityData<Entity> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		simpleInfo = types.get(matchedCodeName);
 		assert simpleInfo != null : matchedCodeName;
-		return true;
+		return this;
 	}
 	
 	@Override
-	protected boolean init(@Nullable Class<? extends Entity> entityClass, @Nullable Entity entity) {
+	protected SyntaxElement init(@Nullable Class<? extends Entity> entityClass, @Nullable Entity entity) {
 		assert false;
-		return false;
+		return null;
 	}
 	
 	@Override

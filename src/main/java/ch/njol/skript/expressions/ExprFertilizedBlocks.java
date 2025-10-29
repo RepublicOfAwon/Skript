@@ -3,6 +3,7 @@ package ch.njol.skript.expressions;
 
 import java.util.Iterator;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockFertilizeEvent;
 import org.jetbrains.annotations.Nullable;
@@ -35,12 +36,12 @@ public class ExprFertilizedBlocks extends SimpleExpression<BlockStateBlock> {
 	}
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(BlockFertilizeEvent.class)) {
 			Skript.error("The 'fertilized blocks' are only usable in block fertilize events");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 	
 	@Nullable

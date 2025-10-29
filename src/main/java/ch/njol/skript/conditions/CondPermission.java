@@ -1,5 +1,6 @@
 package ch.njol.skript.conditions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -40,11 +41,11 @@ public class CondPermission extends Condition {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		senders = (Expression<CommandSender>) exprs[0];
 		permissions = (Expression<String>) exprs[1];
 		setNegated(matchedPattern == 1);
-		return true;
+		return this;
 	}
 	
 	@Override

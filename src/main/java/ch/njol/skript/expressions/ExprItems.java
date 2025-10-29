@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.Iterables;
@@ -56,14 +57,14 @@ public class ExprItems extends SimpleExpression<ItemType> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		items = matchedPattern == 3;
 		itemTypeExpr = matchedPattern == 0 || matchedPattern == 1 ? null : (Expression<ItemType>) exprs[0];
 		if (itemTypeExpr instanceof Literal) {
 			for (ItemType itemType : ((Literal<ItemType>) itemTypeExpr).getAll())
 				itemType.setAll(true);
 		}
-		return true;
+		return this;
 	}
 
 	@Override

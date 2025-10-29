@@ -8,6 +8,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.EventValues;
@@ -45,11 +46,11 @@ public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 	private boolean offHand;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		//noinspection unchecked
 		setExpr((Expression<LivingEntity>) exprs[0]);
 		offHand = matchedPattern >= 2;
-		return true;
+		return this;
 	}
 
 	@Override

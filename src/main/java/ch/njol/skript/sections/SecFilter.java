@@ -10,13 +10,8 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.ExprInput;
-import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.InputSource;
-import ch.njol.skript.lang.Section;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
@@ -71,10 +66,10 @@ public class SecFilter extends Section implements InputSource {
 	private final Set<ExprInput<?>> dependentInputs = new HashSet<>();
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
 		if (expressions[0].isSingle() || !(expressions[0] instanceof Variable)) {
 			Skript.error("You can only filter list variables!");
-			return false;
+			return null;
 		}
 		unfilteredObjects = (Variable<?>) expressions[0];
 		isAny = parseResult.hasTag("any");
@@ -83,7 +78,7 @@ public class SecFilter extends Section implements InputSource {
 		ParserInstance parser = getParser();
 		if (sectionNode.isEmpty()) {
 			Skript.error("filter sections must contain at least one condition");
-			return false;
+			return null;
 		}
 		InputSource.InputData inputData = getParser().getData(InputSource.InputData.class);
 		InputSource originalSource = inputData.getSource();
@@ -92,7 +87,7 @@ public class SecFilter extends Section implements InputSource {
 			for (Node childNode : sectionNode) {
 				if (!(childNode instanceof SimpleNode)) {
 					Skript.error("Filter sections may not contain other sections");
-					return false;
+					return null;
 				}
 				String childKey = childNode.getKey();
 				if (childKey != null) {
@@ -102,7 +97,7 @@ public class SecFilter extends Section implements InputSource {
 					parser.setNode(sectionNode);
 					// if this condition was invalid, don't bother parsing the rest
 					if (condition == null)
-						return false;
+						return null;
 					conditions.add(condition);
 				}
 			}
@@ -110,7 +105,7 @@ public class SecFilter extends Section implements InputSource {
 			inputData.setSource(originalSource);
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

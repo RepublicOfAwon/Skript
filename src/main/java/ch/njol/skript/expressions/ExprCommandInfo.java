@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import ch.njol.skript.command.ScriptCommand;
 import ch.njol.skript.command.ScriptCommandEvent;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -103,14 +104,14 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		commandName = (Expression<String>) exprs[0];
 		if (commandName == null && !getParser().isCurrentEvent(ScriptCommandEvent.class, PlayerCommandPreprocessEvent.class, ServerCommandEvent.class)) {
 			Skript.error("There's no command in " + Utils.a(getParser().getCurrentEventName()) + " event. Please provide a command");
-			return false;
+			return null;
 		}
 		type = InfoType.values()[Math.floorDiv(matchedPattern, 2)];
-		return true;
+		return this;
 	}
 
 	@Nullable

@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.jetbrains.annotations.Nullable;
@@ -30,12 +31,12 @@ public class ExprHostname extends SimpleExpression<String> {
 
 	@Override
 	@SuppressWarnings({"null"})
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(PlayerLoginEvent.class)) {
 			Skript.error("The hostname expression must be used in a player connect event");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

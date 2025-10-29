@@ -7,6 +7,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -95,7 +96,7 @@ public class EffPlaySound extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		sounds = (Expression<String>) exprs[0];
 		int index = 1;
 		if (HAS_SEED)
@@ -110,7 +111,7 @@ public class EffPlaySound extends Effect {
 			players = (Expression<Player>) exprs[index++];
 			emitters = exprs[index];
 		}
-		return true;
+		return this;
 	}
 
 	@Override

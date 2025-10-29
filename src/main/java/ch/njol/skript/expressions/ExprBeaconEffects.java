@@ -6,6 +6,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent;
@@ -43,11 +44,11 @@ public class ExprBeaconEffects extends PropertyExpression<Block, PotionEffectTyp
 	private boolean primary;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		setExpr((Expression<? extends Block>) expressions[0]);
 		primary = parseResult.hasTag("primary");
-		return true;
+		return this;
 	}
 
 	@Override

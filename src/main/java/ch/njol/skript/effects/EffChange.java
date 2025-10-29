@@ -89,7 +89,7 @@ public class EffChange extends Effect {
 	private ChangeMode mode;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		mode = PATTERNS.getInfo(matchedPattern);
 
 		switch (mode) {
@@ -133,7 +133,7 @@ public class EffChange extends Effect {
 
 		if (acceptedTypes == null) { // Changing is forbidden
 			if (changeLog.getCount() > 0) { // 'changed' produced its own error message, default to that
-				return false;
+				return null;
 			}
 			Skript.error(switch (mode) {
 				case ADD -> what + " can't have anything added to it";
@@ -160,7 +160,7 @@ public class EffChange extends Effect {
 					yield error;
 				}
 			});
-			return false;
+			return null;
 		}
 
 		// Flatten accepted types to map array types to their component types
@@ -180,7 +180,7 @@ public class EffChange extends Effect {
 		}
 
 		if (changer == null) { // Safe to reset/delete
-			return true;
+			return this;
 		}
 
 		// Validate 'changer'
@@ -220,7 +220,7 @@ public class EffChange extends Effect {
 					}
 				}
 				log.printError();
-				return false;
+				return null;
 			}
 
 			log.printLog();
@@ -252,7 +252,7 @@ public class EffChange extends Effect {
 				case REMOVE, REMOVE_ALL -> "Only one " + types + " can be removed from " + changedString + ", not more";
 				default -> throw new IllegalStateException("Unexpected value: " + mode);
 			});
-			return false;
+			return null;
 		}
 
 		if (changed instanceof Variable<?> variable) {
@@ -292,7 +292,7 @@ public class EffChange extends Effect {
 			}
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

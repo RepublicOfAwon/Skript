@@ -6,6 +6,7 @@ import ch.njol.skript.conditions.base.PropertyCondition.PropertyType;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.ApiStatus;
@@ -50,21 +51,21 @@ public abstract class PropertyBaseCondition<Handler extends ConditionPropertyHan
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		this.propertyHolder = PropertyBaseSyntax.asProperty(property, expressions[0]);
 		if (propertyHolder == null) {
 			Skript.error(getBadTypesErrorMessage(expressions[0]));
-			return false;
+			return null;
 		}
 
 		// get all possible property infos for the expression's return types
 		properties = PropertyBaseSyntax.getPossiblePropertyInfos(property, propertyHolder);
 		if (properties.isEmpty()) {
 			Skript.error(getBadTypesErrorMessage(propertyHolder));
-			return false; // no name property found
+			return null; // no name property found
 		}
 		setNegated(matchedPattern == 1);
-		return true;
+		return this;
 	}
 
 	@Override

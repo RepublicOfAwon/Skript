@@ -5,12 +5,8 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.LoopSection;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.TriggerSection;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -43,7 +39,7 @@ public class ExprLoopIteration extends SimpleExpression<Long> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		loopNumber = -1;
 		if (exprs[0] != null)
 			loopNumber = ((Literal<Number>) exprs[0]).getSingle().intValue();
@@ -58,7 +54,7 @@ public class ExprLoopIteration extends SimpleExpression<Long> {
 			}
 			if (loop != null) {
 				Skript.error("There are multiple loops. Use loop-iteration-1/2/3/etc. to specify which loop-iteration you want.");
-				return false;
+				return null;
 			}
 			loop = l;
 			if (i == loopNumber)
@@ -67,11 +63,11 @@ public class ExprLoopIteration extends SimpleExpression<Long> {
 
 		if (loop == null) {
 			Skript.error("The loop iteration expression must be used in a loop");
-			return false;
+			return null;
 		}
 
 		this.loop = loop;
-		return true;
+		return this;
 	}
 
 	@Override

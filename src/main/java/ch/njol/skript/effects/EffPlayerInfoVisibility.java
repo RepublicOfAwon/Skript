@@ -5,6 +5,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
 import org.bukkit.event.Event;
@@ -35,19 +36,19 @@ public class EffPlayerInfoVisibility extends Effect {
 	private boolean shouldHide;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!PAPER_EVENT_EXISTS) {
 			Skript.error("The player info visibility effect requires Paper 1.12.2 or newer");
-			return false;
+			return null;
 		} else if (!getParser().isCurrentEvent(PaperServerListPingEvent.class)) {
 			Skript.error("The player info visibility effect can't be used outside of a server list ping event");
-			return false;
+			return null;
 		} else if (isDelayed == Kleenean.TRUE) {
 			Skript.error("Can't change the player info visibility anymore after the server list ping event has already passed");
-			return false;
+			return null;
 		}
 		shouldHide = matchedPattern == 0;
-		return true;
+		return this;
 	}
 
 	@Override

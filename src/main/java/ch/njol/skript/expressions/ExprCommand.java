@@ -2,6 +2,7 @@ package ch.njol.skript.expressions;
 
 import ch.njol.skript.command.ScriptCommandEvent;
 import ch.njol.skript.lang.EventRestrictedSyntax;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -45,9 +46,9 @@ public class ExprCommand extends SimpleExpression<String> implements EventRestri
 	private boolean fullCommand;
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		fullCommand = matchedPattern == 0;
-		return true;
+		return this;
 	}
 
 	@Override

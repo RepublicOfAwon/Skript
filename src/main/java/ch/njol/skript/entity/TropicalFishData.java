@@ -2,6 +2,7 @@ package ch.njol.skript.entity;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.variables.Variables;
@@ -53,10 +54,10 @@ public class TropicalFishData extends EntityData<TropicalFish> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		fishPattern = PATTERNS.getInfo(matchedCodeName);
 		if (exprs.length == 0)
-			return true; // FIXME aliases reloading must work
+			return this; // FIXME aliases reloading must work
 
 		if (matchedPattern == 0) {
 			if (exprs[0] != null) {
@@ -73,18 +74,18 @@ public class TropicalFishData extends EntityData<TropicalFish> {
 			patternColor = bodyColor;
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override
-	protected boolean init(@Nullable Class<? extends TropicalFish> entityClass, @Nullable TropicalFish tropicalFish) {
+	protected SyntaxElement init(@Nullable Class<? extends TropicalFish> entityClass, @Nullable TropicalFish tropicalFish) {
 		if (tropicalFish != null) {
 			bodyColor = tropicalFish.getBodyColor();
 			patternColor = tropicalFish.getPatternColor();
 			fishPattern = tropicalFish.getPattern();
 			super.codeNameIndex = PATTERNS.getMatchedPattern(fishPattern, 0).orElse(0);
 		}
-		return true;
+		return this;
 	}
 
 	@Override

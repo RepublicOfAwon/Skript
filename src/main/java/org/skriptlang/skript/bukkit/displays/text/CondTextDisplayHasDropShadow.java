@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
@@ -31,11 +32,11 @@ public class CondTextDisplayHasDropShadow extends PropertyCondition<Display> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (!super.init(expressions, matchedPattern, isDelayed, parseResult))
-			return false;
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		if (super.init(expressions, matchedPattern, isDelayed, parseResult) == null)
+			return null;
 		setNegated(matchedPattern > 1);
-		return true;
+		return this;
 	}
 
 	@Override

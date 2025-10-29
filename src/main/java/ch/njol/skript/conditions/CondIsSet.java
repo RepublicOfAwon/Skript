@@ -1,6 +1,6 @@
 package ch.njol.skript.conditions;
 
-import ch.njol.skript.lang.VerboseAssert;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.localization.Language;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -10,9 +10,6 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
@@ -38,10 +35,10 @@ public class CondIsSet extends Condition implements VerboseAssert {
 	
 	@SuppressWarnings("null")
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		expr = exprs[0];
 		setNegated(matchedPattern == 1);
-		return true;
+		return this;
 	}
 	
 	private boolean check(final Expression<?> expr, final Event e) {

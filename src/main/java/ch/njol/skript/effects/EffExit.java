@@ -50,7 +50,7 @@ public class EffExit extends Effect {
 	private @UnknownNullability List<SectionExitHandler> sectionsToExit;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		List<TriggerSection> innerSections = null;
 		switch (matchedPattern) {
 			case 0 -> {
@@ -60,7 +60,7 @@ public class EffExit extends Effect {
 			case 1, 2 -> {
 				breakLevels = matchedPattern == 1 ? 1 : Integer.parseInt(parseResult.regexes.get(0).group());
 				if (breakLevels < 1)
-					return false;
+					return null;
 				type = parseResult.mark;
 				ParserInstance parser = getParser();
 				int levels = parser.getCurrentSections(types[type]).size();
@@ -70,7 +70,7 @@ public class EffExit extends Effect {
 					} else {
 						Skript.error("Can't stop " + breakLevels + " " + names[type] + " as there are only " + levels + " " + names[type] + " present");
 					}
-					return false;
+					return null;
 				}
 				innerSections = parser.getSections(breakLevels, types[type]);
 				outerSection = innerSections.get(0);
@@ -81,7 +81,7 @@ public class EffExit extends Effect {
 				List<? extends TriggerSection> sections = parser.getCurrentSections(types[type]);
 				if (sections.isEmpty()) {
 					Skript.error("Can't stop any " + names[type] + " as there are no " + names[type] + " present");
-					return false;
+					return null;
 				}
 				outerSection = sections.get(0);
 				innerSections = parser.getSectionsUntil(outerSection);
@@ -94,7 +94,7 @@ public class EffExit extends Effect {
 			.filter(SectionExitHandler.class::isInstance)
 			.map(SectionExitHandler.class::cast)
 			.toList();
-		return true;
+		return this;
 	}
 
 	@Override

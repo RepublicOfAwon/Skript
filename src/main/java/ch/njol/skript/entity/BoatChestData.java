@@ -5,6 +5,7 @@ import ch.njol.skript.aliases.ItemData;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.Material;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.ChestBoat;
@@ -55,15 +56,15 @@ public class BoatChestData extends EntityData<ChestBoat> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
-		return true;
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+		return this;
 	}
 
 	@Override
-	protected boolean init(@Nullable Class<? extends ChestBoat> entityClass, @Nullable ChestBoat chestBoat) {
+	protected SyntaxElement init(@Nullable Class<? extends ChestBoat> entityClass, @Nullable ChestBoat chestBoat) {
 		if (chestBoat != null)
 			codeNameIndex = 2 + chestBoat.getBoatType().ordinal();
-		return true;
+		return this;
 	}
 
 	@Override

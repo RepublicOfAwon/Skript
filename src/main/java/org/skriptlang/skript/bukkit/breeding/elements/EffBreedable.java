@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Breedable;
 import org.bukkit.entity.LivingEntity;
@@ -35,12 +36,12 @@ public class EffBreedable extends Effect {
 	private Expression<LivingEntity> entities;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern,
-						Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern,
+                              Kleenean isDelayed, ParseResult parseResult) {
 		sterilize = matchedPattern > 1;
 		//noinspection unchecked
 		entities = (Expression<LivingEntity>) expressions[0];
-		return true;
+		return this;
 	}
 
 	@Override

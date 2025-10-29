@@ -1,5 +1,6 @@
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffect;
@@ -44,12 +45,12 @@ public class EffPoison extends Effect {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		entites = (Expression<LivingEntity>) exprs[0];
 		if (matchedPattern == 0)
 			duration = (Expression<Timespan>) exprs[1];
 		cure = matchedPattern == 1;
-		return true;
+		return this;
 	}
 	
 	@Override

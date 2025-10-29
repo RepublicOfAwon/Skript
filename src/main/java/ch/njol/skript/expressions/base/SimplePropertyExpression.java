@@ -2,6 +2,7 @@ package ch.njol.skript.expressions.base;
 
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -20,14 +21,14 @@ public abstract class SimplePropertyExpression<F, T> extends PropertyExpression<
   
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (LiteralUtils.hasUnparsedLiteral(expressions[0])) {
 			setExpr(LiteralUtils.defendExpression(expressions[0]));
-			return LiteralUtils.canInitSafely(getExpr());
+			return LiteralUtils.canInitSafely(getExpr()) ? this : null;
 		}
 		setExpr((Expression<? extends F>) expressions[0]);
 		rawExpr = parseResult.expr;
-		return true;
+		return this;
 	}
 
 	@Override

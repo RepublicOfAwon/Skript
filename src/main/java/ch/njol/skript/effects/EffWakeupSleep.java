@@ -1,7 +1,6 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.config.Node;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -9,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
@@ -56,7 +56,7 @@ public class EffWakeupSleep extends Effect {
 	private boolean setSpawn;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		entities = (Expression<LivingEntity>) exprs[0];
 		sleep = matchedPattern <= 3;
@@ -64,11 +64,11 @@ public class EffWakeupSleep extends Effect {
 		setSpawn = !parseResult.hasTag("spawn");
 		if (sleep && exprs[1] != null) {
 			if (exprs[2] == null)
-				return false;
+				return null;
 			//noinspection unchecked
 			this.location = Direction.combine((Expression<Direction>) exprs[1], (Expression<Location>) exprs[2]);
 		}
-		return true;
+		return this;
 	}
 
 	@Override

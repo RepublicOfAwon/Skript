@@ -5,12 +5,8 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
@@ -42,7 +38,7 @@ public class Delay extends Effect {
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		getParser().setHasDelayBefore(Kleenean.TRUE);
 
 		duration = (Expression<Timespan>) exprs[0];
@@ -50,7 +46,7 @@ public class Delay extends Effect {
 			Timespan timespan = ((Literal<Timespan>) duration).getSingle();
 			if (timespan.isInfinite()) {
 				Skript.error("Delaying for an eternity is not allowed. Use the 'stop' effect instead.");
-				return false;
+				return null;
 			}
 			long millis = timespan.getAs(Timespan.TimePeriod.MILLISECOND);
 			if (millis < 50) {
@@ -58,7 +54,7 @@ public class Delay extends Effect {
 			}
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

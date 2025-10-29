@@ -1,5 +1,6 @@
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -36,16 +37,16 @@ public class EffRespawn extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		if (getParser().isCurrentEvent(PlayerRespawnEvent.class)) { // Just in case someone tries to do this
 			Skript.error("Respawning the player in a respawn event is not possible", ErrorQuality.SEMANTIC_ERROR);
-			return false;
+			return null;
 		}
 		players = (Expression<Player>) exprs[0];
 		// Force a delay before respawning the player if we're in the death event and there isn't already a delay
 		// Unexpected behavior may occur if we don't do this
 		forceDelay = getParser().isCurrentEvent(EntityDeathEvent.class) && isDelayed.isFalse();
-		return true;
+		return this;
 	}
 
 	@Override

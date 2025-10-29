@@ -6,6 +6,7 @@ import ch.njol.skript.effects.Delay;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Player;
@@ -33,10 +34,10 @@ public class ExprCurrentInputKeys extends PropertyExpression<Player, InputKey> {
 	private boolean delayed;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setExpr((Expression<? extends Player>) expressions[0]);
 		delayed = !isDelayed.isFalse();
-		return true;
+		return this;
 	}
 
 	@Override

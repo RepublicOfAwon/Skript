@@ -2,6 +2,7 @@ package ch.njol.skript.expressions;
 
 import java.util.Arrays;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -36,9 +37,9 @@ public class ExprTablistedPlayers extends PropertyExpression<Player, Player> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setExpr((Expression<Player>) expressions[0]);
-		return true;
+		return this;
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.hooks.VaultHook;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import net.milkbowl.vault.permission.Permission;
@@ -45,14 +46,14 @@ public class ExprGroup extends SimpleExpression<String> {
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		if (!VaultHook.permission.hasGroupSupport()) {
 			Skript.error(VaultHook.NO_GROUP_SUPPORT);
-			return false;
+			return null;
 		}
 		players = (Expression<OfflinePlayer>) exprs[0];
 		primary = !parseResult.hasTag("plural");
-		return true;
+		return this;
 	}
 
 	@SuppressWarnings("null")

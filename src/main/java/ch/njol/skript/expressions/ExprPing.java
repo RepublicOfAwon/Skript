@@ -9,6 +9,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Player;
 
@@ -30,13 +31,13 @@ public class ExprPing extends SimplePropertyExpression<Player, Long> {
 
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		if (!SUPPORTED) {
 			Skript.error("The ping expression is not supported on this server software.");
-			return false;
+			return null;
 		}
 		setExpr((Expression<Player>) exprs[0]);
-		return true;
+		return this;
 	}
 
 	@Override

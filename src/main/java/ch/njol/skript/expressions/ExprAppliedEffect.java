@@ -5,6 +5,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.event.block.BeaconEffectEvent;
@@ -33,12 +34,12 @@ public class ExprAppliedEffect extends SimpleExpression<PotionEffectType> {
 
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(BeaconEffectEvent.class)) {
 			Skript.error("You can only use 'applied effect' in a beacon effect event.");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

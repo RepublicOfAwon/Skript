@@ -8,6 +8,7 @@ import ch.njol.skript.effects.Delay;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.util.Kleenean;
@@ -48,17 +49,17 @@ public class ExprSpectatorTarget extends SimpleExpression<Entity> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		players = (Expression<Player>) expressions[0];
 		if (players == null && !EVENT_SUPPORT) {
 			Skript.error("Your server platform does not support using 'spectator target' without players defined." +
 					"'spectator target of event-player'");
-			return false;
+			return null;
 		} else if (players == null && !getParser().isCurrentEvent(PlayerStartSpectatingEntityEvent.class, PlayerStopSpectatingEntityEvent.class)) {
 			Skript.error("The expression 'spectator target' may only be used in a start/stop/swap spectating target event");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

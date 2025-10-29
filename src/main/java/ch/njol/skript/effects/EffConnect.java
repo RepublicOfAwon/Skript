@@ -1,5 +1,6 @@
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
@@ -49,7 +50,7 @@ public class EffConnect extends Effect {
 	private boolean transfer;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		players = (Expression<Player>) exprs[0];
 		server = (Expression<String>) exprs[1];
 		transfer = matchedPattern == 2;
@@ -58,10 +59,10 @@ public class EffConnect extends Effect {
 			port = (Expression<Number>) exprs[2];
 			if (!TRANSFER_METHOD_EXISTS) {
 				Skript.error("Transferring players via IP is not available on this version.");
-				return false;
+				return null;
 			}
 		}
-		return true;
+		return this;
 	}
 
 	@Override

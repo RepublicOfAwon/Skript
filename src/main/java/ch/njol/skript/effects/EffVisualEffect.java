@@ -1,5 +1,6 @@
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -49,7 +50,7 @@ public class EffVisualEffect extends Effect {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		int base = 0;
 		if (matchedPattern == 1) {
 			count = (Expression<Number>) exprs[0];
@@ -81,11 +82,11 @@ public class EffVisualEffect extends Effect {
 				Skript.warning("Entity effects are always played on an entity");
 			if (hasEntityEffect && !where.canReturn(Entity.class)) {
 				Skript.error("Entity effects can only be played on entities");
-				return false;
+				return null;
 			}
 		}
 
-		return true;
+		return this;
 	}
 	
 	@Override

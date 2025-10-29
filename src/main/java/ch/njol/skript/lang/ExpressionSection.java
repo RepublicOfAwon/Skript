@@ -32,21 +32,22 @@ public class ExpressionSection extends Section {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		SectionContext context = getParser().getData(SectionContext.class);
 		assert context != null;
 		if (context.sectionNode == null && expression.isSectionOnly()) {
 			Skript.error("This expression requires a section.");
-			return false;
+			return null;
 		}
-		return this.init(expressions, matchedPattern, isDelayed, parseResult, context.sectionNode, context.triggerItems)
-			&& context.claim(expression);
+		var result = this.init(expressions, matchedPattern, isDelayed, parseResult, context.sectionNode, context.triggerItems);
+		if (result == null) return null;
+		return context.claim(expression) ? result : null;
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed,
-						SkriptParser.ParseResult parseResult,
-						@Nullable SectionNode sectionNode, List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed,
+							  ParseResult parseResult,
+							  @Nullable SectionNode sectionNode, List<TriggerItem> triggerItems) {
 		return expression.init(expressions, matchedPattern, isDelayed, parseResult, sectionNode, triggerItems);
 	}
 

@@ -8,6 +8,7 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
@@ -49,7 +50,7 @@ public class ExprTagContents extends SimpleExpression<Object> {
 	private Class<?>[] possibleReturnTypes;
 
 	@Override
-	public boolean init(Expression<?> @NotNull [] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?> @NotNull [] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		tag = (Expression<Tag<?>>) expressions[0];
 
@@ -79,7 +80,7 @@ public class ExprTagContents extends SimpleExpression<Object> {
 			possibleReturnTypes = new Class<?>[]{returnType};
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

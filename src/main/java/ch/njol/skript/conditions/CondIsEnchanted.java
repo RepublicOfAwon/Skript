@@ -10,6 +10,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -49,12 +50,12 @@ public class CondIsEnchanted extends Condition {
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		items = (Expression<ItemType>) exprs[0];
 		enchs = (Expression<EnchantmentType>) exprs[1];
 		comparison = Comparison.values()[parseResult.mark];
 		setNegated(matchedPattern == 1);
-		return true;
+		return this;
 	}
 	
 	@Override

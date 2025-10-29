@@ -1,5 +1,6 @@
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +51,7 @@ public class EffSendResourcePack extends Effect {
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		url = (Expression<String>) exprs[0];
 		if (matchedPattern == 0) {
 			recipients = (Expression<Player>) exprs[1];
@@ -58,7 +59,7 @@ public class EffSendResourcePack extends Effect {
 			hash = (Expression<String>) exprs[1];
 			recipients = (Expression<Player>) exprs[2];
 		}
-		return true;
+		return this;
 	}
 
 	// Player#setResourcePack(String) is deprecated on Paper

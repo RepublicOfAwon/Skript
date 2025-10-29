@@ -9,6 +9,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -48,7 +49,7 @@ public class ExprLowestHighestSolidBlock extends SimplePropertyExpression<Locati
 	private boolean lowest;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		lowest = parseResult.hasTag("lowest");
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

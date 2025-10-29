@@ -7,11 +7,8 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.ExprArgument;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.lang.parser.ParsingStack;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
@@ -88,7 +85,7 @@ public class ExprArithmetic<L, R, T> extends SimpleExpression<T> {
 
 	@Override
 	@SuppressWarnings({"ConstantConditions", "unchecked"})
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		first = (Expression<L>) exprs[0];
 		second = (Expression<R>) exprs[1];
 
@@ -162,7 +159,7 @@ public class ExprArithmetic<L, R, T> extends SimpleExpression<T> {
 					secondClass);
 				if (operations.isEmpty()) { // no known operations with second's type
 					if (secondClass != Object.class) // there won't be any operations
-						return error(first.getReturnType(), secondClass);
+						return error(first.getReturnType(), secondClass) ? this : null;
 					first = (Expression<L>) first.getConvertedExpression(Object.class);
 				} else {
 					first = (Expression<L>) first.getConvertedExpression(operations.stream()
@@ -176,7 +173,7 @@ public class ExprArithmetic<L, R, T> extends SimpleExpression<T> {
 			List<? extends OperationInfo<?, ?, ?>> operations = Arithmetics.lookupLeftOperations(operator, firstClass);
 			if (operations.isEmpty()) { // no known operations with first's type
 				if (firstClass != Object.class) // there won't be any operations
-					return error(firstClass, second.getReturnType());
+					return error(firstClass, second.getReturnType()) ? this : null;
 				second = (Expression<R>) second.getConvertedExpression(Object.class);
 			} else {
 				second = (Expression<R>) second.getConvertedExpression(operations.stream()
@@ -186,7 +183,7 @@ public class ExprArithmetic<L, R, T> extends SimpleExpression<T> {
 		}
 
 		if (!LiteralUtils.canInitSafely(first, second)) // checks if there are still unparsed literals present
-			return false;
+			return null;
 
 		/*
 		 * Step 2: Return Type Calculation
@@ -232,7 +229,7 @@ public class ExprArithmetic<L, R, T> extends SimpleExpression<T> {
 				returnType = (Class<? extends T>) Object.class;
 				knownReturnTypes = Arithmetics.getAllReturnTypes(operator);
 			} else if (returnTypes.length == 0) { // one of the classes is known but doesn't have any operations
-				return error(firstClass, secondClass);
+				return error(firstClass, secondClass) ? this : null;
 			} else {
 				returnType = (Class<? extends T>) Classes.getSuperClassInfo(returnTypes).getC();
 				knownReturnTypes = ImmutableSet.copyOf(returnTypes);
@@ -241,7 +238,7 @@ public class ExprArithmetic<L, R, T> extends SimpleExpression<T> {
 			OperationInfo<L, R, T> operationInfo = (OperationInfo<L, R, T>) Arithmetics.lookupOperationInfo(
 				operator, firstClass, secondClass);
 			if (operationInfo == null) // we error if we couldn't find an operation between the two types
-				return error(firstClass, secondClass);
+				return error(firstClass, secondClass) ? this : null;
 			returnType = operationInfo.returnType();
 		}
 
@@ -289,7 +286,7 @@ public class ExprArithmetic<L, R, T> extends SimpleExpression<T> {
 		}
 
 		arithmeticGettable = ArithmeticChain.parse(chain);
-		return arithmeticGettable != null || error(firstClass, secondClass);
+		return arithmeticGettable != null || error(firstClass, secondClass) ? this : null;
 	}
 
 	private void printArgWarning(Expression<L> first, Expression<R> second, Operator operator) {

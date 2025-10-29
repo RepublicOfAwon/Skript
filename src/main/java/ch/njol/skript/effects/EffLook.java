@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import io.papermc.paper.entity.LookAnchor;
 import org.bukkit.entity.Entity;
@@ -64,7 +65,7 @@ public class EffLook extends Effect {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		entities = (Expression<LivingEntity>) exprs[0];
 		if (LOOK_ANCHORS && matchedPattern == 0) {
 			target = exprs[parseResult.hasTag("of") ? 2 : 1];
@@ -77,7 +78,7 @@ public class EffLook extends Effect {
 			speed = (Expression<Number>) exprs[2];
 			maxPitch = (Expression<Number>) exprs[3];
 		}
-		return true;
+		return this;
 	}
 
 	@Override

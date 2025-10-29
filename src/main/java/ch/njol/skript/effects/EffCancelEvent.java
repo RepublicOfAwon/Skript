@@ -10,6 +10,7 @@ import ch.njol.skript.events.EvtClick;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
@@ -42,34 +43,34 @@ public class EffCancelEvent extends Effect {
 	private boolean cancel;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern,
-						Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern,
+                              Kleenean isDelayed, ParseResult parseResult) {
 		if (isDelayed == Kleenean.TRUE) {
 			Skript.error("An event cannot be cancelled after it has already passed", ErrorQuality.SEMANTIC_ERROR);
-			return false;
+			return null;
 		}
 
 		cancel = matchedPattern == 0;
 		Class<? extends Event>[] currentEvents = getParser().getCurrentEvents();
 
 		if (currentEvents == null)
-			return false;
+			return null;
 
 		if (cancel && getParser().isCurrentEvent(EntityToggleSwimEvent.class)) {
 			Skript.error("Cancelling a toggle swim event has no effect");
-			return false;
+			return null;
 		}
 
 		for (Class<? extends Event> event : currentEvents) {
 			if (Cancellable.class.isAssignableFrom(event) || BlockCanBuildEvent.class.isAssignableFrom(event))
-				return true; // TODO warning if some event(s) cannot be cancelled even though some can (needs a way to be suppressed)
+				return this; // TODO warning if some event(s) cannot be cancelled even though some can (needs a way to be suppressed)
 		}
 
 		if (getParser().isCurrentEvent(PlayerLoginEvent.class))
 			Skript.error("A connect event cannot be cancelled, but the player may be kicked ('kick player by reason of \"...\"')", ErrorQuality.SEMANTIC_ERROR);
 		else
 			Skript.error(Utils.A(getParser().getCurrentEventName()) + " event cannot be cancelled", ErrorQuality.SEMANTIC_ERROR);
-		return false;
+		return null;
 	}
 	
 	@Override

@@ -2,6 +2,7 @@ package ch.njol.skript.expressions;
 
 import java.lang.reflect.Array;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -106,7 +107,7 @@ public class ExprClicked extends SimpleExpression<Object> {
 	private ClickableType clickable = ClickableType.BLOCK_AND_ITEMS;
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		clickable = ClickableType.getClickable(parseResult.mark);
 		switch (clickable) {
 			case BLOCK_AND_ITEMS:
@@ -115,13 +116,13 @@ public class ExprClicked extends SimpleExpression<Object> {
 					entityType = (EntityData<?>) type;
 					if (!getParser().isCurrentEvent(PlayerInteractEntityEvent.class) && !getParser().isCurrentEvent(PlayerInteractAtEntityEvent.class)) {
 						Skript.error("The expression 'clicked entity' may only be used in a click event");
-						return false;
+						return null;
 					}
 				} else {
 					itemType = (ItemType) type;
 					if (!getParser().isCurrentEvent(PlayerInteractEvent.class)) {
 						Skript.error("The expression 'clicked block' may only be used in a click event");
-						return false;
+						return null;
 					}
 				}
 				break;
@@ -131,17 +132,17 @@ public class ExprClicked extends SimpleExpression<Object> {
 			case SLOT:
 				if (!getParser().isCurrentEvent(InventoryClickEvent.class)) {
 					Skript.error("The expression '" + clickable.getName() + "' may only be used in an inventory click event");
-					return false;
+					return null;
 				}
 				break;
 			case ENCHANT_BUTTON:
 				if (!getParser().isCurrentEvent(EnchantItemEvent.class)) {
 					Skript.error("The expression 'clicked enchantment button' is only usable in an enchant event.");
-					return false;
+					return null;
 				}
 				break;
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

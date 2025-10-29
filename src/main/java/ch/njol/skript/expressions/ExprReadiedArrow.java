@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.event.player.PlayerReadyArrowEvent;
@@ -36,13 +37,13 @@ public class ExprReadiedArrow extends SimpleExpression<ItemStack> {
 	private boolean isArrow;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		isArrow = parseResult.hasTag("arrow");
 		if (!getParser().isCurrentEvent(PlayerReadyArrowEvent.class)) {
 			Skript.error("'the readied " + (isArrow ? "arrow" : "bow") + "' can only be used in a ready arrow event");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

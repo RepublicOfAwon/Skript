@@ -5,6 +5,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import org.bukkit.event.Event;
@@ -31,13 +32,13 @@ public class EffElytraBoostConsume extends Effect {
 	private boolean consume;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(PlayerElytraBoostEvent.class)) {
 			Skript.error("This effect can only be used in an 'elytra boost' event.");
-			return false;
+			return null;
 		}
 		consume = matchedPattern == 1;
-		return true;
+		return this;
 	}
 
 	@Override

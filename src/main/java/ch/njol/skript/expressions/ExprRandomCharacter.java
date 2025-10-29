@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -41,12 +42,12 @@ public class ExprRandomCharacter extends SimpleExpression<String> {
 	private boolean isAlphanumeric;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		amount = (Expression<Integer>) exprs[0];
 		from = (Expression<String>) exprs[1];
 		to = (Expression<String>) exprs[2];
 		isAlphanumeric = parseResult.hasTag("alphanumeric");
-		return true;
+		return this;
 	}
 
 	@Override

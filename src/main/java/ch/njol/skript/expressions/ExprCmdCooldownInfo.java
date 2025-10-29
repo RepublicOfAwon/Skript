@@ -2,6 +2,7 @@ package ch.njol.skript.expressions;
 
 import java.util.UUID;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -48,13 +49,13 @@ public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
 	private int pattern;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		pattern = matchedPattern;
 		if (!getParser().isCurrentEvent(ScriptCommandEvent.class)) {
 			Skript.error("The " + getExpressionName() + " expression can only be used within a command", ErrorQuality.SEMANTIC_ERROR);
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

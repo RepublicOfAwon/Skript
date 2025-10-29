@@ -6,6 +6,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.damage.DamageSource;
@@ -44,7 +45,7 @@ public class ExprDamageType extends SimplePropertyExpression<DamageSource, Damag
 	private boolean isEvent;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		isEvent = getParser().isCurrentEvent(DamageSourceSectionEvent.class);
 		return super.init(expressions, matchedPattern, isDelayed, parseResult);
 	}

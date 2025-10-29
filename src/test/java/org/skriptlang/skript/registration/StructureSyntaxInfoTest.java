@@ -2,6 +2,7 @@ package org.skriptlang.skript.registration;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class StructureSyntaxInfoTest extends BaseSyntaxInfoTests<MockStructure, 
 	public static final class MockStructure extends Structure {
 
 		@Override
-		public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
+		public SyntaxElement init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
 			throw new UnsupportedOperationException();
 		}
 

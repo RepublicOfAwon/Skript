@@ -6,6 +6,7 @@ import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.EventRestrictedSyntax;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -38,7 +39,7 @@ public class ExprArmorChangeItem extends EventValueExpression<ItemStack> impleme
 	private boolean oldArmor;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		oldArmor = matchedPattern == 0;
 		super.setTime(oldArmor ? EventValues.TIME_PAST : EventValues.TIME_FUTURE);
 		return super.init(exprs, matchedPattern, isDelayed, parser);

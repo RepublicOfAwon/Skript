@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
@@ -42,7 +43,7 @@ public class ExprMidpoint extends SimpleExpression<Object> implements SyntaxRunt
 	private Node node;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		object1 = exprs[0];
 		object2 = exprs[1];
 		Class<?>[] type1 = checkExpressionType(object1);
@@ -50,7 +51,7 @@ public class ExprMidpoint extends SimpleExpression<Object> implements SyntaxRunt
 		if (type1.length == 1 && type2.length == 1) {
 			if (type1[0] != type2[0]) {
 				Skript.error("You can only get the midpoint between two locations or two vectors.");
-				return false;
+				return null;
 			}
 			classTypes = type1;
 			superType = type1[0];
@@ -59,7 +60,7 @@ public class ExprMidpoint extends SimpleExpression<Object> implements SyntaxRunt
 			superType = Classes.getSuperClassInfo(classTypes).getC();
 		}
 		node = getParser().getNode();
-		return true;
+		return this;
 	}
 
 	@Override

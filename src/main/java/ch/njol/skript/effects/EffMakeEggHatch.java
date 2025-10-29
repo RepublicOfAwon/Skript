@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerEggThrowEvent;
@@ -34,13 +35,13 @@ public class EffMakeEggHatch extends Effect {
 	private boolean not;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(PlayerEggThrowEvent.class)) {
 			Skript.error("You can't use the 'make the egg hatch' effect outside of a Player Egg Throw event.");
-			return false;
+			return null;
 		}
 		not = parseResult.hasTag("not");
-		return true;
+		return this;
 	}
 
 	@Override

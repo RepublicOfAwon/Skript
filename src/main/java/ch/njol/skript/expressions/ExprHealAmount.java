@@ -1,6 +1,7 @@
 
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.jetbrains.annotations.Nullable;
@@ -38,13 +39,13 @@ public class ExprHealAmount extends SimpleExpression<Double> {
 	private Kleenean delay;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(EntityRegainHealthEvent.class)) {
 			Skript.error("The expression 'heal amount' may only be used in a healing event");
-			return false;
+			return null;
 		}
 		delay = isDelayed;
-		return true;
+		return this;
 	}
 
 	@Nullable

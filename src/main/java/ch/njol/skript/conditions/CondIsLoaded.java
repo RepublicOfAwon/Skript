@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 
@@ -48,7 +49,7 @@ public class CondIsLoaded extends Condition {
 	private int pattern;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		pattern = matchedPattern;
 		switch (pattern) {
 			case 0:
@@ -65,7 +66,7 @@ public class CondIsLoaded extends Condition {
 				objects = exprs[0];
 		}
 		setNegated(parseResult.mark == 1);
-		return true;
+		return this;
 	}
 
 	@Override

@@ -39,17 +39,17 @@ public class ExprExcept extends WrapperExpression<Object> {
 	private Expression<?> exclude;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		Expression<?> source = LiteralUtils.defendExpression(exprs[0]);
 		setExpr(source);
 		if (source.isSingle()) {
 			if (!(source instanceof ExpressionList<?>)) {
 				Skript.error("Must provide a list containing more than one object to exclude objects from.");
-				return false;
+				return null;
 			}
 		}
 		exclude = LiteralUtils.defendExpression(exprs[1]);
-		return LiteralUtils.canInitSafely(source, exclude);
+		return LiteralUtils.canInitSafely(source, exclude) ? this : null;
 	}
 
 	@Override

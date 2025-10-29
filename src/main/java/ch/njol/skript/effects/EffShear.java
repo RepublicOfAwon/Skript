@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import io.papermc.paper.entity.Shearable;
 import org.bukkit.entity.LivingEntity;
@@ -45,11 +46,11 @@ public class EffShear extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		entity = (Expression<LivingEntity>) exprs[0];
 		force = parseResult.hasTag("force");
 		shear = matchedPattern == 0;
-		return true;
+		return this;
 	}
 	
 	@Override

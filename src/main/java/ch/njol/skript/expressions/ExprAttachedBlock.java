@@ -5,6 +5,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.block.Block;
 import org.bukkit.entity.AbstractArrow;
@@ -41,14 +42,14 @@ public class ExprAttachedBlock extends PropertyExpression<Projectile, Block> {
 	private boolean isMultiple;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		isMultiple = parseResult.hasTag("multiple");
 		// noinspection unchecked
 		setExpr((Expression<? extends Projectile>) expressions[0]);
 
 		if (!SUPPORTS_MULTIPLE && isMultiple) {
 			Skript.error("The plural version of this expression is only available when running Paper 1.21.4 or newer.");
-			return false;
+			return null;
 		}
 
 		if (SUPPORTS_MULTIPLE && !isMultiple) {
@@ -58,7 +59,7 @@ public class ExprAttachedBlock extends PropertyExpression<Projectile, Block> {
 			Skript.warning("It is recommended to use the plural version of this expression instead: '" + expr + "'");
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

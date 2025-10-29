@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -37,13 +38,13 @@ public class CondIsUsingFeature extends Condition {
 
 	@SuppressWarnings("null")
 	@Override
-	public boolean init(Expression<?>[] expressions, int pattern, Kleenean delayed, ParseResult result) {
+	public SyntaxElement init(Expression<?>[] expressions, int pattern, Kleenean delayed, ParseResult result) {
 		//noinspection unchecked
 		this.names = (Expression<String>) expressions[1];
 		//noinspection unchecked
 		this.scripts = (Expression<Script>) expressions[0];
 		this.setNegated(pattern > 1);
-		return true;
+		return this;
 	}
 
 	@Override

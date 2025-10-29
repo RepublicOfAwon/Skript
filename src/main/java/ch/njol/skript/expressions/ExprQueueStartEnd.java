@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +42,7 @@ public class ExprQueueStartEnd extends SimplePropertyExpression<SkriptQueue, Obj
 	private boolean start;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int pattern, Kleenean delayed, ParseResult result) {
+	public SyntaxElement init(Expression<?>[] expressions, int pattern, Kleenean delayed, ParseResult result) {
 		this.start = result.hasTag("start");
 		return super.init(expressions, pattern, delayed, result);
 	}

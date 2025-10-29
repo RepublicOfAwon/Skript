@@ -5,6 +5,7 @@ import ch.njol.skript.bukkitutil.BukkitUtils;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import com.google.common.collect.Iterators;
@@ -61,20 +62,20 @@ public class ChickenData extends EntityData<Chicken> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		if (VARIANTS_ENABLED && exprs[0] != null) {
 			//noinspection unchecked
 			variant = ((Literal<Chicken.Variant>) exprs[0]).getSingle();
 		}
-		return true;
+		return this;
 	}
 
 	@Override
-	protected boolean init(@Nullable Class<? extends Chicken> entityClass, @Nullable Chicken chicken) {
+	protected SyntaxElement init(@Nullable Class<? extends Chicken> entityClass, @Nullable Chicken chicken) {
 		if (chicken != null && VARIANTS_ENABLED) {
 			variant = chicken.getVariant();
 		}
-		return true;
+		return this;
 	}
 
 	@Override

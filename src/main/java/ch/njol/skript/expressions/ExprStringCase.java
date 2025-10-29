@@ -1,6 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SyntaxElement;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +65,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		expr = (Expression<String>) exprs[0];
 		if (matchedPattern <= 1) { // Basic Case Change 
 			casemode = (parseResult.mark == 0) ? 1 : 2;
@@ -91,7 +92,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 			if (parseResult.mark != 0)
 				casemode = (parseResult.mark == 1) ? 2 : 1;
 		}
-		return true;
+		return this;
 	}
 	
 	@SuppressWarnings("null")

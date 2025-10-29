@@ -3,6 +3,7 @@ package ch.njol.skript.expressions;
 import java.lang.reflect.Array;
 
 import ch.njol.skript.lang.EventRestrictedSyntax;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -50,7 +51,7 @@ public class ExprAttacked extends SimpleExpression<Entity> implements EventRestr
 	private EntityData<?> type;
 
 	@Override
-	public boolean init(Expression<?>[] vars, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] vars, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		String type = parser.regexes.size() == 0 ? null : parser.regexes.get(0).group();
 		if (type == null) {
 			this.type = EntityData.fromClass(Entity.class);
@@ -58,11 +59,11 @@ public class ExprAttacked extends SimpleExpression<Entity> implements EventRestr
 			EntityData<?> t = EntityData.parse(type);
 			if (t == null) {
 				Skript.error("'" + type + "' is not an entity type", ErrorQuality.NOT_AN_EXPRESSION);
-				return false;
+				return null;
 			}
 			this.type = t;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

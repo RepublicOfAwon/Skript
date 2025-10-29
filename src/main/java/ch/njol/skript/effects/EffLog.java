@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.logging.Level;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.skriptlang.skript.lang.script.Script;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +26,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.ExceptionUtils;
-import ch.njol.util.Closeable;
 import ch.njol.util.Kleenean;
 
 @Name("Log")
@@ -70,7 +70,7 @@ public class EffLog extends Effect {
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		messages = (Expression<String>) exprs[0];
 		files = (Expression<String>) exprs[1];
 		if (parser.mark == 1) {
@@ -78,7 +78,7 @@ public class EffLog extends Effect {
 		} else if (parser.mark == 2) {
 			logLevel = Level.SEVERE;
 		}
-		return true;
+		return this;
 	}
 
 	@SuppressWarnings("resource")

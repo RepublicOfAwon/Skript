@@ -2,6 +2,7 @@ package ch.njol.skript.entity;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Strider;
@@ -30,18 +31,18 @@ public class StriderData extends EntityData<Strider> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		shivering = PATTERNS.getInfo(matchedCodeName);
-		return true;
+		return this;
 	}
 
 	@Override
-	protected boolean init(@Nullable Class<? extends Strider> entityClass, @Nullable Strider strider) {
+	protected SyntaxElement init(@Nullable Class<? extends Strider> entityClass, @Nullable Strider strider) {
 		if (strider != null) {
 			shivering = Kleenean.get(strider.isShivering());
 			super.codeNameIndex = PATTERNS.getMatchedPattern(shivering, 0).orElseThrow();
 		}
-		return true;
+		return this;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -59,7 +60,7 @@ public class EffSendTitle extends Effect {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		title = matchedPattern == 0 ? (Expression<String>) exprs[0] : null;
 		subtitle = (Expression<String>) exprs[1 - matchedPattern];
 		recipients = (Expression<Player>) exprs[2 - matchedPattern];
@@ -68,7 +69,7 @@ public class EffSendTitle extends Effect {
 			fadeIn = (Expression<Timespan>) exprs[4 - matchedPattern];
 			fadeOut = (Expression<Timespan>) exprs[5 - matchedPattern];
 		}
-		return true;
+		return this;
 	}
 	
 	@SuppressWarnings("null")

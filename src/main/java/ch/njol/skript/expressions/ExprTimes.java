@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.log.SkriptLogger;
@@ -41,7 +42,7 @@ public class ExprTimes extends SimpleExpression<Long> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		end = matchedPattern == 0 ? (Expression<Number>) exprs[0] : new SimpleLiteral<>(matchedPattern, false);
 		
 		if (end instanceof Literal) {
@@ -55,10 +56,10 @@ public class ExprTimes extends SimpleExpression<Long> {
 					Skript.error("Looping a negative amount of times is impossible");
 				else
 					Skript.error("The times expression only supports positive numbers");
-				return false;
+				return null;
 			}
 		}
-		return true;
+		return this;
 	}
 	
 	private boolean isInLoop() {

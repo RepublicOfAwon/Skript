@@ -5,11 +5,8 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionList;
-import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
@@ -41,17 +38,17 @@ public class ExprRawString extends SimpleExpression<String> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		expr = (Expression<String>) exprs[0];
 		messages = expr instanceof ExpressionList<?> ?
 			((ExpressionList<String>) expr).getExpressions() : new Expression[]{expr};
 		for (Expression<? extends String> message : messages) {
 			if (message instanceof ExprColoured) {
 				Skript.error("The 'colored' expression may not be used in a 'raw string' expression");
-				return false;
+				return null;
 			}
 		}
-		return true;
+		return this;
 	}
 
 	@Override

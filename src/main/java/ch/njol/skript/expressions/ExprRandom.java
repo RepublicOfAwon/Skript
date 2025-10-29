@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import ch.njol.skript.lang.*;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,10 +16,6 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionList;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
@@ -42,7 +39,7 @@ public class ExprRandom extends SimpleExpression<Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (LiteralUtils.hasUnparsedLiteral(exprs[1])) {
 			expr = LiteralUtils.defendExpression(exprs[1]);
 			if (expr instanceof ExpressionList) {
@@ -53,14 +50,14 @@ public class ExprRandom extends SimpleExpression<Object> {
 						.collect(Collectors.toList());
 				if (list.isEmpty()) {
 					Skript.error("There are no objects of type '" + exprs[0].toString() + "' in the list " + exprs[1].toString());
-					return false;
+					return null;
 				}
 				expr = CollectionUtils.getRandom(list);
 			}
 		} else {
 			expr = exprs[1].getConvertedExpression((((Literal<ClassInfo<?>>) exprs[0]).getSingle()).getC());
 		}
-		return expr != null && LiteralUtils.canInitSafely(expr);
+		return expr != null && LiteralUtils.canInitSafely(expr) ? this : null;
 	}
 
 	@Override

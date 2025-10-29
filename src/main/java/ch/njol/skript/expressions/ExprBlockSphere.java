@@ -3,6 +3,7 @@ package ch.njol.skript.expressions;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
@@ -44,10 +45,10 @@ public class ExprBlockSphere extends SimpleExpression<Block> {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		radius = (Expression<Number>) exprs[matchedPattern];
 		center = (Expression<Location>) exprs[1 - matchedPattern];
-		return true;
+		return this;
 	}
 	
 	@Override

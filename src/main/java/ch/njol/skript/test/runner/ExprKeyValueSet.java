@@ -9,7 +9,6 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.Map;
 
 @NoDoc
@@ -27,16 +26,16 @@ public class ExprKeyValueSet extends SimpleExpression<Object> implements KeyProv
 
 	private Variable<?> variable;
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		if (matchedPattern == 0) {
 			Expression<?>  expression = expressions[0];
 			if (!(expression instanceof Variable<?> variable) || !variable.isList()) {
 				Skript.error("The expression '" + expression + "' is not a list variable.");
-				return false;
+				return null;
 			}
 			this.variable = variable;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

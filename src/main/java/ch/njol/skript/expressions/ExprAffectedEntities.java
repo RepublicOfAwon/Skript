@@ -1,9 +1,9 @@
 package ch.njol.skript.expressions;
 
 import java.util.Iterator;
-import java.util.Objects;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
@@ -35,12 +35,12 @@ public class ExprAffectedEntities extends SimpleExpression<LivingEntity> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		if (!getParser().isCurrentEvent(AreaEffectCloudApplyEvent.class)) {
 			Skript.error("The 'affected entities' expression may only be used in an area cloud effect event.");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

@@ -25,11 +25,11 @@ public class SecReturnable extends Section implements ReturnHandler<Object> {
 	private static Object @Nullable [] returnedValues;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
 		returnValueType = ((Literal<ClassInfo<?>>) expressions[0]).getSingle();
 		singleReturnValue = !parseResult.hasTag("plural");
 		loadReturnableSectionCode(sectionNode);
-		return true;
+		return this;
 	}
 
 	@Override
@@ -60,8 +60,8 @@ public class SecReturnable extends Section implements ReturnHandler<Object> {
 		}
 
 		@Override
-		public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-			return true;
+		public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+			return this;
 		}
 
 		@Override

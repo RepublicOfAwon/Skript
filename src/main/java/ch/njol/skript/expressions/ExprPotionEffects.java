@@ -3,6 +3,7 @@ package ch.njol.skript.expressions;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffect;
@@ -47,9 +48,9 @@ public class ExprPotionEffects extends SimpleExpression<PotionEffect> {
 	
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		objects = (Expression<Object>) exprs[0];
-		return true;
+		return this;
 	}
 	
 	@Nullable

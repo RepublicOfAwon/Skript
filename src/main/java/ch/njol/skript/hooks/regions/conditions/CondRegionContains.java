@@ -10,13 +10,12 @@ import ch.njol.skript.hooks.regions.classes.Region;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Predicate;
 
 @Name("Region Contains")
 @Description({
@@ -47,7 +46,7 @@ public class CondRegionContains extends Condition {
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		if (exprs.length == 3) {
 			regions = (Expression<Region>) exprs[0];
 			locs = Direction.combine((Expression<? extends Direction>) exprs[1], (Expression<? extends Location>) exprs[2]);
@@ -56,7 +55,7 @@ public class CondRegionContains extends Condition {
 			locs = (Expression<Location>) exprs[0];
 		}
 		setNegated(matchedPattern >= 2);
-		return true;
+		return this;
 	}
 
 	@Override

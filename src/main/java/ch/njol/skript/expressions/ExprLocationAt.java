@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
@@ -39,12 +40,12 @@ public class ExprLocationAt extends SimpleExpression<Location> {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		x = (Expression<Number>) exprs[0];
 		y = (Expression<Number>) exprs[1];
 		z = (Expression<Number>) exprs[2];
 		world = (Expression<World>) exprs[3];
-		return true;
+		return this;
 	}
 	
 	@Override

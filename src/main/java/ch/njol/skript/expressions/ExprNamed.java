@@ -11,6 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
@@ -46,11 +47,11 @@ public class ExprNamed extends PropertyExpression<Object, Object> {
 	private Class<?>[] returnTypes;
 
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		setExpr(exprs[0]);
 		if (exprs[0] instanceof Literal<?> lit && lit.getSingle() instanceof InventoryType inventoryType && !inventoryType.isCreatable()) {
 			Skript.error("Cannot create an inventory of type " + Classes.toString(inventoryType));
-			return false;
+			return null;
 		}
 		//noinspection unchecked
 		name = (Expression<String>) exprs[1];
@@ -62,7 +63,7 @@ public class ExprNamed extends PropertyExpression<Object, Object> {
 			returnTypes.add(Inventory.class);
 		this.returnTypes = returnTypes.toArray(new Class<?>[0]);
 
-		return true;
+		return this;
 	}
 	
 	@Override

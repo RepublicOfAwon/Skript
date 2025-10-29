@@ -2,6 +2,7 @@ package ch.njol.skript.effects;
 
 import java.util.function.Function;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
@@ -85,7 +86,7 @@ public class EffToggle extends Effect {
 	private Type type;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		togglables = expressions[0];
 		action = patterns.getInfo(matchedPattern);
 
@@ -96,13 +97,13 @@ public class EffToggle extends Effect {
 		if (type == Type.BOOLEANS && 
 			!ChangerUtils.acceptsChange(togglables, ChangeMode.SET, Boolean.class)) {
 			Skript.error("Cannot toggle '" + togglables + "' as it cannot be set to booleans.");
-			return false;
+			return null;
 		} else if (type == Type.MIXED && !ChangerUtils.acceptsChange(togglables, ChangeMode.SET, Block.class, Boolean.class)) {
 			Skript.error("Cannot toggle '" + togglables + "' as it cannot be set to both blocks and booleans.");
-			return false;
+			return null;
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

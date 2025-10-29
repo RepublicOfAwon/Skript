@@ -2,6 +2,7 @@ package ch.njol.skript.expressions;
 
 import java.util.Iterator;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -64,7 +65,7 @@ public class ExprBlocks extends SimpleExpression<Block> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		this.pattern = matchedPattern;
 		switch (matchedPattern) {
 			case 0:
@@ -86,9 +87,9 @@ public class ExprBlocks extends SimpleExpression<Block> {
 				break;
 			default:
 				assert false : matchedPattern;
-				return false;
+				return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

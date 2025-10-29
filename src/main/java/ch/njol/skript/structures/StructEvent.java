@@ -6,6 +6,7 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptEvent.ListeningBehavior;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.parser.ParserInstance;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -65,7 +66,7 @@ public class StructEvent extends Structure {
 
 	@Override
 	@SuppressWarnings("ConstantConditions")
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
+	public SyntaxElement init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
 		String expr = parseResult.regexes.get(0).group();
 
 		EventData data = getParser().getData(EventData.class);
@@ -90,7 +91,7 @@ public class StructEvent extends Structure {
 
 		// cleanup after ourselves
 		data.clear();
-		return event != null;
+		return event != null ? this : null;
 	}
 
 	@Override

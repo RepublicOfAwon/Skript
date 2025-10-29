@@ -2,6 +2,7 @@ package ch.njol.skript.expressions;
 
 import java.util.function.Predicate;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDismountEvent;
@@ -50,9 +51,9 @@ public class ExprVehicle extends PropertyExpression<Entity, Entity> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setExpr((Expression<Entity>) expressions[0]);
-		return true;
+		return this;
 	}
 
 	@Override

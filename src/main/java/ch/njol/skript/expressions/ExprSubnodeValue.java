@@ -9,10 +9,7 @@ import ch.njol.skript.doc.Example;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Feature;
@@ -49,16 +46,16 @@ public class ExprSubnodeValue extends SimplePropertyExpression<Node, Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] expressions, int pattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int pattern, Kleenean isDelayed, ParseResult parseResult) {
 
 		if (!this.getParser().hasExperiment(Feature.SCRIPT_REFLECTION))
-			return false;
+			return null;
 		this.isSingle = true;
 		@NotNull Literal<ClassInfo<?>> format = (Literal<ClassInfo<?>>) expressions[0];
 		this.pathExpression = (Expression<String>) expressions[1];
 		this.setExpr((Expression<? extends Node>) expressions[2]);
 		this.classInfo = format.getSingle();
-		return true;
+		return this;
 	}
 
 	@Override

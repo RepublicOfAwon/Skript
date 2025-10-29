@@ -5,6 +5,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import org.bukkit.event.Event;
@@ -31,16 +32,16 @@ public class StructTestEntryContainer extends Structure {
 	private EntryContainer entryContainer;
 
 	@Override
-	public boolean init(
+	public SyntaxElement init(
 		Literal<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer
 	) {
 		assert entryContainer != null;
 		this.entryContainer = entryContainer;
 		if (entryContainer.hasEntry("has entry") && entryContainer.hasEntry("has multiple entries")) {
-			return true;
+			return this;
 		}
 		assert false;
-		return false;
+		return null;
 	}
 
 	@Override

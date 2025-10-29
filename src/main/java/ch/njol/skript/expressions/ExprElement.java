@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Feature;
 import ch.njol.skript.util.LiteralUtils;
@@ -82,11 +83,11 @@ public class ExprElement<T> extends SimpleExpression<T> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		ElementType[] types = PATTERNS.getInfo(matchedPattern);
 		this.queue = matchedPattern > 4;
 		if (queue && !this.getParser().hasExperiment(Feature.QUEUES))
-			return false;
+			return null;
 		if (queue) {
 			this.expr = (Expression<T>) exprs[exprs.length - 1];
 		} else {
@@ -102,7 +103,7 @@ public class ExprElement<T> extends SimpleExpression<T> {
 				startIndex = null;
 				break;
 		}
-		return queue || LiteralUtils.canInitSafely(expr);
+		return queue || LiteralUtils.canInitSafely(expr) ? this : null;
 	}
 
 	@Override

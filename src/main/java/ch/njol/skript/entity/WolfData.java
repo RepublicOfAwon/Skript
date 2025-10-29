@@ -5,6 +5,7 @@ import ch.njol.skript.bukkitutil.BukkitUtils;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.Patterns;
@@ -89,7 +90,7 @@ public class WolfData extends EntityData<Wolf> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		WolfStates state = PATTERNS.getInfo(matchedCodeName);
 		assert state != null;
 		isAngry = state.angry;
@@ -102,11 +103,11 @@ public class WolfData extends EntityData<Wolf> {
 			//noinspection unchecked
 			collarColor = ((Literal<Color>) exprs[1]).getSingle().asDyeColor();
 		}
-		return true;
+		return this;
 	}
 
 	@Override
-	protected boolean init(@Nullable Class<? extends Wolf> entityClass, @Nullable Wolf wolf) {
+	protected SyntaxElement init(@Nullable Class<? extends Wolf> entityClass, @Nullable Wolf wolf) {
 		if (wolf != null) {
 			isAngry = Kleenean.get(wolf.isAngry());
 			isTamed = Kleenean.get(wolf.isTamed());
@@ -115,7 +116,7 @@ public class WolfData extends EntityData<Wolf> {
 				variant = wolf.getVariant();
 			super.codeNameIndex = PATTERNS.getMatchedPattern(new WolfStates(isAngry, isTamed), 0).orElse(0);
 		}
-		return true;
+		return this;
 	}
 
 	@Override

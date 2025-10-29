@@ -2,6 +2,7 @@ package ch.njol.skript.entity;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.coll.CollectionUtils;
@@ -37,18 +38,18 @@ public class FoxData extends EntityData<Fox> {
 	}
 	
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		type = PATTERNS.getInfo(matchedCodeName);
-		return true;
+		return this;
 	}
 	
 	@Override
-	protected boolean init(@Nullable Class<? extends Fox> entityClass, @Nullable Fox fox) {
+	protected SyntaxElement init(@Nullable Class<? extends Fox> entityClass, @Nullable Fox fox) {
 		if (fox != null) {
 			type = fox.getFoxType();
 			super.codeNameIndex = PATTERNS.getMatchedPattern(type, 0).orElse(0);
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

@@ -6,11 +6,8 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.ExprColoured;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionList;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.SkriptColor;
@@ -56,12 +53,12 @@ public class EffBroadcast extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		messageExpr = LiteralUtils.defendExpression(exprs[0]);
 		messages = messageExpr instanceof ExpressionList ?
 			((ExpressionList<?>) messageExpr).getExpressions() : new Expression[] {messageExpr};
 		worlds = (Expression<World>) exprs[1];
-		return LiteralUtils.canInitSafely(messageExpr);
+		return LiteralUtils.canInitSafely(messageExpr) ? this : null;
 	}
 
 	/**

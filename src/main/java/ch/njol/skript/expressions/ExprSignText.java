@@ -1,7 +1,6 @@
 package ch.njol.skript.expressions;
 
-import ch.njol.skript.bukkitutil.ItemUtils;
-import org.bukkit.Material;
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -10,8 +9,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.Aliases;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -48,13 +45,13 @@ public class ExprSignText extends SimpleExpression<String> {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		if (matchedPattern == 0)
 			line = (Expression<Number>) exprs[0];
 		else
 			line = new SimpleLiteral<>(parseResult.mark, false);
 		block = (Expression<Block>) exprs[exprs.length - 1];
-		return true;
+		return this;
 	}
 	
 	@Override

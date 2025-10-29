@@ -18,7 +18,6 @@ import org.jetbrains.annotations.UnknownNullability;
 import org.skriptlang.skript.lang.converter.Converters;
 
 import java.util.*;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Name("Transformed List")
@@ -63,10 +62,10 @@ public class ExprTransform extends SimpleExpression<Object> implements InputSour
 	private @UnknownNullability String currentIndex;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		unmappedObjects = LiteralUtils.defendExpression(expressions[0]);
 		if (unmappedObjects.isSingle() || !LiteralUtils.canInitSafely(unmappedObjects))
-			return false;
+			return null;
 		keyed = KeyProviderExpression.canReturnKeys(unmappedObjects);
 
 		//noinspection DuplicatedCode
@@ -74,10 +73,10 @@ public class ExprTransform extends SimpleExpression<Object> implements InputSour
 			@Nullable String unparsedExpression = parseResult.regexes.get(0).group();
 			assert unparsedExpression != null;
 			mappingExpr = parseExpression(unparsedExpression, getParser(), SkriptParser.ALL_FLAGS);
-			return mappingExpr != null;
+			return mappingExpr != null ? this : null;
 		}
 		returnClassInfo = Classes.getExactClassInfo(mappingExpr.getReturnType());
-		return true;
+		return this;
 	}
 
 	@Override

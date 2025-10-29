@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -66,7 +67,7 @@ public class ExprBookPages extends SimpleExpression<String> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (matchedPattern == 0 || matchedPattern == 1) {
 			items = exprs[0];
 		} else if (matchedPattern == 2) {
@@ -76,7 +77,7 @@ public class ExprBookPages extends SimpleExpression<String> {
 			items = exprs[0];
 			page = (Expression<Number>) exprs[1];
 		}
-		return true;
+		return this;
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.variables.Variables;
@@ -83,18 +84,18 @@ public class DisplayData extends EntityData<Display> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		type = DisplayType.values()[matchedCodeName];
 		// default to 0, use 1 for alternate pattern: %x% display instead of display of %x%
 		if (exprs.length == 0 || exprs[0] == null)
-			return true;
+			return this;
 
 		if (type == DisplayType.BLOCK) {
 			Object object = ((Literal<Object>) exprs[0]).getSingle();
 			if (object instanceof ItemType itemType) {
 				if (!itemType.hasBlock()) {
 					Skript.error("A block display must be of a block item. " + Classes.toString(itemType.getMaterial()) + " is not a block. If you want to display an item, use an 'item display'.");
-					return false;
+					return null;
 				}
 				blockData = Bukkit.createBlockData(itemType.getBlockMaterial());
 			} else {
@@ -104,15 +105,15 @@ public class DisplayData extends EntityData<Display> {
 			ItemType itemType = ((Literal<ItemType>) exprs[0]).getSingle();
 			if (!itemType.hasItem()) {
 				Skript.error("An item display must be of a valid item. " + Classes.toString(itemType.getMaterial()) + " is not a valid item. If you want to display a block, use a 'block display'.");
-				return false;
+				return null;
 			}
 			item = itemType.getRandom();
 		}
-		return true;
+		return this;
 	}
 
 	@Override
-	protected boolean init(@Nullable Class<? extends Display> displayClass, @Nullable Display entity) {
+	protected SyntaxElement init(@Nullable Class<? extends Display> displayClass, @Nullable Display entity) {
 		DisplayType[] types = DisplayType.values();
 		for (int i = types.length - 1; i >= 0; i--) {
 			Class<?> display = types[i].displaySubClass;
@@ -128,11 +129,11 @@ public class DisplayData extends EntityData<Display> {
 						case TEXT -> text = ((TextDisplay) entity).getText();
 					}
 				}
-				return true;
+				return this;
 			}
 		}
 		assert false;
-		return false;
+		return null;
 	}
 
 	@Override

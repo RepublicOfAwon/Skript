@@ -10,7 +10,6 @@ import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.ClassInfoReference;
-import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +46,7 @@ public class ExprValueWithin extends WrapperExpression<Object> implements KeyPro
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		boolean plural;
 		if (exprs[0] != null) {
 			Literal<ClassInfoReference> classInfoReference = (Literal<ClassInfoReference>) ClassInfoReference.wrap((Expression<ClassInfo<?>>) exprs[0]);
@@ -62,16 +61,16 @@ public class ExprValueWithin extends WrapperExpression<Object> implements KeyPro
 			} else {
 				Skript.error(exprs[1].toString(null, false) + " may contain more than one " + (classInfo == null ? "value" :  classInfo.getName()));
 			}
-			return false;
+			return null;
 		}
 
 		classInfo = exprs[0] == null ? null : ((Literal<ClassInfo<?>>) exprs[0]).getSingle();
 		Expression<?> expr = classInfo == null ? exprs[1] : exprs[1].getConvertedExpression(classInfo.getC());
 		if (expr == null)
-			return false;
+			return null;
 		setExpr(expr);
 		returnsKeys = KeyProviderExpression.canReturnKeys(expr);
-		return true;
+		return this;
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.ApiStatus;
@@ -196,11 +197,11 @@ public abstract class PropertyCondition<T> extends Condition implements Predicat
 	private Expression<? extends T> expr;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		expr = (Expression<? extends T>) expressions[0];
 		setNegated(matchedPattern == 1);
-		return true;
+		return this;
 	}
 
 	@Override

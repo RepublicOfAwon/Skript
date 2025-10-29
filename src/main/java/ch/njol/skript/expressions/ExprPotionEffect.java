@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -42,13 +43,13 @@ public class ExprPotionEffect extends SimpleExpression<PotionEffect> {
 	private boolean ambient;
 	
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		potionEffectType = (Expression<PotionEffectType>) exprs[0];
 		tier = (Expression<Number>) exprs[1];
 		timespan = (Expression<Timespan>) exprs[2];
 		particles = parseResult.mark == 0;
 		ambient = matchedPattern == 1;
-		return true;
+		return this;
 	}
 	
 	@Override

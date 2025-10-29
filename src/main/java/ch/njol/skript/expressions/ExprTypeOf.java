@@ -9,6 +9,7 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.ConvertedExpression;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Utils;
@@ -48,7 +49,7 @@ public class ExprTypeOf extends SimplePropertyExpression<Object, Object> {
 	private Class<?> superReturnType;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		Expression<?> expression = expressions[0];
 		List<Class<?>> returnTypes = new ArrayList<>();
 		if (expression.canReturn(EntityData.class))

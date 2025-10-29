@@ -7,6 +7,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Color;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -42,10 +43,10 @@ public class ExprItemWithCustomModelData extends PropertyExpression<ItemType, It
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
 		setExpr((Expression<ItemType>) exprs[0]);
 		data = exprs[1];
-		return true;
+		return this;
 	}
 
 	@Override

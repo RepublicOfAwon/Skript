@@ -6,6 +6,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
@@ -44,13 +45,13 @@ public class ExprSubstring extends SimpleExpression<String> {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		usedSubstring = matchedPattern == 0;
 		string = (Expression<String>) exprs[usedSubstring ? 0 : 1];
 		start = (Expression<Number>) (usedSubstring ? exprs[1] : parseResult.mark == 1 ? null : exprs[0] == null ? new SimpleLiteral<>(1, false) : exprs[0]);
 		end = (Expression<Number>) (usedSubstring ? exprs[2] : parseResult.mark == 2 ? null : exprs[0] == null ? new SimpleLiteral<>(1, false) : exprs[0]);
 		assert end != null || start != null;
-		return true;
+		return this;
 	}
 	
 	@Override

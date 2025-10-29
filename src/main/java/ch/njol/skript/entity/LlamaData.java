@@ -2,6 +2,7 @@ package ch.njol.skript.entity;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.coll.CollectionUtils;
@@ -61,16 +62,16 @@ public class LlamaData extends EntityData<Llama> {
 	}
 	
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		LlamaState llamaState = PATTERNS.getInfo(matchedCodeName);
 		assert llamaState != null;
 		color = llamaState.color;
 		isTrader = llamaState.trader;
-		return true;
+		return this;
 	}
 	
 	@Override
-	protected boolean init(@Nullable Class<? extends Llama> entityClass, @Nullable Llama llama) {
+	protected SyntaxElement init(@Nullable Class<? extends Llama> entityClass, @Nullable Llama llama) {
 		if (entityClass != null)
 			isTrader = TraderLlama.class.isAssignableFrom(entityClass);
 		if (llama != null) {
@@ -78,7 +79,7 @@ public class LlamaData extends EntityData<Llama> {
 			isTrader = llama instanceof TraderLlama;
 			super.codeNameIndex = PATTERNS.getMatchedPattern(new LlamaState(color, isTrader), 0).orElse(0);
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

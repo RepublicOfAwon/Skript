@@ -3,6 +3,7 @@ package ch.njol.skript.effects;
 import java.util.Locale;
 
 import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.Classes;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -48,7 +49,7 @@ public class EffOpenInventory extends Effect {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		int openFlag = 0;
 		if(parseResult.mark >= 5) {
 			openFlag = parseResult.mark ^ 5;
@@ -80,9 +81,9 @@ public class EffOpenInventory extends Effect {
 		}
 		if (exprs[0] instanceof Literal<?> lit && lit.getSingle() instanceof InventoryType inventoryType && !inventoryType.isCreatable()) {
 			Skript.error("Cannot create an inventory of type " + Classes.toString(inventoryType));
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

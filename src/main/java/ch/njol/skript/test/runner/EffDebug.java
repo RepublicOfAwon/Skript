@@ -3,6 +3,7 @@ package ch.njol.skript.test.runner;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import ch.njol.skript.lang.*;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,10 +12,6 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
@@ -44,7 +41,7 @@ public class EffDebug extends Effect  {
 	private boolean debug = Skript.debug();
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (matchedPattern == 1) {
 			String string = parseResult.regexes.get(0).group();
 			ParseLogHandler logHandler = SkriptLogger.startParseLogHandler();
@@ -62,7 +59,7 @@ public class EffDebug extends Effect  {
 			} finally {
 				logHandler.stop();
 			}
-			return true;
+			return this;
 		} else if (matchedPattern == 2) {
 			String string = parseResult.regexes.get(0).group();
 			ParseLogHandler logHandler = SkriptLogger.startParseLogHandler();
@@ -80,7 +77,7 @@ public class EffDebug extends Effect  {
 			} finally {
 				logHandler.stop();
 			}
-			return true;
+			return this;
 		}
 		expressions = exprs[0];
 		if (LiteralUtils.canInitSafely(expressions))
@@ -88,7 +85,7 @@ public class EffDebug extends Effect  {
 		if (parseResult.hasTag("verbose"))
 			debug = true;
 		print();
-		return true;
+		return this;
 	}
 
 	@Override

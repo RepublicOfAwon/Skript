@@ -3,6 +3,7 @@ package ch.njol.skript.test.runner;
 import java.util.Arrays;
 import java.util.List;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,11 +41,11 @@ public class EffObjectives extends Effect  {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		objectives = (Expression<String>) exprs[matchedPattern ^ 1];
 		junit = (Expression<String>) exprs[matchedPattern];
 		setup = matchedPattern == 0;
-		return true;
+		return this;
 	}
 
 	@Override

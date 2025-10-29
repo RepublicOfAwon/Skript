@@ -6,6 +6,7 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntitySnapshot;
@@ -37,10 +38,10 @@ public class ExprEntitySnapshot extends SimplePropertyExpression<Object, EntityS
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (Player.class.isAssignableFrom(exprs[0].getReturnType()) || FishHook.class.isAssignableFrom(exprs[0].getReturnType())) {
 			Skript.error("One or more listed entities can not return an entity snapshot.");
-			return false;
+			return null;
 		}
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

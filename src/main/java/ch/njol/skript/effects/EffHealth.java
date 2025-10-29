@@ -14,6 +14,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.util.slot.Slot;
@@ -81,7 +82,7 @@ public class EffHealth extends Effect implements SyntaxRuntimeErrorProducer {
 	private Node node;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		effectType = PATTERNS.getInfo(matchedPattern);
 		damageables = exprs[0];
 		//noinspection unchecked
@@ -95,7 +96,7 @@ public class EffHealth extends Effect implements SyntaxRuntimeErrorProducer {
 			}
 		}
 		node = getParser().getNode();
-		return true;
+		return this;
 	}
 
 	@Override

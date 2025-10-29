@@ -1,5 +1,6 @@
 package ch.njol.skript.literals;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.event.Event;
@@ -37,8 +38,8 @@ public class LitConsole extends SimpleLiteral<ConsoleCommandSender> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		return true;
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		return this;
 	}
 
 	@Override

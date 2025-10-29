@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
@@ -42,7 +43,7 @@ public class EffPush extends Effect {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		entities = (Expression<Entity>) exprs[0];
 		if (matchedPattern == 0) {
 			direction = (Expression<Direction>) exprs[1];
@@ -51,7 +52,7 @@ public class EffPush extends Effect {
 			awayFrom = parseResult.hasTag("away");
 		}
 		speed = (Expression<Number>) exprs[2];
-		return true;
+		return this;
 	}
 	
 	@Override

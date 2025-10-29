@@ -91,12 +91,12 @@ public class SecConditional extends Section {
 	private @Nullable ExecutionIntent executionIntent;
 
 	@Override
-	public boolean init(Expression<?>[] exprs,
-						int matchedPattern,
-						Kleenean isDelayed,
-						ParseResult parseResult,
-						SectionNode sectionNode,
-						List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] exprs,
+							  int matchedPattern,
+							  Kleenean isDelayed,
+							  ParseResult parseResult,
+							  SectionNode sectionNode,
+							  List<TriggerItem> triggerItems) {
 		type = CONDITIONAL_PATTERNS.getInfo(matchedPattern);
 		ifAny = parseResult.hasTag("any");
 		parseIf = parseResult.hasTag("parse");
@@ -135,7 +135,7 @@ public class SecConditional extends Section {
 				SecConditional precedingConditional = getPrecedingConditional(triggerItems, null);
 				if (precedingConditional == null || !precedingConditional.multiline) {
 					Skript.error("'then' has to placed just after a multiline 'if' or 'else if' section");
-					return false;
+					return null;
 				}
 			} else {
 				// find the latest 'if' section so that we can ensure this section is placed properly (e.g. ensure a 'if' occurs before an 'else')
@@ -148,7 +148,7 @@ public class SecConditional extends Section {
 					} else if (type == ConditionalType.THEN) {
 						Skript.error("'then' has to placed just after a multiline 'if' or 'else if' section");
 					}
-					return false;
+					return null;
 				}
 			}
 		} else {
@@ -160,11 +160,11 @@ public class SecConditional extends Section {
 					String nextNodeKey = ScriptLoader.replaceOptions(nextNode.getKey());
 					if (THEN_PATTERN.match(nextNodeKey) == null) {
 						Skript.error(error);
-						return false;
+						return null;
 					}
 				} else {
 					Skript.error(error);
-					return false;
+					return null;
 				}
 			}
 			hasDelayBefore = parser.getHasDelayBefore();
@@ -200,12 +200,12 @@ public class SecConditional extends Section {
 				int nonEmptyNodeCount = Iterables.size(sectionNode);
 				if (nonEmptyNodeCount < 2) {
 					Skript.error((ifAny ? "'if any'" : "'if all'") + " sections must contain at least two conditions");
-					return false;
+					return null;
 				}
 				for (Node childNode : sectionNode) {
 					if (childNode instanceof SectionNode) {
 						Skript.error((ifAny ? "'if any'" : "'if all'") + " sections may not contain other sections");
-						return false;
+						return null;
 					}
 					String childKey = childNode.getKey();
 					if (childKey != null) {
@@ -214,7 +214,7 @@ public class SecConditional extends Section {
 						Condition condition = Condition.parse(childKey, "Can't understand this condition: '" + childKey + "'");
 						// if this condition was invalid, don't bother parsing the rest
 						if (condition == null)
-							return false;
+							return null;
 						conditionals.add(condition);
 					}
 				}
@@ -234,7 +234,7 @@ public class SecConditional extends Section {
 			}
 
 			if (conditionals.isEmpty())
-				return false;
+				return null;
 
 			/*
 				This allows the embedded multilined conditions to be properly debugged.
@@ -253,7 +253,7 @@ public class SecConditional extends Section {
 		// ([else] parse if) If condition is valid and false, do not parse the section
 		if (parseIf) {
 			if (!checkConditions(ContextlessEvent.get())) {
-				return true;
+				return this;
 			}
 			parseIfPassed = true;
 		}
@@ -311,7 +311,7 @@ public class SecConditional extends Section {
 			}
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

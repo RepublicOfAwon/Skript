@@ -61,7 +61,7 @@ public class EffTeleport extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		entities = (Expression<Entity>) exprs[0];
 		location = Direction.combine((Expression<? extends Direction>) exprs[1], (Expression<? extends Location>) exprs[2]);
 		async = CAN_RUN_ASYNC && !parseResult.hasTag("force");
@@ -70,12 +70,12 @@ public class EffTeleport extends Effect {
 
 		if (getParser().isCurrentEvent(SpawnEvent.class)) {
 			Skript.error("You cannot teleport an entity that hasn't spawned yet. Ensure you're using the location expression from the spawn section pattern.");
-			return false;
+			return null;
 		}
 
 		if (async)
 			getParser().setHasDelayBefore(Kleenean.UNKNOWN); // UNKNOWN because it isn't async if the chunk is already loaded.
-		return true;
+		return this;
 	}
 
 	@Override

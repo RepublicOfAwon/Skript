@@ -1,7 +1,6 @@
 package ch.njol.skript.conditions;
 
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SimplifiedCondition;
+import ch.njol.skript.lang.*;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,9 +9,6 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 
 @Name("Starts/Ends With")
@@ -36,12 +32,12 @@ public class CondStartsEndsWith extends Condition {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		strings = (Expression<String>) exprs[0];
 		affix = (Expression<String>) exprs[1];
 		usingEnds = parseResult.mark == 1;
 		setNegated(matchedPattern == 1);
-		return true;
+		return this;
 	}
 	
 	@Override

@@ -4,11 +4,8 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.*;
 import ch.njol.skript.entity.EntityType;
-import ch.njol.skript.lang.EffectSection;
-import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SectionUtils;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Direction;
@@ -96,8 +93,8 @@ public class EffSecSpawn extends EffectSection {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
-			@Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
+                              @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
 
 		amount = matchedPattern == 0 ? null : (Expression<Number>) (exprs[0]);
 		types = exprs[matchedPattern];
@@ -106,10 +103,10 @@ public class EffSecSpawn extends EffectSection {
 		if (sectionNode != null) {
 			trigger = SectionUtils.loadLinkedCode("spawn", (beforeLoading, afterLoading)
 					-> loadCode(sectionNode, "spawn", beforeLoading, afterLoading, SpawnEvent.class));
-			return trigger != null;
+			return trigger != null ? this : null;
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

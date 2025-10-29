@@ -64,21 +64,21 @@ public class EffTransform extends Effect implements InputSource {
 	private @UnknownNullability String currentIndex;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (parseResult.regexes.isEmpty()) {
-			return false;
+			return null;
 		}
 
 		if (expressions[0].isSingle() || !(expressions[0] instanceof Variable<?> variable)) {
 			Skript.error("You can only transform list variables!");
-			return false;
+			return null;
 		}
 		unmappedObjects = variable;
 
 		String unparsedExpression = parseResult.regexes.get(0).group();
 		mappingExpr = parseExpression(unparsedExpression, getParser(), SkriptParser.ALL_FLAGS);
 		if (mappingExpr == null) {
-			return false;
+			return null;
 		}
 
 		// type hints
@@ -86,7 +86,7 @@ public class EffTransform extends Effect implements InputSource {
 			getParser().getHintManager().set(variable, mappingExpr.possibleReturnTypes());
 		}
 
-		return true;
+		return this;
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import ch.njol.skript.lang.EventRestrictedSyntax;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -42,9 +43,9 @@ public class ExprConsumedItem extends SimpleExpression<ItemStack> implements Eve
 	private boolean allowsSettingConsumedItem;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		this.allowsSettingConsumedItem = getParser().isCurrentEvent(PlayerItemConsumeEvent.class);
-		return true;
+		return this;
 	}
 
 	@Override

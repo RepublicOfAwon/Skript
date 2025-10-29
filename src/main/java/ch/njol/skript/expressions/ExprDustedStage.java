@@ -6,6 +6,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.block.Block;
@@ -39,10 +40,10 @@ public class ExprDustedStage extends PropertyExpression<Object, Integer> {
 	private boolean isMax;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setExpr((Expression<Block>) exprs[0]);
 		isMax = parseResult.hasTag("max");
-		return true;
+		return this;
 	}
 
 	@Override

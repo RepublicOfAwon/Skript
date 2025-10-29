@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Entity;
@@ -35,17 +36,17 @@ public class ExprHanging extends SimpleExpression<Entity> {
 	private boolean isRemover;
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		isRemover = parseResult.hasTag("remover");
 
 		if (isRemover && !getParser().isCurrentEvent(HangingBreakEvent.class)) {
 			Skript.error("The expression 'hanging remover' can only be used in break event");
-			return false;
+			return null;
 		} else if (!getParser().isCurrentEvent(HangingBreakEvent.class, HangingPlaceEvent.class)) {
 			Skript.error("The expression 'hanging entity' can only be used in break and place events");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -36,11 +37,11 @@ public class CondIsBanned extends PropertyCondition<Object> {
 	private boolean ipBanned;
 
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		setExpr(exprs[0]);
 		setNegated(matchedPattern >= 2);
 		ipBanned = matchedPattern % 2 != 0;
-		return true;
+		return this;
 	}
 	
 	@Override

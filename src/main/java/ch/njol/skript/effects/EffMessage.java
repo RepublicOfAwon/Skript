@@ -3,11 +3,8 @@ package ch.njol.skript.effects;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.ExprColoured;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionList;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.chat.BungeeConverter;
@@ -22,7 +19,6 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.UUID;
 
 @Name("Message")
 @Description({"Sends a message to the given player. Only styles written",
@@ -63,14 +59,14 @@ public class EffMessage extends Effect {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		messageExpr = LiteralUtils.defendExpression(exprs[0]);
 
 		messages = messageExpr instanceof ExpressionList ?
 			((ExpressionList<?>) messageExpr).getExpressions() : new Expression[] {messageExpr};
 		recipients = (Expression<CommandSender>) exprs[1];
 		sender = (Expression<Player>) exprs[2];
-		return LiteralUtils.canInitSafely(messageExpr);
+		return LiteralUtils.canInitSafely(messageExpr) ? this : null;
 	}
 
 	@Override

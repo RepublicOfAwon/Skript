@@ -10,6 +10,7 @@ import ch.njol.skript.expressions.ExprCaughtErrors;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.registrations.Feature;
@@ -39,10 +40,10 @@ public class SecCatchErrors extends Section implements ExperimentalSyntax {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
 		if (sectionNode.isEmpty()) {
 			Skript.error("A catch errors section must contain code.");
-			return false;
+			return null;
 		}
 		ParserInstance parser = getParser();
 		Kleenean previousDelay = parser.getHasDelayBefore();
@@ -50,10 +51,10 @@ public class SecCatchErrors extends Section implements ExperimentalSyntax {
 		loadCode(sectionNode);
 		if (parser.getHasDelayBefore().isTrue()) {
 			Skript.error("Delays can't be used within a catch errors section.");
-			return false;
+			return null;
 		}
 		parser.setHasDelayBefore(previousDelay);
-		return true;
+		return this;
 	}
 
 	@Override

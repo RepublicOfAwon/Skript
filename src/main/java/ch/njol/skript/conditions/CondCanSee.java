@@ -7,6 +7,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -41,7 +42,7 @@ public class CondCanSee extends Condition {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult result) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult result) {
 		if (matchedPattern == 1 || matchedPattern == 3) {
 			viewers = (Expression<Player>) exprs[0];
 			entities = (Expression<Entity>) exprs[1];
@@ -50,7 +51,7 @@ public class CondCanSee extends Condition {
 			viewers = (Expression<Player>) exprs[1];
 		}
 		setNegated(matchedPattern > 1 ^ result.hasTag("invisible"));
-		return true;
+		return this;
 	}
 
 	@Override

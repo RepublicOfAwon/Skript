@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.localization.Adjective;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Noun;
@@ -41,7 +42,7 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 	private ItemType @Nullable [] types;
 	
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		if (exprs.length > 0 && exprs[0] != null) {
 			//noinspection unchecked
 			ItemType[] itemTypes = ((Literal<ItemType>) exprs[0]).getAll();
@@ -57,20 +58,20 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 				}
 				return itemType;
 			});
-			return types.length != 0;
+			return types.length != 0 ? this : null;
 		} else {
 			types = new ItemType[]{new ItemType(SPLASH_POTION)};
 		}
-		return true;
+		return this;
 	}
 	
 	@Override
-	protected boolean init(@Nullable Class<? extends ThrownPotion> entityClass, @Nullable ThrownPotion thrownPotion) {
+	protected SyntaxElement init(@Nullable Class<? extends ThrownPotion> entityClass, @Nullable ThrownPotion thrownPotion) {
 		if (thrownPotion != null) {
 			ItemStack itemStack = thrownPotion.getItem();
 			types = new ItemType[] {new ItemType(itemStack)};
 		}
-		return true;
+		return this;
 	}
 
 	@Override

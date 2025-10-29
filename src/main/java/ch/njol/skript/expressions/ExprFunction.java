@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.function.DynamicFunctionReference;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.lang.function.Namespace;
@@ -47,7 +48,7 @@ public class ExprFunction extends SimpleExpression<DynamicFunctionReference> imp
 
 	@Override
 	@SuppressWarnings("null")
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult result) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult result) {
 		this.mode = matchedPattern;
 		this.local = mode == 2 || expressions[1] != null;
 		switch (mode) {
@@ -63,7 +64,7 @@ public class ExprFunction extends SimpleExpression<DynamicFunctionReference> imp
 				this.script = (Expression<Script>) expressions[0];
 		}
 		this.here = this.getParser().getCurrentScript();
-		return true;
+		return this;
 	}
 
 	@Override

@@ -5,10 +5,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
@@ -39,11 +36,11 @@ public class ExprDefaultValue extends SimpleExpression<Object> {
 	private Expression<Object> defaultValues;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		values = LiteralUtils.defendExpression(exprs[0]);
 		defaultValues = LiteralUtils.defendExpression(exprs[1]);
 		if (!LiteralUtils.canInitSafely(values, defaultValues)) {
-			return false;
+			return null;
 		}
 
 		Set<Class<?>> types = new HashSet<>();
@@ -52,7 +49,7 @@ public class ExprDefaultValue extends SimpleExpression<Object> {
 		this.types = types.toArray(new Class<?>[0]);
 		this.superType = Utils.getSuperType(this.types);
 
-		return true;
+		return this;
 	}
 
 	@Override

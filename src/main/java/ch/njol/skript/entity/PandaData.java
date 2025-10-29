@@ -3,6 +3,7 @@ package ch.njol.skript.entity;
 import ch.njol.skript.classes.EnumClassInfo;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
@@ -40,22 +41,22 @@ public class PandaData extends EntityData<Panda> {
 	}
 	
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		if (exprs[0] != null) {
 			mainGene = (Gene) exprs[0].getSingle();
 			if (exprs[1] != null)
 				hiddenGene = (Gene) exprs[1].getSingle();
 		}
-		return true;
+		return this;
 	}
 	
 	@Override
-	protected boolean init(@Nullable Class<? extends Panda> entityClass, @Nullable Panda panda) {
+	protected SyntaxElement init(@Nullable Class<? extends Panda> entityClass, @Nullable Panda panda) {
 		if (panda != null) {
 			mainGene = panda.getMainGene();
 			hiddenGene = panda.getHiddenGene();
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

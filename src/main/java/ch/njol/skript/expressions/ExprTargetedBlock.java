@@ -11,6 +11,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -44,10 +45,10 @@ public class ExprTargetedBlock extends PropertyExpression<LivingEntity, Block> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		setExpr((Expression<LivingEntity>) exprs[0]);
 		actual = parser.hasTag("actual");
-		return true;
+		return this;
 	}
 
 	@Override

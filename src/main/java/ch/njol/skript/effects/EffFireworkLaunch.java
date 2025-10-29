@@ -1,5 +1,6 @@
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -41,11 +42,11 @@ public class EffFireworkLaunch extends Effect {
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		effects = (Expression<FireworkEffect>) exprs[0];
 		locations = (Expression<Location>) exprs[1];
 		lifetime = (Expression<Number>) exprs[2];
-		return true;
+		return this;
 	}
 
 	@Override

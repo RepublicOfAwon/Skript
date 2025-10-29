@@ -37,7 +37,7 @@ public abstract class EffectSection extends Section {
 	 * This method should not be overridden unless you know what you are doing!
 	 */
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		ParserInstance parser = getParser();
 		SectionContext sectionContext = parser.getData(SectionContext.class);
 		EffectSectionContext effectSectionContext = parser.getData(EffectSectionContext.class);
@@ -48,7 +48,7 @@ public abstract class EffectSection extends Section {
 
 		//noinspection ConstantConditions - For an EffectSection, it may be null
 		hasSection = sectionContext.sectionNode != null;
-		boolean result = super.init(expressions, matchedPattern, isDelayed, parseResult);
+		SyntaxElement result = super.init(expressions, matchedPattern, isDelayed, parseResult);
 
 		if (!effectSectionContext.isNodeForEffectSection) {
 			sectionContext.sectionNode = sectionNode;
@@ -58,12 +58,12 @@ public abstract class EffectSection extends Section {
 	}
 
 	@Override
-	public abstract boolean init(Expression<?>[] expressions,
-								 int matchedPattern,
-								 Kleenean isDelayed,
-								 ParseResult parseResult,
-								 @Nullable SectionNode sectionNode,
-								 @Nullable List<TriggerItem> triggerItems);
+	public abstract SyntaxElement init(Expression<?>[] expressions,
+									   int matchedPattern,
+									   Kleenean isDelayed,
+									   ParseResult parseResult,
+									   @Nullable SectionNode sectionNode,
+									   @Nullable List<TriggerItem> triggerItems);
 
 	/**
 	 * Similar to {@link Section#parse(String, String, SectionNode, List)}, but will only attempt to parse from other {@link EffectSection}s.

@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.ColorRGB;
 import org.bukkit.FireworkEffect;
 import org.bukkit.event.Event;
@@ -40,7 +41,7 @@ public class ExprFireworkEffect extends SimpleExpression<FireworkEffect> {
 	
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		flicker = parseResult.mark == 2 || parseResult.mark > 3;
 		trail = parseResult.mark >= 3;
 		hasFade = matchedPattern == 1;
@@ -48,7 +49,7 @@ public class ExprFireworkEffect extends SimpleExpression<FireworkEffect> {
 		color = (Expression<Color>) exprs[1];
 		if (hasFade)
 			fade = (Expression<Color>) exprs[2];
-		return true;
+		return this;
 	}
 	
 	@Override

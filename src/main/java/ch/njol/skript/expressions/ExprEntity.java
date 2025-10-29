@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +47,7 @@ public class ExprEntity extends SimpleExpression<Entity> {
 	private EventValueExpression<Entity> entity;
 	
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public SyntaxElement init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		final RetainingLogHandler log = SkriptLogger.startRetainingLog();
 		try {
 			if (!StringUtils.startsWithIgnoreCase(parseResult.expr, "the ") && !StringUtils.startsWithIgnoreCase(parseResult.expr, "event-")) {
@@ -56,7 +57,7 @@ public class ExprEntity extends SimpleExpression<Entity> {
 				log.clear();
 				if (item != null) {
 					log.printLog();
-					return false;
+					return null;
 				}
 				
 				//if(!StringUtils.startsWithIgnoreCase(parseResult.expr, "the event-") && !s.equalsIgnoreCase("player") && !s.equalsIgnoreCase("entity")){
@@ -69,13 +70,13 @@ public class ExprEntity extends SimpleExpression<Entity> {
 			log.clear();
 			log.printLog();
 			if (type == null || type.isPlural().isTrue())
-				return false;
+				return null;
 			this.type = type;
 		} finally {
 			log.stop();
 		}
 		entity = new EventValueExpression<>(type.getType());
-		return entity.init();
+		return entity.init() ? this : null;
 	}
 	
 	@Override

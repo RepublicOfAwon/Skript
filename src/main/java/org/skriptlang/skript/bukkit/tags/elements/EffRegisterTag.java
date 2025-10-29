@@ -7,11 +7,8 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Keywords;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
@@ -71,7 +68,7 @@ public class EffRegisterTag extends Effect {
 	private TagType<?> type;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		name = (Expression<String>) expressions[0];
 		if (name instanceof Literal<String> literal) {
@@ -79,13 +76,13 @@ public class EffRegisterTag extends Effect {
 			if (!KEY_PATTERN.matcher(key).matches()) {
 				Skript.error("Tag names can only contain the following characters: letters, numbers, and some symbols: " +
 						"'/', '.', '_', and '-'");
-				return false;
+				return null;
 			}
 		}
 
 		contents = expressions[1];
 		type = TagType.getType(parseResult.mark - 1)[0];
-		return true;
+		return this;
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
@@ -43,7 +44,7 @@ public class ExprChunk extends SimpleExpression<Chunk> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		pattern = matchedPattern;
 		if (pattern == 0) {
 			locations = (Expression<Location>) exprs[1];
@@ -55,7 +56,7 @@ public class ExprChunk extends SimpleExpression<Chunk> {
 		} else {
 			worlds = ((Expression<World>) exprs[0]);
 		}
-		return true;
+		return this;
 	}
 
 	@Override

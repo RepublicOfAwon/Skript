@@ -7,6 +7,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemFlag;
@@ -38,11 +39,11 @@ public class ExprItemWithTooltip extends PropertyExpression<ItemType, ItemType> 
 	private boolean without, entire;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setExpr((Expression<ItemType>) expressions[0]);
 		without = parseResult.hasTag("out");
 		entire = !parseResult.hasTag("additional");
-		return true;
+		return this;
 	}
 
 	@Override

@@ -25,9 +25,9 @@ public class ExprTestStringLiteral extends SimpleExpression<String> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		this.literal = (Expression<String>) expressions[0];
-		return literal instanceof LiteralString;
+		return literal instanceof LiteralString ? this : null;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package ch.njol.skript.literals;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 
 import ch.njol.skript.Skript;
@@ -29,8 +30,8 @@ public class LitNewLine extends SimpleLiteral<String> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult result) {
-		return true;
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult result) {
+		return this;
 	}
 
 	@Override

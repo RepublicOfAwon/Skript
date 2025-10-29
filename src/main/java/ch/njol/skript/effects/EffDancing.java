@@ -5,6 +5,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.Timespan;
@@ -51,7 +52,7 @@ public class EffDancing extends Effect {
 	private @Nullable Expression<Timespan> timespan;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		entities = (Expression<LivingEntity>) exprs[0];
 		start = matchedPattern == 0;
@@ -63,7 +64,7 @@ public class EffDancing extends Effect {
 			//noinspection unchecked
 			timespan = (Expression<Timespan>) exprs[3];
 		}
-		return true;
+		return this;
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.Material;
@@ -74,14 +75,14 @@ public class ExprFurnaceEventItems extends PropertyExpression<Block, ItemStack> 
 	private FurnaceValues type;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		type = FURNACE_VALUES[matchedPattern];
 		if (!getParser().isCurrentEvent(type.clazz)) {
 			Skript.error(type.error);
-			return false;
+			return null;
 		}
 		setExpr(new EventValueExpression<>(Block.class));
-		return true;
+		return this;
 	}
 
 	@Override

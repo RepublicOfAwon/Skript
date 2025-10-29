@@ -5,10 +5,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.Utils;
@@ -39,21 +36,21 @@ public class ExprTernary extends SimpleExpression<Object> {
 	private Expression<Object> ifFalse;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		ifTrue = LiteralUtils.defendExpression(exprs[0]);
 		ifFalse = LiteralUtils.defendExpression(exprs[1]);
 		if (ifFalse instanceof ExprTernary || ifTrue instanceof ExprTernary) {
 			Skript.error("Ternary operators may not be nested!");
-			return false;
+			return null;
 		}
 		if (!LiteralUtils.canInitSafely(ifTrue, ifFalse)) {
-			return false;
+			return null;
 		}
 
 		String cond = parseResult.regexes.get(0).group();
 		condition = Condition.parse(cond, "Can't understand this condition: " + cond);
 		if (condition == null) {
-			return false;
+			return null;
 		}
 
 		Set<Class<?>> types = new HashSet<>();
@@ -62,7 +59,7 @@ public class ExprTernary extends SimpleExpression<Object> {
 		this.types = types.toArray(new Class<?>[0]);
 		this.superType = Utils.getSuperType(this.types);
 
-		return true;
+		return this;
 	}
 
 	@Override

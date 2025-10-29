@@ -6,6 +6,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
@@ -47,7 +48,7 @@ public class PropExprValueOf extends PropertyBaseExpression<TypedValuePropertyHa
 	private ClassInfo<?> type;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		Expression<?> propertyExpr;
 		if (matchedPattern == 0) {
 			//noinspection unchecked
@@ -62,14 +63,14 @@ public class PropExprValueOf extends PropertyBaseExpression<TypedValuePropertyHa
 		this.expr = PropertyBaseSyntax.asProperty(property, propertyExpr);
 		if (expr == null) {
 			Skript.error(getBadTypesErrorMessage(propertyExpr));
-			return false;
+			return null;
 		}
 
 		// get all possible property infos for the expression's return types
 		properties = PropertyBaseSyntax.getPossiblePropertyInfos(property, expr);
 		if (properties.isEmpty()) {
 			Skript.error(getBadTypesErrorMessage(expr));
-			return false; // no name property found
+			return null; // no name property found
 		}
 
 		// determine possible return types
@@ -80,7 +81,7 @@ public class PropExprValueOf extends PropertyBaseExpression<TypedValuePropertyHa
 			returnTypes = new Class[]{ type.getC() };
 			returnType = type.getC();
 		}
-		return LiteralUtils.canInitSafely(expr);
+		return LiteralUtils.canInitSafely(expr) ? this : null;
 	}
 
 	@Override

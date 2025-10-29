@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.parser.ParserInstance;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
@@ -53,20 +54,20 @@ public class ExprScript extends SimpleExpression<Script> {
 	private boolean isDirectory;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		this.isDirectory = matchedPattern == 2;
 		if (matchedPattern == 0) {
 			ParserInstance parser = this.getParser();
 			if (!parser.isActive()) {
 				Skript.error("'the current script' can only be used in a script.");
-				return false;
+				return null;
 			}
 			this.script = parser.getCurrentScript();
 		} else {
 			//noinspection unchecked
 			this.name = (Expression<String>) exprs[0];
 		}
-		return true;
+		return this;
 	}
 
 	@Override

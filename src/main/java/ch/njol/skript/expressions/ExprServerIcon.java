@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -38,18 +39,18 @@ public class ExprServerIcon extends SimpleExpression<CachedServerIcon> {
 	private boolean isServerPingEvent, isDefault;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!PAPER_EVENT_EXISTS) {
 			Skript.error("The server icon expression requires Paper 1.12.2 or newer");
-			return false;
+			return null;
 		}
 		isServerPingEvent = getParser().isCurrentEvent(PaperServerListPingEvent.class);
 		isDefault = (parseResult.mark == 0 && !isServerPingEvent) || parseResult.mark == 1;
 		if (!isServerPingEvent && !isDefault) {
 			Skript.error("The 'shown' server icon expression can't be used outside of a server list ping event");
-			return false;
+			return null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

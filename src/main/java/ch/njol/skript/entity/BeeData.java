@@ -2,6 +2,7 @@ package ch.njol.skript.entity;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Bee;
@@ -54,22 +55,22 @@ public class BeeData extends EntityData<Bee> {
 	}
 	
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		BeeState state = PATTERNS.getInfo(matchedCodeName);
 		assert state != null;
 		hasNectar = state.nectar;
 		isAngry = state.angry;
-		return true;
+		return this;
 	}
 	
 	@Override
-	protected boolean init(@Nullable Class<? extends Bee> entityClass, @Nullable Bee bee) {
+	protected SyntaxElement init(@Nullable Class<? extends Bee> entityClass, @Nullable Bee bee) {
 		if (bee != null) {
 			isAngry = Kleenean.get(bee.getAnger() > 0);
 			hasNectar = Kleenean.get(bee.hasNectar());
 			super.codeNameIndex = PATTERNS.getMatchedPattern(new BeeState(isAngry, hasNectar), 0).orElse(0);
 		}
-		return true;
+		return this;
 	}
 	
 	@Override

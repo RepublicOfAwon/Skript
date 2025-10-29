@@ -10,6 +10,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -29,7 +30,7 @@ public class ExprUnbreakable extends SimplePropertyExpression<ItemType, ItemType
 	private boolean unbreakable;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		unbreakable = parseResult.hasTag("un");
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

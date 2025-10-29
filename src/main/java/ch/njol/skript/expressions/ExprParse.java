@@ -7,13 +7,8 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.log.LogEntry;
@@ -82,20 +77,20 @@ public class ExprParse extends SimpleExpression<Object> {
 
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		text = (Expression<String>) exprs[0];
 		if (exprs[1] == null) {
 			String pattern = ChatColor.translateAlternateColorCodes('&', parseResult.regexes.get(0).group());
 
 			if (!VariableString.isQuotedCorrectly(pattern, false)) {
 				Skript.error("Invalid amount and/or placement of double quotes in '" + pattern + "'");
-				return false;
+				return null;
 			}
 
 			NonNullPair<String, NonNullPair<ClassInfo<?>, Boolean>[]> p = SkriptParser.validatePattern(pattern);
 			if (p == null) {
 				// Errored in validatePattern already
-				return false;
+				return null;
 			}
 
 			// Make all types in the pattern plural
@@ -105,7 +100,7 @@ public class ExprParse extends SimpleExpression<Object> {
 			// Check if all the types can actually parse
 			for (NonNullPair<ClassInfo<?>, Boolean> patternExpression : patternExpressions) {
 				if (!canParse(patternExpression.getFirst()))
-					return false;
+					return null;
 				if (patternExpression.getSecond())
 					single = false;
 			}
@@ -119,7 +114,7 @@ public class ExprParse extends SimpleExpression<Object> {
 			} catch (MalformedPatternException exception) {
 				// Some checks already done by validatePattern above, but just making sure
 				Skript.error("Malformed pattern: " + exception.getMessage());
-				return false;
+				return null;
 			}
 
 			// If the pattern contains at most 1 type, and this type is single, this expression is single
@@ -130,13 +125,13 @@ public class ExprParse extends SimpleExpression<Object> {
 
 			if (classInfo.getC() == String.class) {
 				Skript.error("Parsing as text is useless as only things that are already text may be parsed");
-				return false;
+				return null;
 			}
 
 			// Make sure the ClassInfo has a parser
-			return canParse(classInfo);
+			return canParse(classInfo) ? this : null;
 		}
-		return true;
+		return this;
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
@@ -78,7 +79,7 @@ public class ExprFurnaceTime extends PropertyExpression<Block, Timespan> {
 	private boolean explicitlyBlock = false;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		type = furnaceExprs[matchedPattern / 2];
 		if (exprs[0] != null) {
 			explicitlyBlock = true;
@@ -87,12 +88,12 @@ public class ExprFurnaceTime extends PropertyExpression<Block, Timespan> {
 		} else {
 			if (!getParser().isCurrentEvent(FurnaceBurnEvent.class, FurnaceStartSmeltEvent.class, FurnaceExtractEvent.class, FurnaceSmeltEvent.class)) {
 				Skript.error("There's no furnace in a '" + getParser().getCurrentEventName() + "' event.");
-				return false;
+				return null;
 			}
 			explicitlyBlock = false;
 			setExpr(new EventValueExpression<>(Block.class));
 		}
-		return true;
+		return this;
 	}
 
 	@Override

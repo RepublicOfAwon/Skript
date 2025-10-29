@@ -3,6 +3,7 @@ package ch.njol.skript.expressions;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
@@ -45,7 +46,7 @@ public class ExprInventorySlot extends SimpleExpression<Slot> {
 	
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (matchedPattern == 0){
 			 slots = (Expression<Number>) exprs[0];
 			 invis = (Expression<Inventory>) exprs[1];
@@ -53,7 +54,7 @@ public class ExprInventorySlot extends SimpleExpression<Slot> {
 			 slots = (Expression<Number>) exprs[1];
 			 invis = (Expression<Inventory>) exprs[0];			
 		}
-		return true;
+		return this;
 	}
 
 	@Override

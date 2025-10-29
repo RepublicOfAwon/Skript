@@ -8,6 +8,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.function.DynamicFunctionReference;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
@@ -41,7 +42,7 @@ public class ExprResult extends PropertyExpression<Executable<Event, Object>, Ob
 	private DynamicFunctionReference.Input input;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult result) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult result) {
 		//noinspection unchecked
 		this.setExpr((Expression<? extends Executable<Event, Object>>) expressions[0]);
 		this.hasArguments = result.hasTag("arguments");
@@ -55,11 +56,11 @@ public class ExprResult extends PropertyExpression<Executable<Event, Object>, Ob
 				arguments = new Expression[] {this.arguments};
 			}
 			this.input = new DynamicFunctionReference.Input(arguments);
-			return LiteralUtils.canInitSafely(this.arguments);
+			return LiteralUtils.canInitSafely(this.arguments) ? this : null;
 		} else {
 			this.input = new DynamicFunctionReference.Input();
 		}
-		return true;
+		return this;
 	}
 
 	@Override

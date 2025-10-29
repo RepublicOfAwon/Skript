@@ -43,23 +43,23 @@ public class EffReturn extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		ParserInstance parser = getParser();
 		handler = parser.getData(ReturnHandlerStack.class).getCurrentHandler();
 		if (handler == null) {
 			Skript.error("The return statement cannot be used here");
-			return false;
+			return null;
 		}
 
 		if (!isDelayed.isFalse()) {
 			Skript.error("A return statement after a delay is useless, as the calling trigger will resume when the delay starts (and won't get any returned value)");
-			return false;
+			return null;
 		}
 
 		Class<?> returnType = handler.returnValueType();
 		if (returnType == null) {
 			Skript.error(handler + " doesn't return any value. Please use 'stop' or 'exit' if you want to stop the trigger.");
-			return false;
+			return null;
 		}
 
 		RetainingLogHandler log = SkriptLogger.startRetainingLog();
@@ -69,7 +69,7 @@ public class EffReturn extends Effect {
 			if (convertedExpr == null) {
 				String typeName = Classes.getSuperClassInfo(returnType).getName().withIndefiniteArticle();
 				log.printErrors(handler + " is declared to return " + typeName + ", but " + exprs[0].toString(null, false) + " is not of that type.");
-				return false;
+				return null;
 			}
 			log.printLog();
 		} finally {
@@ -79,7 +79,7 @@ public class EffReturn extends Effect {
 		if (handler.isSingleReturnValue() && !convertedExpr.isSingle()) {
 			String typeName = Classes.getSuperClassInfo(returnType).getName().getSingular();
 			Skript.error(handler + " is defined to only return a single " + typeName + ", but this return statement can return multiple values.");
-			return false;
+			return null;
 		}
 		value = convertedExpr;
 
@@ -92,7 +92,7 @@ public class EffReturn extends Effect {
 			.filter(SectionExitHandler.class::isInstance)
 			.map(SectionExitHandler.class::cast)
 			.toList();
-		return true;
+		return this;
 	}
 
 	@Override

@@ -43,28 +43,28 @@ public class ExprRecursiveSize extends SimpleExpression<Long> {
 	private ExpressionList<?> exprs;
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		this.exprs = expressions[0] instanceof ExpressionList<?> exprList
 		? exprList
 		: new ExpressionList<>(new Expression<?>[]{ expressions[0] }, Object.class, false);
 
 		this.exprs = (ExpressionList<?>) LiteralUtils.defendExpression(this.exprs);
 		if (!LiteralUtils.canInitSafely(this.exprs)) {
-			return false;
+			return null;
 		}
 
 		if (this.exprs.isSingle()) {
 			Skript.error("'" + this.exprs.toString(null, Skript.debug()) + "' can only ever have one value at most, thus the 'recursive size of ...' expression is useless. Use '... exists' instead to find out whether the expression has a value.");
-			return false;
+			return null;
 		}
 
 		for (Expression<?> expr : this.exprs.getExpressions()) {
 			if (!(expr instanceof Variable<?>)) {
 				Skript.error("Getting the recursive size of a list only applies to variables, thus the '" + expr.toString(null, Skript.debug()) + "' expression is useless.");
-				return false;
+				return null;
 			}
 		}
-		return true;
+		return this;
 	}
 
 	@Override

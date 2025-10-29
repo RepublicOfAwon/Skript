@@ -87,16 +87,16 @@ public class SecLoop extends LoopSection {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs,
-						int matchedPattern,
-						Kleenean isDelayed,
-						ParseResult parseResult,
-						SectionNode sectionNode,
-						List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] exprs,
+                              int matchedPattern,
+                              Kleenean isDelayed,
+                              ParseResult parseResult,
+                              SectionNode sectionNode,
+                              List<TriggerItem> triggerItems) {
 		this.expression = LiteralUtils.defendExpression(exprs[0]);
 		if (!LiteralUtils.canInitSafely(expression)) {
 			Skript.error("Can't understand this loop: '" + parseResult.expr.substring(5) + "'");
-			return false;
+			return null;
 		}
 
 		if (!(expression instanceof Variable) && Container.class.isAssignableFrom(expression.getReturnType())) {
@@ -113,7 +113,7 @@ public class SecLoop extends LoopSection {
 			this.iterableSingle = true;
 		} else if (expression.isSingle()) {
 			Skript.error("Can't loop '" + expression + "' because it's only a single value");
-			return false;
+			return null;
 		}
 		loopPeeking = exprs[0].supportsLoopPeeking();
 
@@ -121,7 +121,7 @@ public class SecLoop extends LoopSection {
 		keyed = KeyProviderExpression.canReturnKeys(expression);
 		loadOptionalCode(sectionNode);
 
-		return true;
+		return this;
 	}
 
 	@Override

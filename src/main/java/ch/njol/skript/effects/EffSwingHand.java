@@ -1,5 +1,6 @@
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -36,14 +37,14 @@ public class EffSwingHand extends Effect {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!SWINGING_IS_SUPPORTED) {
 			Skript.error("The swing hand effect requires Minecraft 1.15.2 or newer");
-			return false;
+			return null;
 		}
 		entities = (Expression<LivingEntity>) exprs[0];
 		isMainHand = matchedPattern == 0;
-		return true;
+		return this;
 	}
 	
 	@Override

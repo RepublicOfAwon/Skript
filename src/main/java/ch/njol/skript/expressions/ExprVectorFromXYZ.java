@@ -1,6 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
@@ -34,11 +35,11 @@ public class ExprVectorFromXYZ extends SimpleExpression<Vector> {
 
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		x = (Expression<Number>) exprs[0];
 		y = (Expression<Number>) exprs[1];
 		z = (Expression<Number>) exprs[2];
-		return true;
+		return this;
 	}
 
 	@Override

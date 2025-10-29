@@ -2,6 +2,7 @@ package ch.njol.skript.entity;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Goat;
@@ -30,18 +31,18 @@ public class GoatData extends EntityData<Goat> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		screaming = PATTERNS.getInfo(matchedCodeName);
-		return true;
+		return this;
 	}
 
 	@Override
-	protected boolean init(@Nullable Class<? extends Goat> entityClass, @Nullable Goat goat) {
+	protected SyntaxElement init(@Nullable Class<? extends Goat> entityClass, @Nullable Goat goat) {
 		if (goat != null) {
 			screaming = Kleenean.get(goat.isScreaming());
 			super.codeNameIndex = PATTERNS.getMatchedPattern(screaming, 0).orElseThrow();
 		}
-		return true;
+		return this;
 	}
 
 	@Override

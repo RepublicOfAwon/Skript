@@ -2,10 +2,7 @@ package ch.njol.skript.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.*;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.KeyProviderExpression;
-import ch.njol.skript.lang.KeyedValue;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
@@ -51,7 +48,7 @@ public class ExprIndices extends SimpleExpression<String> {
 	private boolean descending;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		sort = matchedPattern > 1;
 		descending = parseResult.mark == 1;
 
@@ -59,11 +56,11 @@ public class ExprIndices extends SimpleExpression<String> {
 
 		if (!KeyProviderExpression.canReturnKeys(expression)) {
 			Skript.error("The indices expression may only be used with keyed expressions");
-			return false;
+			return null;
 		}
 
 		keyedExpression = (KeyProviderExpression<?>) exprs[0];
-		return true;
+		return this;
 
 	}
 

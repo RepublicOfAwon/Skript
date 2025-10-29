@@ -32,7 +32,7 @@ public class VisualEffect implements SyntaxElement, YggdrasilSerializable {
 
 	@SuppressWarnings({"null", "ConstantConditions"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		type = VisualEffects.get(matchedPattern);
 
 		if (exprs.length > 4) {
@@ -64,7 +64,7 @@ public class VisualEffect implements SyntaxElement, YggdrasilSerializable {
 			speed = ((Number) exprs[exprs.length - 1].getSingle(null)).floatValue();
 		}
 
-		return true;
+		return this;
 	}
 
 	public void play(@Nullable Player[] ps, Location l, @Nullable Entity e, int count, int radius) {

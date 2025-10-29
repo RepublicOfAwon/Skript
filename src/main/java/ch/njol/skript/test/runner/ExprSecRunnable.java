@@ -4,11 +4,8 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.expressions.base.SectionExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -39,14 +36,14 @@ public class ExprSecRunnable extends SectionExpression<Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] expressions,
-						int pattern,
-						Kleenean delayed,
-						ParseResult result,
-						@Nullable SectionNode node,
-						@Nullable List<TriggerItem> triggerItems) {
+	public SyntaxElement init(Expression<?>[] expressions,
+                              int pattern,
+                              Kleenean delayed,
+                              ParseResult result,
+                              @Nullable SectionNode node,
+                              @Nullable List<TriggerItem> triggerItems) {
 		loadCode(node);
-		return true;
+		return this;
 	}
 
 	@Override

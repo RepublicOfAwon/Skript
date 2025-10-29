@@ -1,5 +1,6 @@
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.SyntaxElement;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -49,7 +50,7 @@ public class EffCommand extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (matchedPattern == 0) {
 			commands = (Expression<String>) exprs[0];
 			senders = (Expression<CommandSender>) exprs[1];
@@ -60,10 +61,10 @@ public class EffCommand extends Effect {
 		bungeecord = parseResult.hasTag("bungee");
 		if (bungeecord && senders == null) {
 			Skript.error("The commandsenders expression cannot be omitted when using the bungeecord option");
-			return false;
+			return null;
 		}
 		commands = VariableString.setStringMode(commands, StringMode.COMMAND);
-		return true;
+		return this;
 	}
 
 	@Override

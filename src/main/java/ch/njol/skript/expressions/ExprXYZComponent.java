@@ -11,6 +11,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
@@ -61,7 +62,7 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 	private ExprXYZComponent.@UnknownNullability Axis axis;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		axis = Axis.valueOf(parseResult.tags.get(0).toUpperCase(Locale.ENGLISH));
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}

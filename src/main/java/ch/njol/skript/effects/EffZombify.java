@@ -10,6 +10,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
@@ -60,7 +61,7 @@ public class EffZombify extends Effect {
 	private boolean changeInPlace = false;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		entities = (Expression<LivingEntity>) exprs[0];
 		zombify = matchedPattern == 0;
@@ -70,7 +71,7 @@ public class EffZombify extends Effect {
 		}
 		if (ChangerUtils.acceptsChange(entities, ChangeMode.SET, LivingEntity.class))
 			changeInPlace = true;
-		return true;
+		return this;
 	}
 
 	@Override

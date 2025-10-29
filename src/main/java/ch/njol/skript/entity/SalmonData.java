@@ -3,6 +3,7 @@ package ch.njol.skript.entity;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.coll.CollectionUtils;
@@ -52,18 +53,18 @@ public class SalmonData extends EntityData<Salmon> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		variant = PATTERNS.getInfo(matchedCodeName);
-		return true;
+		return this;
 	}
 
 	@Override
-	protected boolean init(@Nullable Class<? extends Salmon> entityClass, @Nullable Salmon salmon) {
+	protected SyntaxElement init(@Nullable Class<? extends Salmon> entityClass, @Nullable Salmon salmon) {
 		if (salmon != null && SUPPORT_SALMON_VARIANTS) {
 			variant = salmon.getVariant();
 			super.codeNameIndex = PATTERNS.getMatchedPattern(variant, 0).orElse(0);
 		}
-		return true;
+		return this;
 	}
 
 	@Override

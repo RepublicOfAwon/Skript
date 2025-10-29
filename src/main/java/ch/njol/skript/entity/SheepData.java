@@ -2,6 +2,7 @@ package ch.njol.skript.entity;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.localization.Adjective;
 import ch.njol.skript.localization.Language;
@@ -42,23 +43,23 @@ public class SheepData extends EntityData<Sheep> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
+	protected SyntaxElement init(Literal<?>[] exprs, int matchedCodeName, int matchedPattern, ParseResult parseResult) {
 		sheared = PATTERNS.getInfo(matchedCodeName);
 		if (exprs[0] != null) {
 			//noinspection unchecked
 			colors = ((Literal<Color>) exprs[0]).getAll();
 		}
-		return true;
+		return this;
 	}
 
 	@Override
-	protected boolean init(@Nullable Class<? extends Sheep> entityClass, @Nullable Sheep sheep) {
+	protected SyntaxElement init(@Nullable Class<? extends Sheep> entityClass, @Nullable Sheep sheep) {
 		if (sheep != null) {
 			sheared = Kleenean.get(sheep.isSheared());
 			colors = CollectionUtils.array(SkriptColor.fromDyeColor(sheep.getColor()));
 			super.codeNameIndex = PATTERNS.getMatchedPattern(sheared, 0).orElse(0);
 		}
-		return true;
+		return this;
 	}
 
 	@Override
