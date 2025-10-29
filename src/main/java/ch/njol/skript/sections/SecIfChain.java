@@ -2,10 +2,7 @@ package ch.njol.skript.sections;
 
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Section;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -24,11 +21,11 @@ public class SecIfChain extends Section {
     }
 
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern,
-						Kleenean delayed, SkriptParser.ParseResult result,
-						SectionNode node, List<TriggerItem> items) {
+    public SyntaxElement init(Expression<?>[] exprs, int matchedPattern,
+							  Kleenean delayed, SkriptParser.ParseResult result,
+							  SectionNode node, List<TriggerItem> items) {
         // code not parsed here, handled by child SecConditionals
-        return true;
+        return this;
     }
 
     @Override
