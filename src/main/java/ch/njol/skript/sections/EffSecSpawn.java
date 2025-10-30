@@ -154,7 +154,6 @@ public class EffSecSpawn extends EffectSection {
 				}
 			}
 		}
-		super.walk(event);
 
 		return null;
 	}

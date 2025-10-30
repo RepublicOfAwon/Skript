@@ -316,6 +316,9 @@ public class SecConditional extends Section {
 		if (type == ConditionalType.THEN || (parseIf && !parseIfPassed)) {
 			return null;
 		} else if (parseIf || checkConditions(event)) {
+			if (multiline) {
+				return null;
+			}
 			super.walk(event);
 			throw new SkipException();
 		}

@@ -103,7 +103,8 @@ public class EffReturn extends Effect {
 		for (SectionExitHandler section : sectionsToExit)
 			section.exit(event);
 
-		return null;
+
+		throw new Trigger.ReturnException();
 	}
 
 	@Override

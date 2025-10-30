@@ -256,7 +256,6 @@ public class EffSecShoot extends EffectSection {
 				}
 			}
 		}
-		super.walk(event);
 
 		return null;
 	}
