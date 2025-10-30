@@ -14,9 +14,9 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
-import org.bukkit.event.Event;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +57,7 @@ public class ExprMaxPlayers extends SimpleExpression<Integer> {
 
 	@Override
 	@Nullable
-	public Integer[] get(Event event) {
+	public Integer[] execute(VirtualFrame event) {
 		if (!isReal && !(event instanceof ServerListPingEvent))
 			return null;
 
@@ -97,7 +97,7 @@ public class ExprMaxPlayers extends SimpleExpression<Integer> {
 
 	@SuppressWarnings("null")
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		int amount = delta == null ? 0 : ((Number) delta[0]).intValue();
 		
 		if (!isReal && !(event instanceof ServerListPingEvent))
@@ -145,7 +145,7 @@ public class ExprMaxPlayers extends SimpleExpression<Integer> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the count of " + (isReal ? "real max players" : "max players");
 	}
 

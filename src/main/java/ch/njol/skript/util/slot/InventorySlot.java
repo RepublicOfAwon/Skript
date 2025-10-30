@@ -1,9 +1,9 @@
 package ch.njol.skript.util.slot;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -92,7 +92,7 @@ public class InventorySlot extends SlotWithIndex {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		InventoryHolder holder = inventory.getHolder();
 
 		if (holder instanceof BlockState)

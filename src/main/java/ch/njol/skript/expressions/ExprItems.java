@@ -14,8 +14,8 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.Iterables;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Material;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,7 +69,7 @@ public class ExprItems extends SimpleExpression<ItemType> {
 
 	@Override
 	@Nullable
-	protected ItemType[] get(Event event) {
+	protected ItemType[] execute(VirtualFrame event) {
 		if (buffer != null)
 			return buffer;
 		List<ItemType> items = new ArrayList<>();
@@ -83,7 +83,7 @@ public class ExprItems extends SimpleExpression<ItemType> {
 	@Override
 	@Nullable
 	@SuppressWarnings("unchecked")
-	public Iterator<ItemType> iterator(Event event) {
+	public Iterator<ItemType> iterator(VirtualFrame event) {
 		if (!items && itemTypeExpr == null)
 			return Arrays.stream(ALL_BLOCKS)
 				.map(ItemType::clone)
@@ -116,7 +116,7 @@ public class ExprItems extends SimpleExpression<ItemType> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "all of the " + (items ? "items" : "blocks") + (itemTypeExpr != null ? " of type " + itemTypeExpr.toString(event, debug) : "");
 	}
 

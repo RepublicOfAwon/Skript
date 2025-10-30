@@ -11,8 +11,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Do Respawn Anchors Work")
@@ -38,12 +38,12 @@ public class CondAnchorWorks extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		return worlds.check(event, World::isRespawnAnchorWorks, isNegated());
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "respawn anchors " + (isNegated() ? " do" : " don't") + " work in " + worlds.toString(event, debug);
 	}
 

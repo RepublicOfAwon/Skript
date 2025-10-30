@@ -9,10 +9,10 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Tameable;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Entity Owner")
@@ -47,9 +47,9 @@ public class ExprEntityOwner extends SimplePropertyExpression<Entity, OfflinePla
 	}
 	
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		OfflinePlayer newPlayer = delta == null ? null : (OfflinePlayer) delta[0];
-		for (Entity entity : getExpr().getArray(event)) {
+		for (Entity entity : getExpr().executeArray(event)) {
 			if (entity instanceof Tameable tameable) {
 				tameable.setOwner(newPlayer);
 			}

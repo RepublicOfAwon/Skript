@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +40,7 @@ public class ExprItemWithEnchantmentGlint extends PropertyExpression<ItemType, I
 	}
 
 	@Override
-	protected ItemType[] get(Event event, ItemType[] source) {
+	protected ItemType[] get(VirtualFrame event, ItemType[] source) {
 		return get(source, itemType -> {
 			itemType = itemType.clone();
 			ItemMeta meta = itemType.getItemMeta();
@@ -56,7 +56,7 @@ public class ExprItemWithEnchantmentGlint extends PropertyExpression<ItemType, I
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return getExpr().toString(event, debug) + (glint ? " with" : " without") + " enchantment glint";
 	}
 

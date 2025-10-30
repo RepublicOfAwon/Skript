@@ -1,6 +1,6 @@
 package ch.njol.skript.expressions;
 
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +30,7 @@ public class ExprTransformReason extends EventValueExpression<TransformReason> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "transform reason";
 	}
 

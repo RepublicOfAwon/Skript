@@ -9,8 +9,8 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Freeze Time")
@@ -40,30 +40,30 @@ public class ExprFreezeTicks extends SimplePropertyExpression<Entity, Timespan> 
 	}
 
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
 		int time = delta == null ? 0 : (int) ((Timespan) delta[0]).getAs(Timespan.TimePeriod.TICK);
 		int newTime;
 		switch (mode) {
 			case ADD:
-				for (Entity entity : getExpr().getArray(e)) {
+				for (Entity entity : getExpr().executeArray(e)) {
 					newTime = entity.getFreezeTicks() + time;
 					setFreezeTicks(entity, newTime);
 				}
 				break;
 			case REMOVE:
-				for (Entity entity : getExpr().getArray(e)) {
+				for (Entity entity : getExpr().executeArray(e)) {
 					newTime = entity.getFreezeTicks() - time;
 					setFreezeTicks(entity, newTime);
 				}
 				break;
 			case SET:
-				for (Entity entity : getExpr().getArray(e)) {
+				for (Entity entity : getExpr().executeArray(e)) {
 					setFreezeTicks(entity, time);
 				}
 				break;
 			case DELETE:
 			case RESET:
-				for (Entity entity : getExpr().getArray(e)) {
+				for (Entity entity : getExpr().executeArray(e)) {
 					setFreezeTicks(entity, 0);
 				}
 				break;

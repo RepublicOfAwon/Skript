@@ -9,8 +9,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SectionUtils;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Direction;
-import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntitySnapshot;
@@ -110,7 +110,9 @@ public class EffSecSpawn extends EffectSection {
 	}
 
 	@Override
-	public Object walk(Event event) {
+	public Object execute(VirtualFrame frame) {
+
+		Event event = (Event) frame.getArguments()[0];
 		lastSpawned = null;
 
 		Consumer<? extends Entity> consumer;
@@ -118,17 +120,20 @@ public class EffSecSpawn extends EffectSection {
 			consumer = entity -> {
 				lastSpawned = entity;
 				SpawnEvent spawnEvent = new SpawnEvent(entity);
-				Variables.withLocalVariables(event, spawnEvent, () -> TriggerItem.walk(trigger, spawnEvent));
+				Event previousEvent = (Event) frame.getArguments()[0];
+				frame.getArguments()[0] = spawnEvent;
+				trigger.execute(frame);
+				frame.getArguments()[0] = previousEvent;
 			};
 		} else {
 			consumer = null;
 		}
 
-		Number numberAmount = amount != null ? amount.getSingle(event) : 1;
+		Number numberAmount = amount != null ? amount.executeSingle(frame) : 1;
 		if (numberAmount != null) {
 			double amount = numberAmount.doubleValue();
-			Object[] types = this.types.getArray(event);
-			for (Location location : locations.getArray(event)) {
+			Object[] types = this.types.executeArray(frame);
+			for (Location location : locations.executeArray(frame)) {
 				for (Object type : types) {
 					if (type instanceof EntityType entityType) {
 						double typeAmount = amount * entityType.getAmount();
@@ -159,7 +164,7 @@ public class EffSecSpawn extends EffectSection {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "spawn " + (amount != null ? amount.toString(event, debug) + " of " : "") +
 				types.toString(event, debug) + " " + locations.toString(event, debug);
 	}

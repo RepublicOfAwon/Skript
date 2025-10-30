@@ -15,7 +15,7 @@ import ch.njol.skript.lang.function.Namespace;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.registrations.experiments.ReflectionExperimentSyntax;
 import org.skriptlang.skript.lang.script.Script;
@@ -68,16 +68,16 @@ public class ExprFunction extends SimpleExpression<DynamicFunctionReference> imp
 	}
 
 	@Override
-	protected DynamicFunctionReference<?>[] get(Event event) {
+	protected DynamicFunctionReference<?>[] execute(VirtualFrame event) {
 		@Nullable Script script;
 		if (local) {
-			script = this.script.getSingle(event);
+			script = this.script.executeSingle(event);
 		} else {
 			script = here;
 		}
 		return switch (mode) {
 			case 0 -> {
-				@Nullable String name = this.name.getSingle(event);
+				@Nullable String name = this.name.executeSingle(event);
 				if (name == null)
 					yield CollectionUtils.array();
 				@Nullable DynamicFunctionReference reference = DynamicFunctionReference.resolveFunction(name, script);
@@ -113,7 +113,7 @@ public class ExprFunction extends SimpleExpression<DynamicFunctionReference> imp
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return switch (mode) {
 			case 0 -> "the function named " + name.toString(event, debug)
 						+ (local ? " from " + script.toString(event, debug) : "");

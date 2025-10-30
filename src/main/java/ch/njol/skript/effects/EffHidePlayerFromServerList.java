@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,16 +58,16 @@ public class EffHidePlayerFromServerList extends Effect {
 
 	@Override
 	@SuppressWarnings("removal")
-	protected void execute(Event e) {
+	protected void executeVoid(VirtualFrame e) {
 		if (!(e instanceof ServerListPingEvent))
 			return;
 
 		Iterator<Player> it = ((ServerListPingEvent) e).iterator();
-		Iterators.removeAll(it, Arrays.asList(players.getArray(e)));
+		Iterators.removeAll(it, Arrays.asList(players.executeArray(e)));
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "hide " + players.toString(e, debug) + " from the server list";
 	}
 

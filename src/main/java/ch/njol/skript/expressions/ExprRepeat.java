@@ -13,7 +13,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 
@@ -43,8 +43,8 @@ public class ExprRepeat extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected @Nullable String[] get(Event event) {
-		int repeatCount = this.repeatCount.getOptionalSingle(event).orElse(0);
+	protected @Nullable String[] execute(VirtualFrame event) {
+		int repeatCount = this.repeatCount.executeOptional(event).orElse(0);
 		if (repeatCount < 1)
 			return new String[0];
 		return strings.stream(event).map(string -> StringUtils.multiply(string, repeatCount)).toArray(String[]::new);
@@ -68,7 +68,7 @@ public class ExprRepeat extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return strings.toString(event, debug) + " repeated " + repeatCount.toString(event, debug) + " times";
 	}
 

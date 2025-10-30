@@ -7,10 +7,10 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Goat;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Make Entity Scream")
@@ -50,8 +50,8 @@ public class EffScreaming extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (LivingEntity entity : entities.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (LivingEntity entity : entities.executeArray(event)) {
 			if (entity instanceof Goat goat) {
 				goat.setScreaming(scream);
 			} else if (SUPPORTS_ENDERMAN && entity instanceof Enderman enderman) {
@@ -61,7 +61,7 @@ public class EffScreaming extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "make " + entities.toString(event, debug) + (scream ? " start " : " stop ") + "screaming";
 	}
 

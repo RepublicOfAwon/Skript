@@ -1,8 +1,8 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -65,16 +65,16 @@ public class EffSendResourcePack extends Effect {
 	// Player#setResourcePack(String) is deprecated on Paper
 	@SuppressWarnings({"deprecation"})
 	@Override
-	protected void execute(Event e) {
+	protected void executeVoid(VirtualFrame e) {
 		assert url != null;
 		String hash = null;
 		if (this.hash != null)
-			hash = this.hash.getSingle(e);
-		String address = url.getSingle(e);
+			hash = this.hash.executeSingle(e);
+		String address = url.executeSingle(e);
 		if (address == null) {
 			return; // Can't send, URL not valid
 		}
-		for (Player p : recipients.getArray(e)) {
+		for (Player p : recipients.executeArray(e)) {
 			try {
 				if (hash == null) {
 					p.setResourcePack(address);
@@ -89,7 +89,7 @@ public class EffSendResourcePack extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "send the resource pack from " + url.toString(e, debug) +
 				(hash != null ? " with hash " + hash.toString(e, debug) : "") +
 				" to " + recipients.toString(e, debug);

@@ -13,7 +13,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
@@ -44,9 +44,9 @@ public class ExprVectorAngleBetween extends SimpleExpression<Number> {
 
 	@Override
 	@SuppressWarnings("null")
-	protected Number[] get(Event event) {
-		Vector first = this.first.getSingle(event);
-		Vector second = this.second.getSingle(event);
+	protected Number[] execute(VirtualFrame event) {
+		Vector first = this.first.executeSingle(event);
+		Vector second = this.second.executeSingle(event);
 		if (first == null || second == null)
 			return null;
 		return CollectionUtils.array(first.angle(second) * RAD_TO_DEG);
@@ -70,7 +70,7 @@ public class ExprVectorAngleBetween extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the angle between " + first.toString(event, debug) + " and " + second.toString(event, debug);
 	}
 

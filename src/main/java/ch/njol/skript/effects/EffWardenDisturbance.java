@@ -11,10 +11,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Warden;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Make Disturbance")
@@ -48,18 +48,18 @@ public class EffWardenDisturbance extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		Location finalLocation = location.getSingle(event);
+	protected void executeVoid(VirtualFrame event) {
+		Location finalLocation = location.executeSingle(event);
 		if (finalLocation == null)
 			return;
-		for (LivingEntity livingEntity : wardens.getArray(event)) {
+		for (LivingEntity livingEntity : wardens.executeArray(event)) {
 			if (livingEntity instanceof Warden warden)
 				warden.setDisturbanceLocation(finalLocation);
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "make " + wardens.toString(event, debug) + " sense a disturbance " + location.toString(event, debug);
 	}
 

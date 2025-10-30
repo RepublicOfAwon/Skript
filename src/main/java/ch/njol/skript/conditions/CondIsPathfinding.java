@@ -16,10 +16,10 @@ import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.entity.Pathfinder;
 import com.destroystokyo.paper.entity.Pathfinder.PathResult;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Is Pathfinding")
@@ -56,7 +56,7 @@ public class CondIsPathfinding extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		return entities.check(event, entity -> {
 			if (!(entity instanceof Mob))
 				return false;
@@ -65,7 +65,7 @@ public class CondIsPathfinding extends Condition {
 				return pathfind.hasPath();
 
 			PathResult current = pathfind.getCurrentPath();
-			Object target = this.target.getSingle(event);
+			Object target = this.target.executeSingle(event);
 			if (target == null || current == null)
 				return false;
 			Location location = current.getFinalPoint();
@@ -78,7 +78,7 @@ public class CondIsPathfinding extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return PropertyCondition.toString(this, PropertyType.BE, event, debug, entities, "pathfinding" +
 				target == null ? "" : " to " + target.toString(event, debug));
 	}

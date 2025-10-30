@@ -2,8 +2,8 @@ package ch.njol.skript.effects;
 
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -43,15 +43,15 @@ public class EffMakeFly extends Effect {
 	}
 
 	@Override
-	protected void execute(Event e) {
-		for (Player player : players.getArray(e)) {
+	protected void executeVoid(VirtualFrame e) {
+		for (Player player : players.executeArray(e)) {
 			player.setAllowFlight(flying);
 			player.setFlying(flying);
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "make " + players.toString(e, debug) + (flying ? " start " : " stop ") + "flying";
 	}
 

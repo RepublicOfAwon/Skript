@@ -2,7 +2,7 @@ package ch.njol.skript.expressions.arithmetic;
 
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.Variable;
-import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.test.runner.SkriptJUnitTest;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class ArithmeticSimplificationTest extends SkriptJUnitTest {
 		Assert.assertTrue(leftArith instanceof SimplifiedLiteral<?>);
 		Assert.assertTrue(rightArith instanceof Variable<?>);
 		//noinspection unchecked,DataFlowIssue
-		Assert.assertEquals(5 - 10, ((ExprArithmetic<?,?,Number>) arithmetic).getSingle(ContextlessEvent.get()).intValue());
+		Assert.assertEquals(5 - 10, ((ExprArithmetic<?,?,Number>) arithmetic).executeSingle(ContextlessVirtualFrame.get()).intValue());
 	}
 
 }

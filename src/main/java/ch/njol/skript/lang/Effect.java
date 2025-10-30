@@ -5,6 +5,7 @@ import ch.njol.skript.config.Node;
 import ch.njol.skript.lang.function.EffFunctionCall;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,12 +36,12 @@ public abstract class Effect extends Statement implements SyntaxRuntimeErrorProd
 	 * 
 	 * @param event The event with which this effect will be executed
 	 */
-	protected abstract void execute(Event event);
+	protected abstract void executeVoid(VirtualFrame event);
 
 	@Override
-	public final boolean run(Event event) {
-		execute(event);
-		return true;
+	public Object execute(VirtualFrame frame) {
+		executeVoid(frame);
+		return null;
 	}
 
 	public static @Nullable Effect parse(String input, @Nullable String defaultError) {

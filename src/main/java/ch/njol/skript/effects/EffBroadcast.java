@@ -10,19 +10,17 @@ import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
-import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.util.chat.BungeeConverter;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.MessageComponent;
 import ch.njol.util.Kleenean;
-import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.Event;
 import org.bukkit.event.server.BroadcastMessageEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,13 +64,13 @@ public class EffBroadcast extends Effect {
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
-	public void execute(Event event) {
+	public void executeVoid(VirtualFrame event) {
 		List<CommandSender> receivers = new ArrayList<>();
 		if (worlds == null) {
 			receivers.addAll(Bukkit.getOnlinePlayers());
 			receivers.add(Bukkit.getConsoleSender());
 		} else {
-			for (World world : worlds.getArray(event))
+			for (World world : worlds.executeArray(event))
 				receivers.addAll(world.getPlayers());
 		}
 
@@ -86,14 +84,14 @@ public class EffBroadcast extends Effect {
 				BaseComponent[] components = BungeeConverter.convert(messageComponents);
 				receivers.forEach(receiver -> receiver.spigot().sendMessage(components));
 			} else if (message instanceof ExprColoured coloured && coloured.isUnsafeFormat()) { // Manually marked as trusted
-				for (Object realMessage : message.getArray(event)) {
+				for (Object realMessage : message.executeArray(event)) {
 					if (!dispatchEvent(Utils.replaceChatStyles((String) realMessage), receivers))
 						continue;
 					BaseComponent[] components = BungeeConverter.convert(ChatMessages.parse((String) realMessage));
 					receivers.forEach(receiver -> receiver.spigot().sendMessage(components));
 				}
 			} else {
-				for (Object messageObject : message.getArray(event)) {
+				for (Object messageObject : message.executeArray(event)) {
 					String realMessage = messageObject instanceof String string ? string : Classes.toString(messageObject);
 					if (!dispatchEvent(Utils.replaceChatStyles(realMessage), receivers))
 						continue;
@@ -104,7 +102,7 @@ public class EffBroadcast extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "broadcast " + messageExpr.toString(event, debug) + (worlds == null ? "" : " to " + worlds.toString(event, debug));
 	}
 
@@ -131,26 +129,6 @@ public class EffBroadcast extends Effect {
 		}
 		Bukkit.getPluginManager().callEvent(broadcastEvent);
 		return !broadcastEvent.isCancelled();
-	}
-
-	/**
-	 * Gets the raw string from the expression, replacing colour codes.
-	 * @param event the event
-	 * @param string the expression
-	 * @return the raw string
-	 */
-	private static @Nullable String getRawString(Event event, Expression<? extends String> string) {
-		if (string instanceof VariableString variableString)
-			return variableString.toUnformattedString(event);
-		String rawString = string.getSingle(event);
-		if (rawString == null)
-			return null;
-		rawString = SkriptColor.replaceColorChar(rawString);
-		if (rawString.toLowerCase().contains("&x")) {
-			rawString = StringUtils.replaceAll(rawString, HEX_PATTERN, matchResult ->
-				"<#" + matchResult.group(1).replace("&", "") + '>');
-		}
-		return rawString;
 	}
 
 }

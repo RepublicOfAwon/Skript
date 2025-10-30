@@ -1,7 +1,7 @@
 package ch.njol.skript.hooks.economy.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -57,15 +57,15 @@ public class ExprBalance extends SimplePropertyExpression<OfflinePlayer, Money> 
 	}
 	
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null) { // RESET/DELETE
-			for (OfflinePlayer p : getExpr().getArray(event))
+			for (OfflinePlayer p : getExpr().executeArray(event))
 				VaultHook.economy.withdrawPlayer(p, VaultHook.economy.getBalance(p));
 			return;
 		}
 
 		double money = delta[0] instanceof Number ? ((Number) delta[0]).doubleValue() : ((Money) delta[0]).getAmount();
-		for (OfflinePlayer player : getExpr().getArray(event)) {
+		for (OfflinePlayer player : getExpr().executeArray(event)) {
 			switch (mode) {
 				case SET:
 					double balance = VaultHook.economy.getBalance(player);

@@ -1,8 +1,8 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -57,11 +57,11 @@ public class EffExplosion extends Effect {
 	}
 
 	@Override
-	public void execute(final Event e) {
-		final Number power = force != null ? force.getSingle(e) : 0;
+	public void executeVoid(final VirtualFrame e) {
+		final Number power = force != null ? force.executeSingle(e) : 0;
 		if (power == null)
 			return;
-		for (Location location : locations.getArray(e)) {
+		for (Location location : locations.executeArray(e)) {
 			if (location.getWorld() == null)
 				continue;
 			if (!blockDamage)
@@ -72,7 +72,7 @@ public class EffExplosion extends Effect {
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		if (force != null)
 			return "create explosion of force " + force.toString(e, debug) + " " + locations.toString(e, debug);
 		else

@@ -12,8 +12,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -55,14 +55,14 @@ public class CondIsMember extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		return players.check(event,
 			player -> regions.check(event,
 				region -> owner ? region.isOwner(player) : region.isMember(player), isNegated()));
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return players.toString(e, debug) + " " + (players.isSingle() ? "is" : "are") + (isNegated() ? " not" : "") + " " + (owner ? "owner" : "member") + (players.isSingle() ? "" : "s") + " of " + regions.toString(e, debug);
 	}
 }

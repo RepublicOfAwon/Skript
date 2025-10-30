@@ -7,7 +7,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -66,8 +66,8 @@ public class ExprIndices extends SimpleExpression<String> {
 
 	@Nullable
 	@Override
-	protected String[] get(Event event) {
-		Object[] values = keyedExpression.getArray(event);
+	protected String[] execute(VirtualFrame event) {
+		Object[] values = keyedExpression.executeArray(event);
 		String[] keys = keyedExpression.getArrayKeys(event);
 		if (sort) {
 			int direction = descending ? -1 : 1;
@@ -91,7 +91,7 @@ public class ExprIndices extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		String text = "indices of " + keyedExpression.toString(e, debug);
 
 		if (sort)

@@ -1,9 +1,9 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -48,8 +48,8 @@ public class EffLightning extends Effect {
 	}
 	
 	@Override
-	protected void execute(final Event e) {
-		for (final Location l : locations.getArray(e)) {
+	protected void executeVoid(final VirtualFrame e) {
+		for (final Location l : locations.executeArray(e)) {
 			if (effectOnly)
 				lastSpawned = l.getWorld().strikeLightningEffect(l);
 			else
@@ -58,7 +58,7 @@ public class EffLightning extends Effect {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "strike lightning " + (effectOnly ? "effect " : "") + locations.toString(e, debug);
 	}
 	

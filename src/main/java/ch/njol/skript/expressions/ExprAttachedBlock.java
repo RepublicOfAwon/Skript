@@ -7,10 +7,10 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Projectile;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -63,7 +63,7 @@ public class ExprAttachedBlock extends PropertyExpression<Projectile, Block> {
 	}
 
 	@Override
-	protected Block[] get(Event event, Projectile[] source) {
+	protected Block[] get(VirtualFrame event, Projectile[] source) {
 		Set<Object> blocks = new HashSet<>();
 
 		for (Projectile projectile : source) {
@@ -90,7 +90,7 @@ public class ExprAttachedBlock extends PropertyExpression<Projectile, Block> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "attached block" + (isMultiple ? "s" : "") + " of " + getExpr().toString(event, debug);
 	}
 

@@ -10,8 +10,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Has Played Before")
@@ -42,14 +42,14 @@ public class CondPlayedBefore extends Condition {
 	}
 	
 	@Override
-	public boolean check(Event e) {
+	public boolean executeBoolean(VirtualFrame e) {
 		return players.check(e,
 				OfflinePlayer::hasPlayedBefore,
 				isNegated());
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return players.toString(e, debug) + (isNegated() ? (players.isSingle() ? " hasn't" : " haven't") : (players.isSingle() ? " has" : " have"))
 			+ " played on this server before";
 	}

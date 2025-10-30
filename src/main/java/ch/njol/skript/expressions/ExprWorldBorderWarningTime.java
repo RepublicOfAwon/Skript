@@ -1,6 +1,5 @@
 package ch.njol.skript.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -10,8 +9,8 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.WorldBorder;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Warning Time of World Border")
@@ -38,9 +37,9 @@ public class ExprWorldBorderWarningTime extends SimplePropertyExpression<WorldBo
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		long input = mode == ChangeMode.RESET ? 15 : (((Timespan) delta[0]).getAs(TimePeriod.SECOND));
-		for (WorldBorder worldBorder : getExpr().getArray(event)) {
+		for (WorldBorder worldBorder : getExpr().executeArray(event)) {
 			switch (mode) {
 				case SET, RESET:
 					worldBorder.setWarningTime((int) Math.min(input, Integer.MAX_VALUE));

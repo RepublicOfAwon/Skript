@@ -3,9 +3,9 @@ package ch.njol.skript.expressions;
 import java.util.Arrays;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -43,7 +43,7 @@ public class ExprTablistedPlayers extends PropertyExpression<Player, Player> {
 	}
 
 	@Override
-	protected Player[] get(Event event, Player[] source) {
+	protected Player[] get(VirtualFrame event, Player[] source) {
 		return Arrays.stream(source)
 				.flatMap(viewer -> Bukkit.getOnlinePlayers().stream().filter(viewer::isListed))
 				.distinct()
@@ -56,9 +56,9 @@ public class ExprTablistedPlayers extends PropertyExpression<Player, Player> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		Player[] recipients = (Player[]) delta;
-		Player[] viewers = getExpr().getArray(event);
+		Player[] viewers = getExpr().executeArray(event);
 		switch (mode) {
 			case DELETE:
 				recipients = Bukkit.getOnlinePlayers().toArray(Player[]::new);
@@ -115,7 +115,7 @@ public class ExprTablistedPlayers extends PropertyExpression<Player, Player> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "tablisted players of " + getExpr().toString(event, debug);
 	}
 

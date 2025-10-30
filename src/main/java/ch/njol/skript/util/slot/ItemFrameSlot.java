@@ -1,7 +1,7 @@
 package ch.njol.skript.util.slot;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.ItemFrame;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +47,7 @@ public class ItemFrameSlot extends Slot {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return Classes.toString(getItem());
 	}
 

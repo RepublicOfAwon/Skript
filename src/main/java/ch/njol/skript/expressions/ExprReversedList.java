@@ -15,7 +15,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
@@ -53,8 +53,8 @@ public class ExprReversedList extends SimpleExpression<Object> {
 
 	@Override
 	@Nullable
-	protected Object[] get(Event e) {
-		Object[] inputArray = list.getArray(e).clone();
+	protected Object[] execute(VirtualFrame e) {
+		Object[] inputArray = list.executeArray(e).clone();
 		Object[] array = (Object[]) Array.newInstance(getReturnType(), inputArray.length);
 		System.arraycopy(inputArray, 0, array, 0, inputArray.length);
 		reverse(array);
@@ -112,7 +112,7 @@ public class ExprReversedList extends SimpleExpression<Object> {
   }
     
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "reversed " + list.toString(e, debug);
 	}
 

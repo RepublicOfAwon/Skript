@@ -16,7 +16,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.comparator.Comparator;
 import org.skriptlang.skript.lang.comparator.ComparatorInfo;
@@ -310,7 +310,7 @@ public class CondCompare extends Condition implements VerboseAssert {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean check(final Event event) {
+	public boolean executeBoolean(final VirtualFrame event) {
 		final Expression<?> third = this.third;
 		// if we are directly comparing the equality of two AND lists, we should change behavior to
 		// compare element-wise, instead of comparing everything to everything.
@@ -356,7 +356,7 @@ public class CondCompare extends Condition implements VerboseAssert {
 		), isNegated());
 	}
 
-	public String getExpectedMessage(Event event) {
+	public String getExpectedMessage(VirtualFrame event) {
 		String message = "a value ";
 		if (third == null)
 			return message + (isNegated() ? "not " : "") + relation + " " + VerboseAssert.getExpressionValue(second, event);
@@ -368,20 +368,20 @@ public class CondCompare extends Condition implements VerboseAssert {
 		return message;
 	}
 
-	public String getReceivedMessage(Event event) {
+	public String getReceivedMessage(VirtualFrame event) {
 		return VerboseAssert.getExpressionValue(first, event);
 	}
 
 	/**
 	 * Used to directly compare two lists for equality.
 	 * This method assumes that {@link CondCompare#first} and {@link CondCompare#second} are both non-single.
-	 * @param event the event with which to evaluate {@link CondCompare#first} and {@link CondCompare#second}.
+	 * @param frame the event with which to evaluate {@link CondCompare#first} and {@link CondCompare#second}.
 	 * @return Whether every element in {@link CondCompare#first} is equal to its counterpart in {@link CondCompare#second}.
 	 * 		e.g. (1,2,3) = (1,2,3), but (1,2,3) != (3,2,1)
 	 */
-	private boolean compareLists(Event event) {
-		Object[] first = this.first.getArray(event);
-		Object[] second = this.second.getArray(event);
+	private boolean compareLists(VirtualFrame frame) {
+		Object[] first = this.first.executeArray(frame);
+		Object[] second = this.second.executeArray(frame);
 		boolean shouldMatch = !isNegated(); // for readability
 		if (first.length != second.length)
 			return !shouldMatch;
@@ -400,7 +400,7 @@ public class CondCompare extends Condition implements VerboseAssert {
 	}
 
 	@Override
-	public String toString(final @Nullable Event event, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame event, final boolean debug) {
 		String s;
 		final Expression<?> third = this.third;
 		if (third == null)

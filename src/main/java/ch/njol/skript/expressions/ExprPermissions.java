@@ -12,8 +12,8 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,9 +42,9 @@ public class ExprPermissions extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String[] get(Event e) {
+	protected String[] execute(VirtualFrame e) {
 		final Set<String> permissions = new HashSet<>();
-		for (Player player : players.getArray(e))
+		for (Player player : players.executeArray(e))
 			for (final PermissionAttachmentInfo permission : player.getEffectivePermissions())
 				permissions.add(permission.getPermission());
 		return permissions.toArray(new String[permissions.size()]);
@@ -61,7 +61,7 @@ public class ExprPermissions extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "permissions of " + players.toString(event, debug);
 	}
 

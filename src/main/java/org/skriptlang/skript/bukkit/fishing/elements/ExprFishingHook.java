@@ -2,9 +2,9 @@ package org.skriptlang.skript.bukkit.fishing.elements;
 
 import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.EventValueExpression;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Fishing Hook")
@@ -27,7 +27,7 @@ public class ExprFishingHook extends EventValueExpression<Entity> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the fishing hook";
 	}
 

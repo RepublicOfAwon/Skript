@@ -1,8 +1,8 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Projectile;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -52,14 +52,14 @@ public class ExprArrowPierceLevel extends SimplePropertyExpression<Projectile, L
 	}
 	
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
 		int strength = delta != null ? Math.max(((Number) delta[0]).intValue(), 0) : 0;
 		int mod = 1;
 		switch (mode) {
 			case REMOVE:
 				mod = -1;
 			case ADD:
-				for (Projectile entity : getExpr().getArray(e)) {
+				for (Projectile entity : getExpr().executeArray(e)) {
 					if (entity instanceof Arrow) {
 						Arrow arrow = (Arrow) entity;
 						int dmg = Math.round(arrow.getPierceLevel() + strength * mod);
@@ -70,7 +70,7 @@ public class ExprArrowPierceLevel extends SimplePropertyExpression<Projectile, L
 				break;
 			case RESET:
 			case SET:
-				for (Projectile entity : getExpr().getArray(e)) {
+				for (Projectile entity : getExpr().executeArray(e)) {
 					((Arrow) entity).setPierceLevel(strength);
 				}
 				break;

@@ -13,7 +13,7 @@ import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.skript.util.ClassInfoReference;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
 
@@ -106,7 +106,7 @@ public class ExprInput<T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	protected T[] get(Event event) {
+	protected T[] execute(VirtualFrame event) {
 		Object currentValue = isIndex ? inputSource.getCurrentIndex() : inputSource.getCurrentValue();
 		if (currentValue == null || (specifiedType != null && !specifiedType.getC().isInstance(currentValue)))
 			return (T[]) Array.newInstance(superType, 0);
@@ -149,7 +149,7 @@ public class ExprInput<T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	public String toString(Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (isIndex)
 			return "input index";
 		return specifiedType == null ? "input" : specifiedType.getCodeName() + " input";

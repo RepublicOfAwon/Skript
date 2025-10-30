@@ -15,8 +15,8 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -61,8 +61,8 @@ public class ExprRegionsAt extends SimpleExpression<Region> {
 	@SuppressWarnings("null")
 	@Override
 	@Nullable
-	protected Region[] get(final Event e) {
-		final Location[] ls = locs.getArray(e);
+	protected Region[] execute(final VirtualFrame e) {
+		final Location[] ls = locs.executeArray(e);
 		if (ls.length == 0)
 			return new Region[0];
 		final ArrayList<Region> r = new ArrayList<>();
@@ -82,7 +82,7 @@ public class ExprRegionsAt extends SimpleExpression<Region> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "the regions at " + locs.toString(e, debug);
 	}
 	

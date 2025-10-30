@@ -3,6 +3,7 @@ package ch.njol.skript.conditions;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.skriptlang.skript.lang.comparator.Relation;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -14,7 +15,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import org.skriptlang.skript.lang.comparator.Comparators;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.EntityEquipment;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,7 +58,7 @@ public class CondItemInHand extends Condition {
 	}
 	
 	@Override
-	public boolean check(Event e) {
+	public boolean executeBoolean(VirtualFrame e) {
 		return entities.check(e,
 				livingEntity -> items.check(e,
 						itemType -> {
@@ -71,7 +71,7 @@ public class CondItemInHand extends Condition {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return entities.toString(e, debug) + " " + (entities.isSingle() ? "is" : "are")
 				+ " holding " + items.toString(e, debug)
 				+ (offTool ? " in off-hand" : "");

@@ -14,8 +14,8 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.WorldBorder;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Expand/Shrink World Border")
@@ -61,8 +61,8 @@ public class EffWorldBorderExpand extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		Number number = numberExpr.getSingle(event);
+	protected void executeVoid(VirtualFrame event) {
+		Number number = numberExpr.executeSingle(event);
 		if (number == null)
 			return;
 		double input = number.doubleValue();
@@ -74,11 +74,11 @@ public class EffWorldBorderExpand extends Effect {
 			input *= 2;
 		long speed = 0;
 		if (timespan != null) {
-			Timespan timespan = this.timespan.getSingle(event);
+			Timespan timespan = this.timespan.executeSingle(event);
 			if (timespan != null)
 				speed = timespan.getAs(TimePeriod.SECOND);
 		}
-		WorldBorder[] worldBorders = this.worldBorders.getArray(event);
+		WorldBorder[] worldBorders = this.worldBorders.executeArray(event);
 		if (to) {
 			input = Math2.fit(1, input, MAX_WORLDBORDER_SIZE);
 			for (WorldBorder worldBorder : worldBorders)
@@ -95,7 +95,7 @@ public class EffWorldBorderExpand extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append(shrink ? "shrink" : "expand");
 		builder.append(radius ? "radius" : "diameter");

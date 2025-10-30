@@ -14,6 +14,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -43,10 +44,11 @@ public class ExprGameMode extends PropertyExpression<Player, GameMode> {
 	}
 	
 	@Override
-	protected GameMode[] get(final Event e, final Player[] source) {
+	protected GameMode[] get(final VirtualFrame e, final Player[] source) {
 		return get(source, player -> {
-			if (getTime() >= 0 && e instanceof PlayerGameModeChangeEvent && ((PlayerGameModeChangeEvent) e).getPlayer() == player && !Delay.isDelayed(e))
-				return ((PlayerGameModeChangeEvent) e).getNewGameMode();
+			Event event = (Event) e.getArguments()[0];
+			if (getTime() >= 0 && event instanceof PlayerGameModeChangeEvent && ((PlayerGameModeChangeEvent) event).getPlayer() == player && !Delay.isDelayed(event))
+				return ((PlayerGameModeChangeEvent) event).getNewGameMode();
 			return player.getGameMode();
 		});
 	}
@@ -57,7 +59,7 @@ public class ExprGameMode extends PropertyExpression<Player, GameMode> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "the gamemode of " + getExpr().toString(e, debug);
 	}
 	
@@ -70,12 +72,13 @@ public class ExprGameMode extends PropertyExpression<Player, GameMode> {
 	}
 	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
+	public void change(final VirtualFrame e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
 		final GameMode m = delta == null ? Bukkit.getDefaultGameMode() : (GameMode) delta[0];
-		for (final Player p : getExpr().getArray(e)) {
-			if (getTime() >= 0 && e instanceof PlayerGameModeChangeEvent && ((PlayerGameModeChangeEvent) e).getPlayer() == p && !Delay.isDelayed(e)) {
-				if (((PlayerGameModeChangeEvent) e).getNewGameMode() != m)
-					((PlayerGameModeChangeEvent) e).setCancelled(true);
+		for (final Player p : getExpr().executeArray(e)) {
+			Event event = (Event) e.getArguments()[0];
+			if (getTime() >= 0 && event instanceof PlayerGameModeChangeEvent && ((PlayerGameModeChangeEvent) event).getPlayer() == p && !Delay.isDelayed(event)) {
+				if (((PlayerGameModeChangeEvent) event).getNewGameMode() != m)
+					((PlayerGameModeChangeEvent) event).setCancelled(true);
 			}
 			p.setGameMode(m);
 		}

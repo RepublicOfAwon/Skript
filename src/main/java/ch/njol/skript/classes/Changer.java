@@ -1,6 +1,5 @@
 package ch.njol.skript.classes;
 
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,7 +61,7 @@ public interface Changer<T> {
 		 * @param expression The expression to test
 		 * @param mode The ChangeMode to use in the test
 		 * @param types The types to test for
-		 * @return Whether <tt>expression.{@link Expression#change(Event, Object[], ChangeMode) change}(event, type[], mode)</tt> can be used or not.
+		 * @return Whether <tt>expression.{@link Expression#change(com.oracle.truffle.api.frame.VirtualFrame, Object[], ChangeMode) change}(event, type[], mode)</tt> can be used or not.
 		 */
 		public static boolean acceptsChange(@NotNull Expression<?> expression, ChangeMode mode, Class<?>... types) {
 			Class<?>[] validTypes = expression.acceptChange(mode);

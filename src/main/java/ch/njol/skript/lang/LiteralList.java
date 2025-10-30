@@ -28,17 +28,17 @@ public class LiteralList<T> extends ExpressionList<T> implements Literal<T> {
 
 	@Override
 	public T[] getArray() {
-		return getArray(null);
+		return executeArray(null);
 	}
 
 	@Override
 	public T getSingle() {
-		return getSingle(null);
+		return executeSingle(null);
 	}
 
 	@Override
 	public T[] getAll() {
-		return getAll(null);
+		return executeAll(null);
 	}
 
 	@Override

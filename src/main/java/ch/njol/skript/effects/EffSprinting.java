@@ -10,8 +10,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Sprinting")
@@ -52,14 +52,14 @@ public class EffSprinting extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (Player player : players.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (Player player : players.executeArray(event)) {
 			player.setSprinting(sprint);
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "make " + players.toString(event, debug) + (sprint ? " start" : " stop") + " sprinting";
 	}
 

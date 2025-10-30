@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.conditions.base.PropertyCondition;
@@ -44,15 +44,15 @@ public class CondHasScoreboardTag extends Condition {
 	}
 	
 	@Override
-	public boolean check(Event e) {
-		List<String> tagsList = Arrays.asList(tags.getArray(e));
+	public boolean executeBoolean(VirtualFrame e) {
+		List<String> tagsList = Arrays.asList(tags.executeArray(e));
 		return entities.check(e,
 				entity -> entity.getScoreboardTags().containsAll(tagsList),
 				isNegated());
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return PropertyCondition.toString(this, PropertyType.HAVE, e, debug, entities,
 				"the scoreboard " + (tags.isSingle() ? "tag " : "tags ") + tags.toString(e, debug));
 	}

@@ -16,8 +16,8 @@ import ch.njol.skript.util.Timeperiod;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Time")
@@ -54,7 +54,7 @@ public class ExprTime extends PropertyExpression<World, Time> {
 	}
 
 	@Override
-	protected Time[] get(Event event, World[] worlds) {
+	protected Time[] get(VirtualFrame event, World[] worlds) {
 		return get(worlds, world -> new Time((int) world.getTime()));
 	}
 
@@ -74,7 +74,7 @@ public class ExprTime extends PropertyExpression<World, Time> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (delta == null)
 			return;
 
@@ -82,7 +82,7 @@ public class ExprTime extends PropertyExpression<World, Time> {
 		if (time == null)
 			return;
 
-		World[] worlds = getExpr().getArray(event);
+		World[] worlds = getExpr().executeArray(event);
 
 		long ticks = 0;
 		if (time instanceof Time) {
@@ -118,7 +118,7 @@ public class ExprTime extends PropertyExpression<World, Time> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the time in " + getExpr().toString(event, debug);
 	}
 

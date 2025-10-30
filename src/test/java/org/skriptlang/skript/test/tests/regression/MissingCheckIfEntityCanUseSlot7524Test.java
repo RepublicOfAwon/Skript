@@ -2,7 +2,7 @@ package org.skriptlang.skript.test.tests.regression;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.test.runner.SkriptJUnitTest;
 import ch.njol.skript.variables.Variables;
 import org.bukkit.Material;
@@ -12,7 +12,6 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,7 +35,7 @@ public class MissingCheckIfEntityCanUseSlot7524Test extends SkriptJUnitTest {
 
 	@Test
 	public void test() {
-		ContextlessEvent event = ContextlessEvent.get();
+		ContextlessVirtualFrame event = ContextlessVirtualFrame.get();
 		Variables.setVariable("player", player, event, true);
 
 		EasyMock.expect(player.isValid()).andStubReturn(true);
@@ -56,7 +55,7 @@ public class MissingCheckIfEntityCanUseSlot7524Test extends SkriptJUnitTest {
 
 		EasyMock.replay(player, equipment);
 
-		assert isWearingCondition.check(event);
+		assert isWearingCondition.executeBoolean(event);
 
 		EasyMock.verify(player, equipment);
 	}

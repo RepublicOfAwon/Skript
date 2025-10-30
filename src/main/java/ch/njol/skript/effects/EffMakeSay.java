@@ -10,8 +10,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Make Say")
@@ -41,16 +41,16 @@ public class EffMakeSay extends Effect {
 	}
 
 	@Override
-	protected void execute(Event e) {
-		for (Player player : players.getArray(e)) {
-			for (String message : messages.getArray(e)) {
+	protected void executeVoid(VirtualFrame e) {
+		for (Player player : players.executeArray(e)) {
+			for (String message : messages.executeArray(e)) {
 				player.chat(message);
 			}
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "make " + players.toString(e, debug) + " say " + messages.toString(e, debug);
 	}
 }

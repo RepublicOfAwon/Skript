@@ -6,6 +6,7 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -89,7 +90,7 @@ public class EvtMove extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		Location from, to;
 		if (canBePlayer && event instanceof PlayerMoveEvent playerMoveEvent) {
 			from = playerMoveEvent.getFrom();
@@ -123,7 +124,7 @@ public class EvtMove extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return entityData + " " + moveType;
 	}
 

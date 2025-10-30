@@ -13,7 +13,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
@@ -43,9 +43,9 @@ public class ExprVectorFromYawAndPitch extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	protected Vector[] get(Event event) {
-		Number skriptYaw = yaw.getSingle(event);
-		Number skriptPitch = pitch.getSingle(event);
+	protected Vector[] execute(VirtualFrame event) {
+		Number skriptYaw = yaw.executeSingle(event);
+		Number skriptPitch = pitch.executeSingle(event);
 		if (skriptYaw == null || skriptPitch == null)
 			return null;
 		float yaw = ExprYawPitch.fromSkriptYaw(wrapAngleDeg(skriptYaw.floatValue()));
@@ -71,7 +71,7 @@ public class ExprVectorFromYawAndPitch extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "vector from yaw " + yaw.toString(event, debug) + " and pitch " + pitch.toString(event, debug);
 	}
 

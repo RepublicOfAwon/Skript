@@ -6,9 +6,9 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Beacon;
 import org.bukkit.block.Block;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Beacon Range")
@@ -44,9 +44,9 @@ public class ExprBeaconRange extends SimplePropertyExpression<Block, Double> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (mode == ChangeMode.RESET) {
-			for (Block block : getExpr().getArray(event)) {
+			for (Block block : getExpr().executeArray(event)) {
 				if (block.getState() instanceof Beacon beacon) {
 					beacon.resetEffectRange();
 					beacon.update(true);
@@ -57,7 +57,7 @@ public class ExprBeaconRange extends SimplePropertyExpression<Block, Double> {
 
 		assert delta != null;
 		double range = ((Number) delta[0]).doubleValue();
-		for (Block block : getExpr().getArray(event)) {
+		for (Block block : getExpr().executeArray(event)) {
 			if (block.getState() instanceof Beacon beacon) {
 				switch (mode) {
 					case SET -> beacon.setEffectRange(Math2.fit(0, range, Double.MAX_VALUE));

@@ -1,6 +1,6 @@
 package ch.njol.skript.events;
 
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.jetbrains.annotations.Nullable;
@@ -43,14 +43,14 @@ public class EvtPortal extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		if (isPlayer)
 			return event instanceof PlayerPortalEvent;
 		return event instanceof EntityPortalEvent;
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (isPlayer ? "player" : "entity") + " portal";
 	}
 

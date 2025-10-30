@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerFishEvent;
@@ -62,7 +62,7 @@ public class ExprExperience extends SimpleExpression<Experience> {
 	}
 
 	@Override
-	protected Experience @Nullable [] get(Event event) {
+	protected Experience @Nullable [] execute(VirtualFrame event) {
 		Experience[] exp;
 
 		if (event instanceof ExperienceSpawnEvent experienceSpawnEvent) {
@@ -93,7 +93,7 @@ public class ExprExperience extends SimpleExpression<Experience> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		int exp;
 
 		if (event instanceof ExperienceSpawnEvent experienceSpawnEvent) {
@@ -148,7 +148,7 @@ public class ExprExperience extends SimpleExpression<Experience> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the experience";
 	}
 

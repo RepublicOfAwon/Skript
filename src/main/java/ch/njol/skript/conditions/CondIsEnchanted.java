@@ -13,7 +13,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Is Enchanted")
@@ -59,9 +59,9 @@ public class CondIsEnchanted extends Condition {
 	}
 	
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		if (enchs != null) {
-			EnchantmentType[] enchantments = enchs.getAll(event);
+			EnchantmentType[] enchantments = enchs.executeAll(event);
 			boolean and = enchs.getAnd();
 			return items.check(event, item -> switch (comparison) {
 				case EXACT -> item.hasExactEnchantments(and, enchantments);
@@ -74,7 +74,7 @@ public class CondIsEnchanted extends Condition {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return PropertyCondition.toString(this, PropertyType.BE, event, debug, items,
 				"enchanted" + (enchs == null ? "" : " with " + enchs.toString(event, debug)) +
 				comparison.toSkriptString());

@@ -3,8 +3,9 @@ package ch.njol.skript.lang.simplification;
 
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.lang.util.SimpleLiteral;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +19,7 @@ import java.util.function.Function;
 public class SimplifiedLiteral<T> extends SimpleLiteral<T> {
 
 	/**
-	 * Creates a new simplified literal from an expression by evaluating it with a {@link ContextlessEvent}.
+	 * Creates a new simplified literal from an expression by evaluating it with a {@link ContextlessVirtualFrame}.
 	 * Any expression that requires specific event data cannot be safely simplified to a literal.
 	 * The original expression is stored for later toString generation.
 	 *
@@ -30,8 +31,8 @@ public class SimplifiedLiteral<T> extends SimpleLiteral<T> {
 		if (original instanceof SimplifiedLiteral<T> literal)
 			return literal;
 
-		Event event = ContextlessEvent.get();
-		T[] values = original.getAll(event);
+		Event event = ContextlessVirtualFrame.get();
+		T[] values = original.executeAll(event);
 
 		//noinspection unchecked
 		return new SimplifiedLiteral<>(
@@ -63,7 +64,7 @@ public class SimplifiedLiteral<T> extends SimpleLiteral<T> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, Changer.ChangeMode mode) throws UnsupportedOperationException {
+	public void change(VirtualFrame event, Object @Nullable [] delta, Changer.ChangeMode mode) throws UnsupportedOperationException {
 		source.change(event, delta, mode);
 	}
 
@@ -73,12 +74,12 @@ public class SimplifiedLiteral<T> extends SimpleLiteral<T> {
 	}
 
 	@Override
-	public <R> void changeInPlace(Event event, Function<T, R> changeFunction) {
+	public <R> void changeInPlace(VirtualFrame event, Function<T, R> changeFunction) {
 		getSource().changeInPlace(event, changeFunction);
 	}
 
 	@Override
-	public <R> void changeInPlace(Event event, Function<T, R> changeFunction, boolean getAll) {
+	public <R> void changeInPlace(VirtualFrame event, Function<T, R> changeFunction, boolean getAll) {
 		getSource().changeInPlace(event, changeFunction, getAll);
 	}
 
@@ -89,7 +90,7 @@ public class SimplifiedLiteral<T> extends SimpleLiteral<T> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (debug)
 			return "[" + source.toString(event, true) + " (SIMPLIFIED)]";
 		return source.toString(event, false);

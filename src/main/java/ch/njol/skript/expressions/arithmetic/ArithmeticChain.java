@@ -2,7 +2,7 @@ package ch.njol.skript.expressions.arithmetic;
 
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.util.Utils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.arithmetic.Arithmetics;
 import org.skriptlang.skript.lang.arithmetic.Operation;
@@ -21,12 +21,14 @@ import java.util.function.Function;
  * @param <R> the type of the right operand
  * @param <T> the return type of the operation
  */
-public class ArithmeticChain<L, R, T> implements ArithmeticGettable<T> {
+public class ArithmeticChain<L, R, T> extends ArithmeticGettable<T> {
 
 	// lazily initialized
 	private static List<Set<Operator>> operatorGroups = null;
 
+	@Child
 	private final ArithmeticGettable<L> left;
+	@Child
 	private final ArithmeticGettable<R> right;
 	private final Operator operator;
 	private final Class<? extends T> returnType;
@@ -46,12 +48,12 @@ public class ArithmeticChain<L, R, T> implements ArithmeticGettable<T> {
 	@Override
 	@Nullable
 	@SuppressWarnings("unchecked")
-	public T get(Event event) {
-		L left = this.left.get(event);
+	public T execute(VirtualFrame event) {
+		L left = this.left.execute(event);
 		if (left == null && this.left instanceof ArithmeticChain)
 			return null;
 
-		R right = this.right.get(event);
+		R right = this.right.execute(event);
 		if (right == null && this.right instanceof ArithmeticChain)
 			return null;
 

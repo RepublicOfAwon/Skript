@@ -1,10 +1,10 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -53,7 +53,7 @@ public class EffEnforceWhitelist extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		Bukkit.setWhitelistEnforced(enforce);
 		reloadWhitelist();
 	}
@@ -70,7 +70,7 @@ public class EffEnforceWhitelist extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return (!enforce ? "un" : "") + "enforce the whitelist";
 	}
 

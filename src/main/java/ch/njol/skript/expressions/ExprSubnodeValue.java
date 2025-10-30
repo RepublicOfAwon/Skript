@@ -15,7 +15,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Feature;
 import ch.njol.skript.util.StringMode;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
@@ -87,8 +87,8 @@ public class ExprSubnodeValue extends SimplePropertyExpression<Node, Object> {
 	}
 
 	@Override
-	protected Object[] get(Event event, Node[] source) {
-		String path = pathExpression.getSingle(event);
+	protected Object[] get(VirtualFrame event, Node[] source) {
+		String path = pathExpression.executeSingle(event);
 		Node node = source[0].getNodeAt(path);
 		Object[] array = (Object[]) Array.newInstance(this.getReturnType(), 1);
 		if (!(node instanceof EntryNode entryNode))
@@ -113,7 +113,7 @@ public class ExprSubnodeValue extends SimplePropertyExpression<Node, Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the " + this.getPropertyName()
 			+ " at " + pathExpression.toString(event, debug)
 			+ " in " + this.getExpr().toString(event, debug);

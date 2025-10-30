@@ -9,13 +9,13 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -115,25 +115,25 @@ public class EffPlaySound extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		OptionalLong seed = OptionalLong.empty();
 		if (this.seed != null) {
-			Number number = this.seed.getSingle(event);
+			Number number = this.seed.executeSingle(event);
 			if (number != null)
 				seed = OptionalLong.of(number.longValue());
 		}
-		SoundCategory category = this.category == null ? SoundCategory.MASTER : this.category.getOptionalSingle(event)
+		SoundCategory category = this.category == null ? SoundCategory.MASTER : this.category.executeOptional(event)
 				.orElse(SoundCategory.MASTER);
-		float volume = this.volume == null ? 1 : this.volume.getOptionalSingle(event)
+		float volume = this.volume == null ? 1 : this.volume.executeOptional(event)
 				.orElse(1)
 				.floatValue();
-		float pitch = this.pitch == null ? 1 : this.pitch.getOptionalSingle(event)
+		float pitch = this.pitch == null ? 1 : this.pitch.executeOptional(event)
 				.orElse(1)
 				.floatValue();
 
 		// validate strings
 		List<NamespacedKey> validSounds = new ArrayList<>();
-		for (String sound : sounds.getArray(event)) {
+		for (String sound : sounds.executeArray(event)) {
 			NamespacedKey key = SoundUtils.getKey(sound);
 			if (key == null)
 				continue;
@@ -146,16 +146,16 @@ public class EffPlaySound extends Effect {
 		// play sounds
 		if (players != null) {
 			if (emitters == null) {
-				for (Player player : players.getArray(event)) {
+				for (Player player : players.executeArray(event)) {
 					SoundReceiver receiver = SoundReceiver.of(player);
 					Location emitter = player.getLocation();
 					for (NamespacedKey sound : validSounds)
 						receiver.playSound(emitter, sound, category, volume, pitch, seed);
 				}
 			} else {
-				for (Player player : players.getArray(event)) {
+				for (Player player : players.executeArray(event)) {
 					SoundReceiver receiver = SoundReceiver.of(player);
-					for (Object emitter : emitters.getArray(event)) {
+					for (Object emitter : emitters.executeArray(event)) {
 						if (emitter instanceof Location) {
 							for (NamespacedKey sound : validSounds)
 								receiver.playSound(((Location) emitter), sound, category, volume, pitch, seed);
@@ -167,7 +167,7 @@ public class EffPlaySound extends Effect {
 				}
 			}
 		} else if (emitters != null) {
-			for (Object emitter : emitters.getArray(event)) {
+			for (Object emitter : emitters.executeArray(event)) {
 				if (ENTITY_EMITTER && emitter instanceof Entity entity) {
 					SoundReceiver receiver = SoundReceiver.of(entity.getWorld());
 					for (NamespacedKey sound : validSounds)
@@ -182,7 +182,7 @@ public class EffPlaySound extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		StringBuilder builder = new StringBuilder()
 				.append("play sound ")
 				.append(sounds.toString(event, debug));

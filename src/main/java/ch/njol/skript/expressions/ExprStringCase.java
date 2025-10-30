@@ -2,8 +2,8 @@ package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -98,8 +98,8 @@ public class ExprStringCase extends SimpleExpression<String> {
 	@SuppressWarnings("null")
 	@Override
 	@Nullable
-	protected String[] get(Event e) {
-		String[] strs = expr.getArray(e);
+	protected String[] execute(VirtualFrame e) {
+		String[] strs = expr.executeArray(e);
 		for (int i = 0; i < strs.length; i++) {
 			if (strs[i] != null) {
 				switch (type) {
@@ -145,7 +145,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String mode = "";
 		switch (type) {
 			case 0: // Basic Case Change 

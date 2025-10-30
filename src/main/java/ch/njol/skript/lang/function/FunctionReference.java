@@ -7,7 +7,6 @@ import ch.njol.skript.config.Node;
 import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.function.FunctionRegistry.Retrieval;
 import ch.njol.skript.lang.function.FunctionRegistry.RetrievalResult;
-import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
@@ -409,7 +408,7 @@ public class FunctionReference<T> implements Contract, Executable<Event, T[]> {
 		Set<String> keys = new LinkedHashSet<>();
 		int keyIndex = 1;
 		for (Expression<?> parameter : parameters) {
-			Object[] valuesArray = parameter.getArray(event);
+			Object[] valuesArray = parameter.executeArray(event);
 			String[] keysArray = KeyProviderExpression.areKeysRecommended(parameter)
 				? ((KeyProviderExpression<?>) parameter).getArrayKeys(event)
 				: null;
@@ -433,7 +432,7 @@ public class FunctionReference<T> implements Contract, Executable<Event, T[]> {
 	}
 
 	private Object[] evaluateParameter(Expression<?> parameter, Event event, boolean keyed) {
-		Object[] values = parameter.getArray(event);
+		Object[] values = parameter.executeArray(event);
 
 		// Don't allow mutating across function boundary; same hack is applied to variables
 		for (int i = 0; i < values.length; i++)

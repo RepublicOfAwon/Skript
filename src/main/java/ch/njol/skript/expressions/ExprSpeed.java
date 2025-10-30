@@ -1,8 +1,8 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -54,10 +54,10 @@ public class ExprSpeed extends SimplePropertyExpression<Player, Number> {
 	}
 	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
+	public void change(final VirtualFrame e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
 		float input = delta == null ? 0 : ((Number) delta[0]).floatValue();
 		
-		for (final Player p : getExpr().getArray(e)) {
+		for (final Player p : getExpr().executeArray(e)) {
 			float oldSpeed = walk ? p.getWalkSpeed() : p.getFlySpeed();
 			
 			float newSpeed;

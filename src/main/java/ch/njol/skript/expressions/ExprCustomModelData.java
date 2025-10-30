@@ -13,7 +13,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ColorRGB;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 import org.jetbrains.annotations.Nullable;
@@ -90,7 +90,7 @@ public class ExprCustomModelData extends PropertyExpression<ItemType, Object> {
 
 	@Override
 	@SuppressWarnings("UnstableApiUsage")
-	protected Object[] get(Event event, ItemType[] source) {
+	protected Object[] get(VirtualFrame event, ItemType[] source) {
 		for (ItemType from : source) {
 			ItemMeta meta = from.getItemMeta();
 			if (dataType == CMDType.SINGLE_INT) {
@@ -137,8 +137,8 @@ public class ExprCustomModelData extends PropertyExpression<ItemType, Object> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		for (ItemType item : getExpr().getArray(event)) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
+		for (ItemType item : getExpr().executeArray(event)) {
 			ItemMeta meta = item.getItemMeta();
 			switch (dataType) {
 				case SINGLE_INT -> {
@@ -309,7 +309,7 @@ public class ExprCustomModelData extends PropertyExpression<ItemType, Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return switch (dataType) {
 			case ALL -> "complete custom model data";
 			case FLOATS -> "custom model data floats";

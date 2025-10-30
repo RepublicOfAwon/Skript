@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.registrations.experiments.ReflectionExperimentSyntax;
 import org.skriptlang.skript.lang.script.Script;
@@ -49,7 +49,7 @@ public class ExprScripts extends SimpleExpression<Script> implements ReflectionE
 	}
 
 	@Override
-	protected Script[] get(Event event) {
+	protected Script[] execute(VirtualFrame event) {
 		List<Script> scripts = new ArrayList<>();
 		if (pattern <= 1)
 			scripts.addAll(ScriptLoader.getLoadedScripts());
@@ -74,7 +74,7 @@ public class ExprScripts extends SimpleExpression<Script> implements ReflectionE
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (pattern == 1)
 		    return "all enabled scripts";
 		else if (pattern == 2)

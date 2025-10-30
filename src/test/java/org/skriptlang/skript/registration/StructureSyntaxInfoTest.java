@@ -3,7 +3,7 @@ package org.skriptlang.skript.registration;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 import org.skriptlang.skript.lang.entry.EntryContainer;
@@ -30,7 +30,7 @@ public class StructureSyntaxInfoTest extends BaseSyntaxInfoTests<MockStructure, 
 		}
 
 		@Override
-		public String toString(@Nullable Event event, boolean debug) {
+		public String toString(@Nullable VirtualFrame event, boolean debug) {
 			throw new UnsupportedOperationException();
 		}
 

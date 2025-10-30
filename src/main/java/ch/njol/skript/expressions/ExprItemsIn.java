@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -72,10 +72,10 @@ public class ExprItemsIn extends SimpleExpression<Slot> {
 	}
 
 	@Override
-	protected Slot[] get(Event event) {
+	protected Slot[] execute(VirtualFrame event) {
 		List<Slot> itemSlots = new ArrayList<>();
-		ItemType[] types = this.types == null ? null : this.types.getArray(event);
-		for (Inventory inventory : inventories.getArray(event)) {
+		ItemType[] types = this.types == null ? null : this.types.executeArray(event);
+		for (Inventory inventory : inventories.executeArray(event)) {
 			for (int i = 0; i < inventory.getSize(); i++) {
 				if (isAllowedItem(types, inventory.getItem(i)))
 					itemSlots.add(new InventorySlot(inventory, i));
@@ -86,9 +86,9 @@ public class ExprItemsIn extends SimpleExpression<Slot> {
 
 	@Override
 	@Nullable
-	public Iterator<Slot> iterator(Event event) {
+	public Iterator<Slot> iterator(VirtualFrame event) {
 		Iterator<? extends Inventory> inventoryIterator = inventories.iterator(event);
-		ItemType[] types = this.types == null ? null : this.types.getArray(event);
+		ItemType[] types = this.types == null ? null : this.types.executeArray(event);
 		if (inventoryIterator == null || !inventoryIterator.hasNext())
 			return null;
 		return new Iterator<Slot>() {
@@ -129,7 +129,7 @@ public class ExprItemsIn extends SimpleExpression<Slot> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (types == null)
 			return "items in " + inventories.toString(event, debug);
 		return "all " + types.toString(event, debug) + " in " + inventories.toString(event, debug);

@@ -1,8 +1,8 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
-import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +43,7 @@ public class ExprRespawnLocation extends SimpleExpression<Location> {
 	
 	@Override
 	@Nullable
-	protected Location[] get(Event event) {
+	protected Location[] execute(VirtualFrame event) {
 		if (!(event instanceof PlayerRespawnEvent))
 			return null;
 
@@ -61,7 +61,7 @@ public class ExprRespawnLocation extends SimpleExpression<Location> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event event, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame event, final boolean debug) {
 		return "the respawn location " + ((event != null) ? ": " + ((PlayerRespawnEvent)event).getRespawnLocation() : "");
 	}
 	
@@ -74,7 +74,7 @@ public class ExprRespawnLocation extends SimpleExpression<Location> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (!(event instanceof PlayerRespawnEvent))
 			return;
 

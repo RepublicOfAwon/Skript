@@ -8,10 +8,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.tags.TagModule;
 import org.skriptlang.skript.bukkit.tags.TagType;
@@ -56,7 +56,7 @@ public class ExprTagsOfType extends SimpleExpression<Tag> {
 	}
 
 	@Override
-	protected Tag<?> @Nullable [] get(Event event) {
+	protected Tag<?> @Nullable [] execute(VirtualFrame event) {
 		Set<Tag<?>> tags = new TreeSet<>(Comparator.comparing(Keyed::key));
 		for (TagType<?> type : types) {
 			for (Tag<?> tag : TagModule.tagRegistry.getMatchingTags(origin, type,
@@ -79,7 +79,7 @@ public class ExprTagsOfType extends SimpleExpression<Tag> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String registry = types.length > 1 ? "" : " " + types[0].toString();
 		return "all of the " + origin.toString(datapackOnly) + registry + " tags";
 	}

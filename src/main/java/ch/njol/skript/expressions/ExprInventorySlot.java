@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.Nullable;
@@ -59,13 +59,13 @@ public class ExprInventorySlot extends SimpleExpression<Slot> {
 
 	@Override
 	@Nullable
-	protected Slot[] get(Event event) {
-		Inventory invi = invis.getSingle(event);
+	protected Slot[] execute(VirtualFrame event) {
+		Inventory invi = invis.executeSingle(event);
 		if (invi == null)
 			return null;
 		
 		List<Slot> inventorySlots = new ArrayList<>();
-		for (Number slot : slots.getArray(event)) {
+		for (Number slot : slots.executeArray(event)) {
 			if (slot.intValue() >= 0 && slot.intValue() < invi.getSize()) {
 				int slotIndex = slot.intValue();
 				// Not all indices point to inventory slots. Equipment, for example
@@ -95,7 +95,7 @@ public class ExprInventorySlot extends SimpleExpression<Slot> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "slots " + slots.toString(e, debug) + " of " + invis.toString(e, debug);
 	}
 }

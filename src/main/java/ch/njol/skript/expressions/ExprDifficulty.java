@@ -1,8 +1,8 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Difficulty;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -38,12 +38,12 @@ public class ExprDifficulty extends SimplePropertyExpression<World, Difficulty> 
 	}
 	
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null)
 			return;
 		
 		Difficulty difficulty = (Difficulty) delta[0];
-		for (World world : getExpr().getArray(e)) {
+		for (World world : getExpr().executeArray(e)) {
 			world.setDifficulty(difficulty);
 			if (difficulty != Difficulty.PEACEFUL)
 				world.setSpawnFlags(true, world.getAllowAnimals()); // Force enable spawn monsters as changing difficulty won't change this by itself

@@ -13,8 +13,8 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Entity Fire Burn Duration")
@@ -54,8 +54,8 @@ public class ExprFireTicks extends SimplePropertyExpression<Entity, Timespan> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		Entity[] entities = getExpr().getArray(event);
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
+		Entity[] entities = getExpr().executeArray(event);
 		int change = delta == null ? 0 : (int) ((Timespan) delta[0]).getAs(Timespan.TimePeriod.TICK);
 		switch (mode) {
 			case REMOVE:

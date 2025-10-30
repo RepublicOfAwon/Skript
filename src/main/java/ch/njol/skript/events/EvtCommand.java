@@ -1,6 +1,6 @@
 package ch.njol.skript.events;
 
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +42,7 @@ public class EvtCommand extends SkriptEvent { // TODO condition to check whether
 
 	@Override
 	@SuppressWarnings("null")
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		if (event instanceof ServerCommandEvent serverCommandEvent && serverCommandEvent.getCommand().isEmpty())
 			return false;
 
@@ -67,7 +67,7 @@ public class EvtCommand extends SkriptEvent { // TODO condition to check whether
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "command" + (commandsLit != null ? " " + commandsLit.toString(event, debug) : "");
 	}
 	

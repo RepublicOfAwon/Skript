@@ -7,8 +7,8 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Flight Mode")
@@ -36,9 +36,9 @@ public class ExprFlightMode extends SimplePropertyExpression<Player, Boolean> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		boolean state = mode != Changer.ChangeMode.RESET && delta != null && (boolean) delta[0];
-		for (Player player : getExpr().getArray(event)) {
+		for (Player player : getExpr().executeArray(event)) {
 			player.setAllowFlight(state);
 		}
 	}

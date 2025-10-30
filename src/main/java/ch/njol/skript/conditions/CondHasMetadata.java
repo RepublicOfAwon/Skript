@@ -12,7 +12,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.metadata.Metadatable;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +43,7 @@ public class CondHasMetadata extends Condition {
 	}
 
 	@Override
-	public boolean check(Event e) {
+	public boolean executeBoolean(VirtualFrame e) {
 		return holders.check(e,
 				holder -> values.check(e,
 						holder::hasMetadata
@@ -51,7 +51,7 @@ public class CondHasMetadata extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return PropertyCondition.toString(this, PropertyType.HAVE, e, debug, holders,
 				"metadata " + (values.isSingle() ? "value " : "values ") + values.toString(e, debug));
 	}

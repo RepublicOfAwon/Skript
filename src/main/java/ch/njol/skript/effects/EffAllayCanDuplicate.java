@@ -10,9 +10,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Allay;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Allay Duplicate")
@@ -45,15 +45,15 @@ public class EffAllayCanDuplicate extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (LivingEntity entity : entities.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (LivingEntity entity : entities.executeArray(event)) {
 			if (entity instanceof Allay allay)
 				allay.setCanDuplicate(duplicate);
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (duplicate)
 			return "allow " + entities.toString(event, debug) + " to duplicate";
 		return "prevent " + entities.toString(event, debug) + " from duplicating";

@@ -8,10 +8,10 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Portal Cooldown")
@@ -60,8 +60,8 @@ public class ExprPortalCooldown extends SimplePropertyExpression<Entity, Timespa
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		Entity[] entities = getExpr().getArray(event);
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
+		Entity[] entities = getExpr().executeArray(event);
 		int change = delta == null ? 0 : (int) ((Timespan) delta[0]).getAs(Timespan.TimePeriod.TICK);
 		switch (mode) {
 			case REMOVE:

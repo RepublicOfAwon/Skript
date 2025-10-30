@@ -3,6 +3,7 @@ package ch.njol.skript.lang;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.util.coll.iterator.ArrayIterator;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,14 +20,14 @@ import java.util.Iterator;
  * <br/>
  * <h2>Contract</h2>
  * <ul>
- *     <li>Neither {@link #getArrayKeys(Event)} nor {@link #getAllKeys(Event)} should ever be called without
+ *     <li>Neither {@link #getArrayKeys(VirtualFrame)} nor {@link #getAllKeys(VirtualFrame)} should ever be called without
  *     a corresponding {@link #getArray(Event)} or {@link #getAll(Event)} call.</li>
- *     <li>{@link #getArrayKeys(Event)} and {@link #getAllKeys(Event)} should only be called iff {@link #canReturnKeys()}
+ *     <li>{@link #getArrayKeys(VirtualFrame)} and {@link #getAllKeys(VirtualFrame)} should only be called iff {@link #canReturnKeys()}
  *     returns {@code true}.</li>
- *     <li>A caller may ask only for values and does not have to invoke either {@link #getArrayKeys(Event)} or
- *     {@link #getAllKeys(Event)}.</li>
- *     <li>{@link #getArrayKeys(Event)} might be called after the corresponding {@link #getArray(Event)}</li>
- *     <li>{@link #getAllKeys(Event)} might be called after the corresponding {@link #getAll(Event)}</li>
+ *     <li>A caller may ask only for values and does not have to invoke either {@link #getArrayKeys(VirtualFrame)} or
+ *     {@link #getAllKeys(VirtualFrame)}.</li>
+ *     <li>{@link #getArrayKeys(VirtualFrame)} might be called after the corresponding {@link #getArray(Event)}</li>
+ *     <li>{@link #getAllKeys(VirtualFrame)} might be called after the corresponding {@link #getAll(Event)}</li>
  * </ul>
  * <br/>
  * <h2>Advice on Caching</h2>
@@ -34,20 +35,20 @@ import java.util.Iterator;
  * call.
  * E.g. if an expression is returning data from a map, it could request the whole entry-set during
  * {@link #getArray(Event)}
- * and return the keys during {@link #getArrayKeys(Event)} (provided the cache is weak, safe and event-linked).
+ * and return the keys during {@link #getArrayKeys(VirtualFrame)} (provided the cache is weak, safe and event-linked).
  * This is not necessary, but it may be helpful for some expressions where the set of keys could potentially change
  * between repeated calls, or is expensive to access.
  * <br/>
  * <br/>
  * <h3>Caveats</h3>
  * <ol>
- *     <li>The caller may <i>never</i> ask for {@link #getArrayKeys(Event)}.
+ *     <li>The caller may <i>never</i> ask for {@link #getArrayKeys(VirtualFrame)}.
  *     The cache should be disposed of in a timely manner.</li>
  *     <li>It is (theoretically) possible for two separate calls to occur simultaneously
  *     (asking for the value/key sets separately) so it is recommended to link any cache system to the event instance
  *     .</li>
  * </ol>
- * Note that the caller may <i>never</i> ask for {@link #getArrayKeys(Event)} and so the cache should be disposed of
+ * Note that the caller may <i>never</i> ask for {@link #getArrayKeys(VirtualFrame)} and so the cache should be disposed of
  * in a timely manner.
  * <br/>
  * <pre>{@code
@@ -71,7 +72,7 @@ import java.util.Iterator;
  * @see KeyReceiverExpression
  * @see KeyedValue
  */
-public interface KeyProviderExpression<T> extends Expression<T> {
+public interface KeyProviderExpression<T> {
 
 	/**
 	 * A set of keys, matching the length and order of the immediately-previous
@@ -92,7 +93,7 @@ public interface KeyProviderExpression<T> extends Expression<T> {
 	 * @throws IllegalStateException If this was not called directly after a {@link #getArray(Event)} call
 	 * or if {@link #canReturnKeys()} returns {@code false}
 	 */
-	@NotNull String @NotNull [] getArrayKeys(Event event) throws IllegalStateException;
+	@NotNull String @NotNull [] getArrayKeys(VirtualFrame event) throws IllegalStateException;
 
 	/**
 	 * A set of keys, matching the length and order of the immediately-previous
@@ -113,7 +114,7 @@ public interface KeyProviderExpression<T> extends Expression<T> {
 	 * @throws IllegalStateException If this was not called directly after a {@link #getAll(Event)} call
 	 * or if {@link #canReturnKeys()} returns {@code false}
 	 */
-	default @NotNull String @NotNull [] getAllKeys(Event event) {
+	default @NotNull String @NotNull [] getAllKeys(VirtualFrame event) {
 		return this.getArrayKeys(event);
 	}
 
@@ -125,14 +126,13 @@ public interface KeyProviderExpression<T> extends Expression<T> {
 	 * @param event The event context
 	 * @return An iterator over the key-value pairs of this expression
 	 */
-	default Iterator<KeyedValue<T>> keyedIterator(Event event) {
+	default Iterator<KeyedValue<T>> keyedIterator(VirtualFrame event) {
 		return new ArrayIterator<>(KeyedValue.zip(getArray(event), getArrayKeys(event)));
 	}
 
 	/**
 	 * Keyed expressions should never be single.
 	 */
-	@Override
 	default boolean isSingle() {
 		return false;
 	}
@@ -140,7 +140,7 @@ public interface KeyProviderExpression<T> extends Expression<T> {
 	/**
 	 * Returns whether this expression can return keys.
 	 * <br/>
-	 * If this returns false, then {@link #getArrayKeys(Event)} and {@link #getAllKeys(Event)} should never be called.
+	 * If this returns false, then {@link #getArrayKeys(VirtualFrame)} and {@link #getAllKeys(VirtualFrame)} should never be called.
 	 *
 	 * @return Whether this expression can return keys
 	 */

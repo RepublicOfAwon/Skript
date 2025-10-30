@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 
@@ -69,9 +69,9 @@ public class ExprJoinSplit extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected String @Nullable [] get(Event event) {
-		String[] strings = this.strings.getArray(event);
-		String delimiter = this.delimiter != null ? this.delimiter.getSingle(event) : "";
+	protected String @Nullable [] execute(VirtualFrame event) {
+		String[] strings = this.strings.executeArray(event);
+		String delimiter = this.delimiter != null ? this.delimiter.executeSingle(event) : "";
 
 		if (strings.length == 0 || delimiter == null)
 			return new String[0];
@@ -107,7 +107,7 @@ public class ExprJoinSplit extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		if (join) {
 			builder.append("join", strings);

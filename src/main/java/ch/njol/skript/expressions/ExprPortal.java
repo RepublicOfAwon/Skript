@@ -4,9 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.event.Event;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +50,7 @@ public class ExprPortal extends SimpleExpression<Block> {
 
 	@Nullable
 	@Override
-	protected Block[] get(Event e) {
+	protected Block[] execute(VirtualFrame e) {
 		if (!(e instanceof PortalCreateEvent))
 			return null;
 
@@ -66,7 +66,7 @@ public class ExprPortal extends SimpleExpression<Block> {
 
 	@Nullable
 	@Override
-	public Iterator<Block> iterator(Event e) {
+	public Iterator<Block> iterator(VirtualFrame e) {
 		if (!(e instanceof PortalCreateEvent))
 			return null;
 
@@ -94,7 +94,7 @@ public class ExprPortal extends SimpleExpression<Block> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the portal blocks";
 	}
 

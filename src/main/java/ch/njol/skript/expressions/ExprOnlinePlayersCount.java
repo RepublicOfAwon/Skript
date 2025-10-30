@@ -14,8 +14,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,7 +61,7 @@ public class ExprOnlinePlayersCount extends SimpleExpression<Long> {
 
 	@Override
 	@Nullable
-	public Long[] get(Event e) {
+	public Long[] execute(VirtualFrame e) {
 		if (!isReal && !(e instanceof PaperServerListPingEvent))
 			return null;
 
@@ -93,7 +93,7 @@ public class ExprOnlinePlayersCount extends SimpleExpression<Long> {
 
 	@SuppressWarnings("null")
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
 		if (!(e instanceof PaperServerListPingEvent))
 			return;
 
@@ -125,7 +125,7 @@ public class ExprOnlinePlayersCount extends SimpleExpression<Long> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the count of " + (isReal ? "real max players" : "max players");
 	}
 

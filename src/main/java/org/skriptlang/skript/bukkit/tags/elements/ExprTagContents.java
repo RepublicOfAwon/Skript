@@ -12,10 +12,10 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.tags.TagType;
@@ -85,13 +85,13 @@ public class ExprTagContents extends SimpleExpression<Object> {
 
 	@Override
 	@SuppressWarnings({"unchecked", "rawtypes", "RedundantCast"}) // cast to avoid type issues
-	protected Object @Nullable [] get(Event event) {
+	protected Object @Nullable [] execute(VirtualFrame event) {
 		return ((Stream) stream(event)).toArray(length -> Array.newInstance(getReturnType(), length));
 	}
 
 	@Override
-	public Stream<?> stream(Event event) {
-		Tag<?> tag = this.tag.getSingle(event);
+	public Stream<?> stream(VirtualFrame event) {
+		Tag<?> tag = this.tag.executeSingle(event);
 		if (tag == null)
 			return Stream.empty();
 		return tag.getValues().stream()
@@ -122,7 +122,7 @@ public class ExprTagContents extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the tag contents of " + tag.toString(event, debug);
 	}
 

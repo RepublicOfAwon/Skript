@@ -1,8 +1,8 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +42,7 @@ public class ExprCursorSlot extends PropertyExpression<Player, Slot> {
 	}
 
 	@Override
-	protected Slot[] get(Event event, Player[] source) {
+	protected Slot[] get(VirtualFrame event, Player[] source) {
 		return get(source, player -> {
 			if (event instanceof InventoryClickEvent)
 				return new CursorSlot(player, ((InventoryClickEvent) event).getCursor());
@@ -56,7 +56,7 @@ public class ExprCursorSlot extends PropertyExpression<Player, Slot> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "cursor slot of " + getExpr().toString(event, debug);
 	}
 

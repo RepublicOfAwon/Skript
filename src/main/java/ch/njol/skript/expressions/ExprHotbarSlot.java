@@ -13,8 +13,8 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.Nullable;
@@ -54,7 +54,7 @@ public class ExprHotbarSlot extends PropertyExpression<Player, Slot> {
 	}
 
 	@Override
-	protected Slot[] get(Event event, Player[] source) {
+	protected Slot[] get(VirtualFrame event, Player[] source) {
 		return get(source, player -> {
 			int time = getTime();
 			PlayerInventory inventory = player.getInventory();
@@ -77,7 +77,7 @@ public class ExprHotbarSlot extends PropertyExpression<Player, Slot> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		assert delta != null;
 		Object object = delta[0];
 		Number number = null;
@@ -93,7 +93,7 @@ public class ExprHotbarSlot extends PropertyExpression<Player, Slot> {
 		if (index > 8 || index < 0) // Only slots in hotbar can be current hotbar slot
 			return;
 
-		for (Player player : getExpr().getArray(event))
+		for (Player player : getExpr().executeArray(event))
 			player.getInventory().setHeldItemSlot(index);
 	}
 
@@ -110,7 +110,7 @@ public class ExprHotbarSlot extends PropertyExpression<Player, Slot> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "hotbar slot of " + getExpr().toString(event, debug);
 	}
 

@@ -15,8 +15,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
@@ -52,9 +52,9 @@ public class ExprEnchantmentLevel extends SimpleExpression<Long> {
 	}
 
 	@Override
-	protected Long[] get(Event e) {
-		Enchantment[] enchantments = enchants.getArray(e);
-		return Stream.of(items.getArray(e))
+	protected Long[] execute(VirtualFrame e) {
+		Enchantment[] enchantments = enchants.executeArray(e);
+		return Stream.of(items.executeArray(e))
 			.map(ItemType::getEnchantmentTypes)
 			.flatMap(Stream::of)
 			.filter(enchantment -> CollectionUtils.contains(enchantments, enchantment.getType()))
@@ -77,9 +77,9 @@ public class ExprEnchantmentLevel extends SimpleExpression<Long> {
 	}
 
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		ItemType[] itemTypes = items.getArray(e);
-		Enchantment[] enchantments = enchants.getArray(e);
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
+		ItemType[] itemTypes = items.executeArray(e);
+		Enchantment[] enchantments = enchants.executeArray(e);
 		int changeValue = ((Number) delta[0]).intValue();
 
 		for (ItemType itemType : itemTypes) {
@@ -123,7 +123,7 @@ public class ExprEnchantmentLevel extends SimpleExpression<Long> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the level of " + enchants.toString(e, debug) + " of " + items.toString(e, debug);
 	}
 

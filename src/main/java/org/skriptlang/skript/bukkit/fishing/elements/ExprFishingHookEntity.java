@@ -10,10 +10,10 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,7 +45,7 @@ public class ExprFishingHookEntity extends SimpleExpression<Entity> {
 	}
 
 	@Override
-	protected Entity @Nullable [] get(Event event) {
+	protected Entity @Nullable [] execute(VirtualFrame event) {
 		if (!(event instanceof PlayerFishEvent fishEvent))
 			return null;
 
@@ -61,7 +61,7 @@ public class ExprFishingHookEntity extends SimpleExpression<Entity> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (!(event instanceof PlayerFishEvent fishEvent))
 			return;
 
@@ -88,7 +88,7 @@ public class ExprFishingHookEntity extends SimpleExpression<Entity> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "hooked entity";
 	}
 

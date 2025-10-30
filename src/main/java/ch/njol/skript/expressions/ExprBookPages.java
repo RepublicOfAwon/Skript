@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.Nullable;
@@ -82,9 +82,9 @@ public class ExprBookPages extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String[] get(Event event) {
+	protected String[] execute(VirtualFrame event) {
 		List<String> pages = new ArrayList<>();
-		for (Object object : items.getArray(event)) {
+		for (Object object : items.executeArray(event)) {
 			BookMeta bookMeta = null;
 			if (object instanceof ItemType) {
 				ItemType itemType = (ItemType) object;
@@ -104,7 +104,7 @@ public class ExprBookPages extends SimpleExpression<String> {
 			if (isAllPages()) {
 				pages.addAll(bookMeta.getPages());
 			} else {
-				Number pageNumber = page.getSingle(event);
+				Number pageNumber = page.executeSingle(event);
 				if (pageNumber == null)
 					continue;
 				int page = pageNumber.intValue();
@@ -133,17 +133,17 @@ public class ExprBookPages extends SimpleExpression<String> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (delta == null && (mode == ChangeMode.SET || mode == ChangeMode.ADD))
 			return;
-		int page = !isAllPages() ? this.page.getOptionalSingle(event).orElse(-1).intValue() : -1;
+		int page = !isAllPages() ? this.page.executeOptional(event).orElse(-1).intValue() : -1;
 		String[] newPages = delta == null ? null : new String[delta.length];
 		if (newPages != null) {
 			for (int i = 0; i < delta.length; i++)
 				newPages[i] = delta[i] + "";
 		}
 
-		for (Object object : items.getArray(event)) {
+		for (Object object : items.executeArray(event)) {
 			BookMeta bookMeta = null;
 			if (object instanceof ItemType) {
 				ItemType itemType = (ItemType) object;
@@ -247,7 +247,7 @@ public class ExprBookPages extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (page != null ? "page " + page.toString(event, debug) : "book pages") + " of " + items.toString(event, debug);
 	}
 

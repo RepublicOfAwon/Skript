@@ -1,8 +1,8 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,9 +45,9 @@ public class EffBreakNaturally extends Effect {
 	}
 	
 	@Override
-	protected void execute(final Event e) {
-		ItemType tool = this.tool != null ? this.tool.getSingle(e) : null;
-		for (Block block : this.blocks.getArray(e)) {
+	protected void executeVoid(final VirtualFrame e) {
+		ItemType tool = this.tool != null ? this.tool.executeSingle(e) : null;
+		for (Block block : this.blocks.executeArray(e)) {
 			if (tool != null) {
 				ItemStack is = tool.getRandom();
 				if (is != null)
@@ -61,7 +61,7 @@ public class EffBreakNaturally extends Effect {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "break " + blocks.toString(e, debug) + " naturally" + (tool != null ? " using " + tool.toString(e, debug) : "");
 	}
 }

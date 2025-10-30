@@ -6,11 +6,11 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Explosive;
 import org.bukkit.entity.Ghast;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -56,12 +56,12 @@ public class ExprExplosiveYield extends SimplePropertyExpression<Entity, Number>
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		Number number = delta != null ? (Number) delta[0] : 0;
 		float floatValue = Math2.fit(0, number.floatValue(), Float.MAX_VALUE);
 		int intValue = Math2.fit(0, number.intValue(), Integer.MAX_VALUE);
 
-		for (Entity entity : getExpr().getArray(event)) {
+		for (Entity entity : getExpr().executeArray(event)) {
 			if (entity instanceof Explosive explosive) {
 				changeExplosion(mode, floatValue, explosive::getYield, explosive::setYield, Float.MAX_VALUE);
 			} else if (entity instanceof Creeper creeper) {

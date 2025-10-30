@@ -9,6 +9,7 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.StructureType;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.block.BlockState;
@@ -106,7 +107,7 @@ public class EvtGrow extends SkriptEvent {
 	}
 	
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		// Exit early if we need fromTypes, but don't have it
 		if (fromTypes == null && actionRestriction != INTO)
 			// We want true for "on grow:", false for anything else
@@ -137,14 +138,16 @@ public class EvtGrow extends SkriptEvent {
 		}
 	}
 
-	private static boolean checkFrom(Event event, Literal<Object> types) {
+	private static boolean checkFrom(VirtualFrame frame, Literal<Object> types) {
 		// treat and lists as or lists
 		if (types.getAnd() && types instanceof LiteralList)
 			((LiteralList<Object>) types).invertAnd();
 
+		Event event = (Event) frame.getArguments()[0];
+
 		if (event instanceof StructureGrowEvent) {
 			Material sapling = ItemUtils.getTreeSapling(((StructureGrowEvent) event).getSpecies());
-			return types.check(event, type -> {
+			return types.check(frame, type -> {
 				if (type instanceof ItemType) {
 					return ((ItemType) type).isOfType(sapling);
 				} else if (type instanceof BlockData) {
@@ -154,7 +157,7 @@ public class EvtGrow extends SkriptEvent {
 			});
 		} else if (event instanceof BlockGrowEvent) {
 			BlockState oldState = ((BlockGrowEvent) event).getBlock().getState();
-			return types.check(event, type -> {
+			return types.check(frame, type -> {
 				if (type instanceof ItemType) {
 					return ((ItemType) type).isOfType(oldState.getBlockData());
 				} else if (type instanceof BlockData) {
@@ -166,14 +169,16 @@ public class EvtGrow extends SkriptEvent {
 		return false;
 	}
 
-	private static boolean checkTo(Event event, Literal<Object> types) {
+	private static boolean checkTo(VirtualFrame frame, Literal<Object> types) {
 		// treat and lists as or lists
 		if (types.getAnd() && types instanceof LiteralList)
 			((LiteralList<Object>) types).invertAnd();
 
+		Event event = (Event) frame.getArguments()[0];
+
 		if (event instanceof StructureGrowEvent) {
 			TreeType species = ((StructureGrowEvent) event).getSpecies();
-			return types.check(event, type -> {
+			return types.check(frame, type -> {
 				if (type instanceof StructureType) {
 					return ((StructureType) type).is(species);
 				}
@@ -181,7 +186,7 @@ public class EvtGrow extends SkriptEvent {
 			});
 		} else if (event instanceof BlockGrowEvent) {
 			BlockState newState = ((BlockGrowEvent) event).getNewState();
-			return types.check(event, type -> {
+			return types.check(frame, type -> {
 				if (type instanceof ItemType) {
 					return ((ItemType) type).isOfType(newState.getBlockData());
 				} else if (type instanceof BlockData) {
@@ -194,7 +199,7 @@ public class EvtGrow extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (fromTypes == null && toTypes == null)
 			return "grow";
 

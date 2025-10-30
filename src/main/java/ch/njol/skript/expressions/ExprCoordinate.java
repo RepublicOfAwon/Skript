@@ -12,8 +12,8 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 
@@ -57,9 +57,9 @@ public class ExprCoordinate extends SimplePropertyExpression<Location, Number> {
 	}
 
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
+	public void change(final VirtualFrame e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
 		assert delta != null;
-		final Location l = getExpr().getSingle(e);
+		final Location l = getExpr().executeSingle(e);
 		if (l == null)
 			return;
 		double n = ((Number) delta[0]).doubleValue();

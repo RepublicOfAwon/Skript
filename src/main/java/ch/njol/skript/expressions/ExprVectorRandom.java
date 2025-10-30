@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +36,7 @@ public class ExprVectorRandom extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	protected Vector[] get(Event event) {
+	protected Vector[] execute(VirtualFrame event) {
 		// Generating uniform random numbers leads to bias towards the corners of the cube.
 		// Gaussian distribution is radially symmetric, so it avoids this bias.
 		return CollectionUtils.array(new Vector(RANDOM.nextGaussian(), RANDOM.nextGaussian(), RANDOM.nextGaussian()).normalize());
@@ -53,7 +53,7 @@ public class ExprVectorRandom extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "random vector";
 	}
 

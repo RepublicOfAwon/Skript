@@ -13,7 +13,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Colored / Uncolored")
@@ -58,7 +58,7 @@ public class ExprColoured extends PropertyExpression<String, String> {
 	}
 	
 	@Override
-	protected String[] get(final Event e, final String[] source) {
+	protected String[] get(final VirtualFrame e, final String[] source) {
 		return get(source, s -> color ? Utils.replaceChatStyles(s) : "" + ChatMessages.stripStyles(s));
 	}
 	
@@ -68,7 +68,7 @@ public class ExprColoured extends PropertyExpression<String, String> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return (color ? "" : "un") + "colored " + getExpr().toString(e, debug);
 	}
 	

@@ -1,8 +1,8 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -50,8 +50,8 @@ public class EffRespawn extends Effect {
 	}
 
 	@Override
-	protected void execute(final Event e) {
-		for (final Player p : players.getArray(e)) {
+	protected void executeVoid(final VirtualFrame e) {
+		for (final Player p : players.executeArray(e)) {
 			if (forceDelay) { // Use Bukkit runnable
 				new BukkitRunnable() {
 
@@ -68,7 +68,7 @@ public class EffRespawn extends Effect {
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "force " + players.toString(e, debug) + " to respawn";
 	}
 

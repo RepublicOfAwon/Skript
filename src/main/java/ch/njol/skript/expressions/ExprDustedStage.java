@@ -9,10 +9,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Brushable;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Dusted Stage")
@@ -47,7 +47,7 @@ public class ExprDustedStage extends PropertyExpression<Object, Integer> {
 	}
 
 	@Override
-	protected Integer @Nullable [] get(Event event, Object[] source) {
+	protected Integer @Nullable [] get(VirtualFrame event, Object[] source) {
 		return get(source, obj -> {
 			Brushable brushable = getBrushable(obj);
 			if (brushable != null) {
@@ -71,11 +71,11 @@ public class ExprDustedStage extends PropertyExpression<Object, Integer> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (isMax) return;
 		Integer value = (delta != null && delta.length > 0) ? (Integer) delta[0] : null;
 
-		for (Object obj : getExpr().getArray(event)) {
+		for (Object obj : getExpr().executeArray(event)) {
 			Brushable brushable = getBrushable(obj);
 			if (brushable == null)
 				continue;
@@ -134,7 +134,7 @@ public class ExprDustedStage extends PropertyExpression<Object, Integer> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return getExpr().toString(event, debug) + "'s " + (isMax ? "maximum " : "") + " dusted stage";
 	}
 

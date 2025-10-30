@@ -12,11 +12,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.EnderDragonPart;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,8 +46,8 @@ public class EffKill extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (Entity entity : entities.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (Entity entity : entities.executeArray(event)) {
 
 			if (entity instanceof EnderDragonPart part)
 				entity = part.getParent();
@@ -71,7 +71,7 @@ public class EffKill extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "kill " + entities.toString(event, debug);
 	}
 

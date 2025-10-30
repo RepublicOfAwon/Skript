@@ -1,8 +1,8 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -39,7 +39,7 @@ public class ExprLocationOf extends WrapperExpression<Location> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "the location of " + getExpr().toString(e, debug);
 	}
 	

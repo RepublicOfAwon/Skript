@@ -11,6 +11,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.Iterators;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +50,7 @@ public class ExprTransform extends SimpleExpression<Object> implements InputSour
 			ParserInstance.registerData(InputData.class, InputData::new);
 	}
 
-	private final Map<Event, List<String>> cache = new WeakHashMap<>();
+	private final Map<VirtualFrame, List<String>> cache = new WeakHashMap<>();
 
 	private boolean keyed;
 	private @UnknownNullability Expression<?> mappingExpr;
@@ -80,7 +81,7 @@ public class ExprTransform extends SimpleExpression<Object> implements InputSour
 	}
 
 	@Override
-	public @NotNull Iterator<?> iterator(Event event) {
+	public @NotNull Iterator<?> iterator(VirtualFrame event) {
 		if (hasIndices()) {
 			Iterator<? extends KeyedValue<?>> iterator = ((KeyProviderExpression<?>) unmappedObjects).keyedIterator(event);
 			return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false)
@@ -107,13 +108,13 @@ public class ExprTransform extends SimpleExpression<Object> implements InputSour
 	}
 
 	@Override
-	public Iterator<KeyedValue<Object>> keyedIterator(Event event) {
+	public Iterator<KeyedValue<Object>> keyedIterator(VirtualFrame event) {
 		Iterator<? extends KeyedValue<?>> iterator = ((KeyProviderExpression<?>) unmappedObjects).keyedIterator(event);
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false)
 			.map(keyedValue -> {
 				currentValue = keyedValue.value();
 				currentIndex = keyedValue.key();
-				Object mappedValue = mappingExpr.getSingle(event);
+				Object mappedValue = mappingExpr.executeSingle(event);
 				return mappedValue != null ? keyedValue.withValue(mappedValue) : null;
 			})
 			.filter(Objects::nonNull)
@@ -121,19 +122,20 @@ public class ExprTransform extends SimpleExpression<Object> implements InputSour
 	}
 
 	@Override
-	protected Object @Nullable [] get(Event event) {
+	protected Object @Nullable [] execute(VirtualFrame frame) {
+		Event event = (Event) frame.getArguments()[0];
 		if (!canReturnKeys())
-			return Converters.convertStrictly(Iterators.toArray(iterator(event), Object.class), getReturnType());
-		KeyedValue.UnzippedKeyValues<Object> unzipped = KeyedValue.unzip(keyedIterator(event));
-		cache.put(event, unzipped.keys());
+			return Converters.convertStrictly(Iterators.toArray(iterator(frame), Object.class), getReturnType());
+		KeyedValue.UnzippedKeyValues<Object> unzipped = KeyedValue.unzip(keyedIterator(frame));
+		cache.put(frame, unzipped.keys());
 		return Converters.convertStrictly(unzipped.values().toArray(), getReturnType());
 	}
 
 	@Override
-	public @NotNull String @NotNull [] getArrayKeys(Event event) throws IllegalStateException {
-		if (!cache.containsKey(event))
+	public @NotNull String @NotNull [] getArrayKeys(VirtualFrame frame) throws IllegalStateException {
+		if (!cache.containsKey(frame))
 			throw new IllegalStateException();
-		return cache.remove(event).toArray(new String[0]);
+		return cache.remove(frame).toArray(new String[0]);
 	}
 
 	@Override
@@ -200,7 +202,7 @@ public class ExprTransform extends SimpleExpression<Object> implements InputSour
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return unmappedObjects.toString(event, debug) + " transformed using " + mappingExpr.toString(event, debug);
 	}
 

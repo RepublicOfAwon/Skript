@@ -10,7 +10,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.properties.Property;
@@ -85,9 +85,9 @@ public class PropExprValueOf extends PropertyBaseExpression<TypedValuePropertyHa
 	}
 
 	@Override
-	protected Object @Nullable [] get(Event event) {
+	protected Object @Nullable [] execute(VirtualFrame event) {
 		if (type == null) {
-			return super.get(event);
+			return super.execute(event);
 		} else {
 			// need to convert to specific classinfo
 			return expr.stream(event)

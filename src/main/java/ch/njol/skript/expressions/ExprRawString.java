@@ -11,7 +11,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -52,14 +52,14 @@ public class ExprRawString extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected String[] get(Event event) {
+	protected String[] execute(VirtualFrame event) {
 		List<String> strings = new ArrayList<>();
 		for (Expression<? extends String> message : messages) {
 			if (message instanceof VariableString) {
 				strings.add(((VariableString) message).toUnformattedString(event));
 				continue;
 			}
-			for (String string : message.getArray(event)) {
+			for (String string : message.executeArray(event)) {
 				String raw = SkriptColor.replaceColorChar(string);
 				if (raw.toLowerCase().contains("&x")) {
 					raw = StringUtils.replaceAll(raw, HEX_PATTERN, matchResult ->
@@ -82,7 +82,7 @@ public class ExprRawString extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "raw " + expr.toString(e, debug);
 	}
 

@@ -1,8 +1,8 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -74,40 +74,40 @@ public class EffSendTitle extends Effect {
 	
 	@SuppressWarnings("null")
 	@Override
-	protected void execute(final Event e) {
-		String title = this.title != null ? this.title.getSingle(e) : null;
-		String subtitle = this.subtitle != null ? this.subtitle.getSingle(e) : null;
+	protected void executeVoid(final VirtualFrame e) {
+		String title = this.title != null ? this.title.executeSingle(e) : null;
+		String subtitle = this.subtitle != null ? this.subtitle.executeSingle(e) : null;
 		
 		if (TIME_SUPPORTED) {
 			int fadeIn, stay, fadeOut;
 			fadeIn = stay = fadeOut = -1;
 
 			if (this.fadeIn != null) {
-				Timespan t = this.fadeIn.getSingle(e);
+				Timespan t = this.fadeIn.executeSingle(e);
 				fadeIn = t != null ? (int) t.getAs(Timespan.TimePeriod.TICK) : -1;
 			}
 
 			if (this.stay != null) {
-				Timespan t = this.stay.getSingle(e);
+				Timespan t = this.stay.executeSingle(e);
 				stay = t != null ? (int) t.getAs(Timespan.TimePeriod.TICK) : -1;
 			}
 
 			if (this.fadeOut != null) {
-				Timespan t = this.fadeOut.getSingle(e);
+				Timespan t = this.fadeOut.executeSingle(e);
 				fadeOut = t != null ? (int) t.getAs(Timespan.TimePeriod.TICK) : -1;
 			}
 			
-			for (Player p : recipients.getArray(e))
+			for (Player p : recipients.executeArray(e))
 				p.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 		} else {
-			for (Player p : recipients.getArray(e))
+			for (Player p : recipients.executeArray(e))
 				p.sendTitle(title, subtitle);
 		}
 	}
 	
 	// TODO: util method to simplify this
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		String title = this.title != null ? this.title.toString(e, debug) : "",
 		sub = subtitle != null ? subtitle.toString(e, debug) : "",
 		in = fadeIn != null ? fadeIn.toString(e, debug) : "",

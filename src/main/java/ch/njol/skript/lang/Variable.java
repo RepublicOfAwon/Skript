@@ -22,6 +22,7 @@ import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.EmptyIterator;
 import ch.njol.util.coll.iterator.SingleItemIterator;
 import com.google.common.collect.Iterators;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -43,7 +44,7 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, KeyProviderExpression<T> {
+public class Variable<T> extends Expression<T> implements KeyReceiverExpression<T>, KeyProviderExpression<T> {
 
 	private final static String SINGLE_SEPARATOR_CHAR = ":";
 	public final static String SEPARATOR = SINGLE_SEPARATOR_CHAR + SINGLE_SEPARATOR_CHAR;
@@ -69,7 +70,7 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 	private final boolean list;
 
 	private final @Nullable Variable<?> source;
-	private final Map<Event, String[]> cache = new WeakHashMap<>();
+	private final Map<VirtualFrame, String[]> cache = new WeakHashMap<>();
 
 	@SuppressWarnings("unchecked")
 	private Variable(VariableString name, Class<? extends T>[] types, boolean local, boolean ephemeral, boolean list, @Nullable Variable<?> source) {
@@ -283,7 +284,7 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		StringBuilder stringBuilder = new StringBuilder()
 			.append("{");
 		if (local)
@@ -294,7 +295,7 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 		if (debug) {
 			stringBuilder.append(" (");
 			if (event != null) {
-				stringBuilder.append(Classes.toString(get(event)))
+				stringBuilder.append(Classes.toString(event.toString()))
 					.append(", ");
 			}
 			stringBuilder.append("as ")
@@ -331,17 +332,18 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 	 * Gets the value of this variable as stored in the variables map.
 	 * This method also checks against default variables.
 	 */
-	public @Nullable Object getRaw(Event event) {
+	public @Nullable Object getRaw(VirtualFrame frame) {
 		DefaultVariables data = script == null ? null : script.getData(DefaultVariables.class);
+		Event event = (Event) frame.getArguments()[0];
 		if (data != null)
 			data.enterScope();
 		try {
-			String name = this.name.toString(event);
+			String name = this.name.toString(frame);
 
 			// prevents e.g. {%expr%} where "%expr%" ends with "::*" from returning a Map
 			if (name.endsWith(Variable.SEPARATOR + "*") != list)
 				return null;
-			Object value = !list ? convertIfOldPlayer(name, local, event, Variables.getVariable(name, event, local)) : Variables.getVariable(name, event, local);
+			Object value = !list ? convertIfOldPlayer(name, local, frame, Variables.getVariable(name, frame, local)) : Variables.getVariable(name, frame, local);
 			if (value != null)
 				return value;
 
@@ -350,7 +352,7 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 				return null;
 
 			for (String typeHint : this.name.getDefaultVariableNames(name, event)) {
-				value = Variables.getVariable(typeHint, event, false);
+				value = Variables.getVariable(typeHint, frame, false);
 				if (value != null)
 					return value;
 			}
@@ -361,14 +363,14 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 		return null;
 	}
 
-	private @Nullable Object get(Event event) {
-		Object rawValue = getRaw(event);
+	private @Nullable Object get(VirtualFrame frame) {
+		Object rawValue = getRaw(frame);
 		if (!list)
 			return rawValue;
 		if (rawValue == null)
 			return Array.newInstance(types[0], 0);
 		List<Object> convertedValues = new ArrayList<>();
-		String name = StringUtils.substring(this.name.toString(event), 0, -1);
+		String name = StringUtils.substring(this.name.toString(frame), 0, -1);
 		//noinspection unchecked
 		for (Entry<String, ?> variable : ((Map<String, ?>) rawValue).entrySet()) {
 			if (variable.getKey() != null && variable.getValue() != null) {
@@ -379,7 +381,7 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 				else
 					value = variable.getValue();
 				if (value != null)
-					convertedValues.add(convertIfOldPlayer(name + variable.getKey(), local, event, value));
+					convertedValues.add(convertIfOldPlayer(name + variable.getKey(), local, frame, value));
 			}
 		}
 		return convertedValues.toArray();
@@ -390,11 +392,11 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 	 * because the player object inside the variable will be a (kinda) dead variable
 	 * as a new player object has been created by the server.
 	 */
-	public static <T> @Nullable T convertIfOldPlayer(String key, boolean local, Event event, @Nullable T object) {
+	public static <T> @Nullable T convertIfOldPlayer(String key, boolean local, VirtualFrame frame, @Nullable T object) {
 		if (SkriptConfig.enablePlayerVariableFix.value() && object instanceof Player oldPlayer) {
 			if (!oldPlayer.isValid() && oldPlayer.isOnline()) {
 				Player newPlayer = Bukkit.getPlayer(oldPlayer.getUniqueId());
-				Variables.setVariable(key, newPlayer, event, local);
+				Variables.setVariable(key, newPlayer, frame, local);
 				//noinspection unchecked
 				return (T) newPlayer;
 			}
@@ -403,7 +405,7 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 	}
 
 	@Override
-	public Iterator<KeyedValue<T>> keyedIterator(Event event) {
+	public Iterator<KeyedValue<T>> keyedIterator(VirtualFrame event) {
 		if (!list)
 			throw new SkriptAPIException("Invalid call to keyedIterator");
 		Iterator<KeyedValue<T>> transformed = Iterators.transform(variablesIterator(event), pair -> {
@@ -418,20 +420,20 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 		return Iterators.filter(transformed, Objects::nonNull);
 	}
 
-	public Iterator<Pair<String, Object>> variablesIterator(Event event) {
+	public Iterator<Pair<String, Object>> variablesIterator(VirtualFrame frame) {
 		if (!list)
 			throw new SkriptAPIException("Looping a non-list variable");
-		return Variables.getVariableIterator(name.toString(event), local, event);
+		return Variables.getVariableIterator(name.toString(frame), local, frame);
 	}
 
 	@Override
-	public @Nullable Iterator<T> iterator(Event event) {
+	public @Nullable Iterator<T> iterator(VirtualFrame frame) {
 		if (!list) {
-			T value = getSingle(event);
+			T value = executeSingle(frame);
 			return value != null ? new SingleItemIterator<>(value) : null;
 		}
-		String name = StringUtils.substring(this.name.toString(event), 0, -1);
-		Object value = Variables.getVariable(name + "*", event, local);
+		String name = StringUtils.substring(this.name.toString(frame), 0, -1);
+		Object value = Variables.getVariable(name + "*", frame, local);
 		if (value == null)
 			return new EmptyIterator<>();
 		assert value instanceof TreeMap;
@@ -448,10 +450,10 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 				while (keys.hasNext()) {
 					@Nullable String key = keys.next();
 					if (key != null) {
-						next = Converters.convert(Variables.getVariable(name + key, event, local), types);
+						next = Converters.convert(Variables.getVariable(name + key, frame, local), types);
 
 						//noinspection unchecked
-						next = (T) convertIfOldPlayer(name + key, local, event, next);
+						next = (T) convertIfOldPlayer(name + key, local, frame, next);
 						if (next != null && !(next instanceof TreeMap))
 							return true;
 					}
@@ -477,15 +479,15 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 		};
 	}
 
-	private @Nullable T getConverted(Event event) {
+	private @Nullable T getConverted(VirtualFrame frame) {
 		assert !list;
-		return Converters.convert(get(event), types);
+		return Converters.convert(get(frame), types);
 	}
 
-	private T[] getConvertedArray(Event event) {
+	private T[] getConvertedArray(VirtualFrame frame) {
 		assert list;
-		Object[] values = (Object[]) get(event);
-		String[] keys = getKeys(event);
+		Object[] values = (Object[]) get(frame);
+		String[] keys = getKeys(frame);
 		assert values != null;
 		//noinspection unchecked
 		T[] converted = (T[]) Array.newInstance(superType, values.length);
@@ -494,14 +496,14 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 			if (converted[i] == null)
 				keys[i] = null;
 		}
-		cache.put(event, ArrayUtils.removeAllOccurrences(keys, null));
+		cache.put(frame, ArrayUtils.removeAllOccurrences(keys, null));
 		return ArrayUtils.removeAllOccurrences(converted, null);
 	}
 
-	private String[] getKeys(Event event) {
+	private String[] getKeys(VirtualFrame frame) {
 		assert list;
-		String name = StringUtils.substring(this.name.toString(event), 0, -1);
-		Object value = Variables.getVariable(name + "*", event, local);
+		String name = StringUtils.substring(this.name.toString(frame), 0, -1);
+		Object value = Variables.getVariable(name + "*", frame, local);
 		if (value == null)
 			return new String[0];
 		assert value instanceof Map<?,?>;
@@ -509,11 +511,11 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 		return ((Map<String, ?>) value).keySet().toArray(new String[0]);
 	}
 
-	private void set(Event event, @Nullable Object value) {
+	private void set(VirtualFrame event, @Nullable Object value) {
 		Variables.setVariable("" + name.toString(event), value, event, local);
 	}
 
-	private void setIndex(Event event, String index, @Nullable Object value) {
+	private void setIndex(VirtualFrame event, String index, @Nullable Object value) {
 		assert list;
 		String name = this.name.toString(event);
 		assert name.endsWith(SEPARATOR + "*") : name + "; " + this.name;
@@ -528,7 +530,7 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 	}
 
 	@Override
-	public void change(Event event, Object @NotNull [] delta, ChangeMode mode, @NotNull String @NotNull [] keys) {
+	public void change(VirtualFrame event, Object @NotNull [] delta, ChangeMode mode, @NotNull String @NotNull [] keys) {
 		if (!list) {
 			this.change(event, delta, mode);
 			return;
@@ -555,7 +557,7 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 
 	@Override
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) throws UnsupportedOperationException {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) throws UnsupportedOperationException {
 		switch (mode) {
 			case DELETE:
 				if (list) {
@@ -714,17 +716,17 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 
 	/**
 	 * {@inheritDoc}
-	 * @param getAll This has no effect for a Variable, as {@link #getArray(Event)} is the same as {@link #getAll(Event)}.
+	 * @param getAll This has no effect for a Variable, as {@link Expression#executeArray(VirtualFrame)} is the same as {@link Expression#executeAll(VirtualFrame)}.
 	 */
 	@Override
-	public <R> void changeInPlace(Event event, Function<T, R> changeFunction, boolean getAll) {
+	public <R> void changeInPlace(VirtualFrame event, Function<T, R> changeFunction, boolean getAll) {
 		changeInPlace(event, changeFunction);
 	}
 
 	@Override
-	public <R> void changeInPlace(Event event, Function<T, R> changeFunction) {
+	public <R> void changeInPlace(VirtualFrame event, Function<T, R> changeFunction) {
 		if (!list) {
-			T value = getSingle(event);
+			T value = executeSingle(event);
 			if (value == null)
 				return;
 			set(event, changeFunction.apply(value));
@@ -738,14 +740,14 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 	}
 
 	@Override
-	public @Nullable T getSingle(Event event) {
+	public @Nullable T executeSingle(VirtualFrame frame) {
 		if (list)
 			throw new SkriptAPIException("Invalid call to getSingle");
-		return getConverted(event);
+		return getConverted(frame);
 	}
 
 	@Override
-	public @NotNull String @NotNull [] getArrayKeys(Event event) throws SkriptAPIException {
+	public @NotNull String @NotNull [] getArrayKeys(VirtualFrame event) throws SkriptAPIException {
 		if (!list)
 			throw new SkriptAPIException("Invalid call to getArrayKeys on non-list");
 		if (!cache.containsKey(event))
@@ -754,7 +756,7 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 	}
 
 	@Override
-	public @NotNull String @NotNull [] getAllKeys(Event event) {
+	public @NotNull String @NotNull [] getAllKeys(VirtualFrame event) {
 		return this.getArrayKeys(event);
 	}
 
@@ -769,16 +771,16 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 	}
 
 	@Override
-	public T[] getArray(Event event) {
-		return getAll(event);
+	public T[] executeArray(VirtualFrame frame) {
+		return executeAll(frame);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public T[] getAll(Event event) {
+	public T[] executeAll(VirtualFrame frame) {
 		if (list)
-			return getConvertedArray(event);
-		T value = getConverted(event);
+			return getConvertedArray(frame);
+		T value = getConverted(frame);
 		if (value == null) {
 			return (T[]) Array.newInstance(superType, 0);
 		}
@@ -796,13 +798,13 @@ public class Variable<T> implements Expression<T>, KeyReceiverExpression<T>, Key
 	}
 
 	@Override
-	public boolean check(Event event, Predicate<? super T> checker, boolean negated) {
-		return SimpleExpression.check(getAll(event), checker, negated, getAnd());
+	public boolean check(VirtualFrame event, Predicate<? super T> checker, boolean negated) {
+		return SimpleExpression.check(executeAll(event), checker, negated, getAnd());
 	}
 
 	@Override
-	public boolean check(Event event, Predicate<? super T> checker) {
-		return SimpleExpression.check(getAll(event), checker, false, getAnd());
+	public boolean check(VirtualFrame event, Predicate<? super T> checker) {
+		return SimpleExpression.check(executeAll(event), checker, false, getAnd());
 	}
 
 	public VariableString getName() {

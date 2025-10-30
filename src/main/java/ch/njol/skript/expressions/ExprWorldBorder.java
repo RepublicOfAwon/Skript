@@ -7,10 +7,10 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("World Border")
@@ -42,8 +42,8 @@ public class ExprWorldBorder extends SimplePropertyExpression<Object, WorldBorde
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		Object[] objects = getExpr().getArray(event);
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
+		Object[] objects = getExpr().executeArray(event);
 		if (mode == ChangeMode.RESET) {
 			for (Object object : objects) {
 				if (object instanceof World world) {

@@ -12,8 +12,8 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Display Teleport Duration")
@@ -53,8 +53,8 @@ public class ExprDisplayTeleportDuration extends SimplePropertyExpression<Displa
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		Display[] displays = getExpr().getArray(event);
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
+		Display[] displays = getExpr().executeArray(event);
 		long ticks = (delta == null ? 0 : ((Timespan) delta[0]).getAs(TimePeriod.TICK));
 		switch (mode) {
 			case REMOVE:

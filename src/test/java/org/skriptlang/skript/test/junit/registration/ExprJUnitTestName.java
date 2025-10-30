@@ -1,7 +1,7 @@
 package org.skriptlang.skript.test.junit.registration;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -34,7 +34,7 @@ public class ExprJUnitTestName extends SimpleExpression<String>  {
 
 	@Override
 	@Nullable
-	protected String[] get(Event event) {
+	protected String[] execute(VirtualFrame event) {
 		return CollectionUtils.array(SkriptJUnitTest.getCurrentJUnitTest());
 	}
 
@@ -49,7 +49,7 @@ public class ExprJUnitTestName extends SimpleExpression<String>  {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "current junit test";
 	}
 

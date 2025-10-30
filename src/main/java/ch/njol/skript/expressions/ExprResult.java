@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.function.DynamicFunctionReference;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.registrations.experiments.ReflectionExperimentSyntax;
@@ -64,7 +65,7 @@ public class ExprResult extends PropertyExpression<Executable<Event, Object>, Ob
 	}
 
 	@Override
-	protected Object[] get(Event event, Executable<Event, Object>[] source) {
+	protected Object[] get(VirtualFrame event, Executable<Event, Object>[] source) {
 		for (Executable<Event, Object> task : source) {
 			Object[] arguments;
 			//noinspection rawtypes
@@ -72,9 +73,9 @@ public class ExprResult extends PropertyExpression<Executable<Event, Object>, Ob
 				Expression<?> validated = reference.validate(input);
 				if (validated == null)
 					return new Object[0];
-				arguments = validated.getArray(event);
+				arguments = validated.executeArray(event);
 			} else if (hasArguments) {
-				arguments = this.arguments.getArray(event);
+				arguments = this.arguments.executeArray(event);
 			} else {
 				arguments = new Object[0];
 			}
@@ -102,7 +103,7 @@ public class ExprResult extends PropertyExpression<Executable<Event, Object>, Ob
 	}
 
 	@Override
-	public String toString(@Nullable Event event, final boolean debug) {
+	public String toString(@Nullable VirtualFrame event, final boolean debug) {
 		String text = "the result" + (isPlural ? "s" : "") + " of " + getExpr().toString(event, debug);
 		if (hasArguments)
 			text += " with arguments " + arguments.toString(event, debug);

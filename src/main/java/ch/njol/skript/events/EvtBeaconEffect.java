@@ -5,7 +5,7 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import com.destroystokyo.paper.event.block.BeaconEffectEvent;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +47,7 @@ public class EvtBeaconEffect extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		if (!(event instanceof BeaconEffectEvent effectEvent))
 			return false;
 		if (primaryCheck != null && effectEvent.isPrimary() != primaryCheck)
@@ -58,7 +58,7 @@ public class EvtBeaconEffect extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (primaryCheck == null ? "" : primaryCheck ? "primary " : "secondary ") +
 			"beacon effect" + (potionTypes == null ? "" : " of " + potionTypes.toString(event, debug));
 	}

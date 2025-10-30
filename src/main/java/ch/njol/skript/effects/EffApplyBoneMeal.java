@@ -11,9 +11,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Apply Bone Meal")
@@ -39,11 +39,11 @@ public class EffApplyBoneMeal extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		int times = 1;
 		if (amount != null)
-			times = amount.getOptionalSingle(event).orElse(0).intValue();
-		for (Block block : blocks.getArray(event)) {
+			times = amount.executeOptional(event).orElse(0).intValue();
+		for (Block block : blocks.executeArray(event)) {
 			for (int i = 0; i < times; i++) {
 				block.applyBoneMeal(BlockFace.UP);
 			}
@@ -51,7 +51,7 @@ public class EffApplyBoneMeal extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "apply " + (amount != null ? amount.toString(event, debug) + " " : "" + "bone meal to " + blocks.toString(event, debug));
 	}
 

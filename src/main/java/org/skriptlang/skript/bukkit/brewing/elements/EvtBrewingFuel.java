@@ -6,7 +6,7 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.registrations.EventValues;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.inventory.BrewingStandFuelEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +49,7 @@ public class EvtBrewingFuel extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		if (!(event instanceof BrewingStandFuelEvent brewingStandFuelEvent))
 			return false;
 		if (items == null)
@@ -64,7 +64,7 @@ public class EvtBrewingFuel extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append("brewing stand fuel consumption");
 		if (items != null)

@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Egg;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.doc.Description;
@@ -27,7 +27,7 @@ public class ExprEgg extends EventValueExpression<Egg> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the egg";
 	}
 

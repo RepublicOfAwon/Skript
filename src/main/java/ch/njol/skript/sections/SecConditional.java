@@ -11,15 +11,15 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
-import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.patterns.PatternCompiler;
 import ch.njol.skript.patterns.SkriptPattern;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.Iterables;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ControlFlowException;
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -80,7 +80,7 @@ public class SecConditional extends Section {
 	}
 
 	private ConditionalType type;
-	private @UnknownNullability Conditional<Event> conditional;
+	private @UnknownNullability Conditional<VirtualFrame> conditional;
 	private boolean ifAny;
 	private boolean parseIf;
 	private boolean parseIfPassed;
@@ -171,12 +171,12 @@ public class SecConditional extends Section {
 			Class<? extends Event>[] currentEvents = parser.getCurrentEvents();
 			String currentEventName = parser.getCurrentEventName();
 
-			List<Conditional<Event>> conditionals = new ArrayList<>();
+			List<Conditional<VirtualFrame>> conditionals = new ArrayList<>();
 
 			// Change event if using 'parse if'
 			if (parseIf) {
 				//noinspection unchecked
-				parser.setCurrentEvents(new Class[]{ContextlessEvent.class});
+				parser.setCurrentEvents(new Class[]{ContextlessVirtualFrame.class});
 				parser.setCurrentEventName("parse");
 			}
 
@@ -248,7 +248,7 @@ public class SecConditional extends Section {
 
 		// ([else] parse if) If condition is valid and false, do not parse the section
 		if (parseIf) {
-			if (!checkConditions(ContextlessEvent.get())) {
+			if (!checkConditions(ContextlessVirtualFrame.get())) {
 				return result;
 			}
 			parseIfPassed = true;
@@ -312,14 +312,14 @@ public class SecConditional extends Section {
 	}
 
 	@Override
-	public Object walk(Event event) {
+	public Object execute(VirtualFrame frame) {
 		if (type == ConditionalType.THEN || (parseIf && !parseIfPassed)) {
 			return null;
-		} else if (parseIf || checkConditions(event)) {
+		} else if (parseIf || checkConditions(frame)) {
 			if (multiline) {
 				return null;
 			}
-			super.walk(event);
+			super.execute(frame);
 			throw new SkipException();
 		}
 		return null;
@@ -343,7 +343,7 @@ public class SecConditional extends Section {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String parseIf = this.parseIf ? "parse " : "";
 		return switch (type) {
 			case IF -> {
@@ -422,7 +422,7 @@ public class SecConditional extends Section {
 		return null;
 	}
 
-	private boolean checkConditions(Event event) {
+	private boolean checkConditions(VirtualFrame event) {
 		return conditional == null || conditional.evaluate(event).isTrue();
 	}
 

@@ -1,6 +1,6 @@
 package ch.njol.skript.expressions.arithmetic;
 
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 
 import ch.njol.skript.lang.Expression;
 import org.jetbrains.annotations.Nullable;
@@ -11,11 +11,16 @@ import org.skriptlang.skript.lang.arithmetic.Arithmetics;
  *
  * @param <T> expression type
  */
-public record ArithmeticExpressionInfo<T>(Expression<? extends T> expression) implements ArithmeticGettable<T> {
+public final class ArithmeticExpressionInfo<T> extends ArithmeticGettable<T> {
+
+	Expression<? extends T> expression;
+	public ArithmeticExpressionInfo(Expression<T> tExpression) {
+		this.expression = tExpression;
+	}
 
 	@Override
-	public @Nullable T get(Event event) {
-		T object = expression.getSingle(event);
+	public @Nullable T execute(VirtualFrame event) {
+		T object = expression.executeSingle(event);
 		return object == null ? Arithmetics.getDefaultValue(expression.getReturnType()) : object;
 	}
 

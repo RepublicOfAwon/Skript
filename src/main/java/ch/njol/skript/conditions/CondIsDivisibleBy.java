@@ -11,7 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
@@ -55,8 +55,8 @@ public class CondIsDivisibleBy extends Condition implements SyntaxRuntimeErrorPr
 	}
 
 	@Override
-	public boolean check(Event event) {
-		Number divisorNumber = divisor.getSingle(event);
+	public boolean executeBoolean(VirtualFrame event) {
+		Number divisorNumber = divisor.executeSingle(event);
 		if (divisorNumber == null)
 			return isNegated();
 		double divisor = divisorNumber.doubleValue();
@@ -65,7 +65,7 @@ public class CondIsDivisibleBy extends Condition implements SyntaxRuntimeErrorPr
 			return isNegated();
 		}
 
-		Number epsilonNumber = epsilon != null ? epsilon.getSingle(event) : Skript.EPSILON;
+		Number epsilonNumber = epsilon != null ? epsilon.executeSingle(event) : Skript.EPSILON;
 		if (epsilonNumber == null) {
 			epsilonNumber = Skript.EPSILON;
 		}
@@ -93,7 +93,7 @@ public class CondIsDivisibleBy extends Condition implements SyntaxRuntimeErrorPr
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return dividend.toString(event, debug) + " is " + (isNegated() ? "not " : "")
 			+ "evenly divisible by " + divisor.toString(event, debug);
 	}

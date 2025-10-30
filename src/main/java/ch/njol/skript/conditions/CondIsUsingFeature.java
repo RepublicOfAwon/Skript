@@ -10,7 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.experiment.ExperimentSet;
@@ -48,12 +48,12 @@ public class CondIsUsingFeature extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
-		String[] array = names.getArray(event);
+	public boolean executeBoolean(VirtualFrame event) {
+		String[] array = names.executeArray(event);
 		if (array.length == 0)
 			return true;
 		boolean isUsing = true;
-		for (Script script : this.scripts.getArray(event)) {
+		for (Script script : this.scripts.executeArray(event)) {
 			ExperimentSet data = script.getData(ExperimentSet.class);
 			if (data == null) {
 				isUsing = false;
@@ -67,7 +67,7 @@ public class CondIsUsingFeature extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String whether = scripts.isSingle()
 				? (isNegated() ? "isn't" : "is")
 				: (isNegated() ? "aren't" : "are");

@@ -10,10 +10,10 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.parser.ParserInstance;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.skriptlang.skript.lang.script.Script;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -59,7 +59,7 @@ public class CondScriptLoaded extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		if (scripts == null)
 			return ScriptLoader.getLoadedScripts().contains(currentScript) ^ isNegated();
 		return scripts.check(event, scriptName -> {
@@ -69,7 +69,7 @@ public class CondScriptLoaded extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String scriptName = scripts == null ?
 			"script" : (scripts.isSingle() ? "script" : "scripts" + " " + scripts.toString(event, debug));
 		if (scripts == null || scripts.isSingle())

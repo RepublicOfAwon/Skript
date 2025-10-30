@@ -9,8 +9,8 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.test.utils.TestOfflinePlayer;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @NoDoc
@@ -34,7 +34,7 @@ public class ExprTestOfflinePlayer extends SimpleExpression<OfflinePlayer> {
 	}
 
 	@Override
-	protected OfflinePlayer @Nullable [] get(Event event) {
+	protected OfflinePlayer @Nullable [] execute(VirtualFrame event) {
 		return new OfflinePlayer[] {PLAYER};
 	}
 
@@ -49,7 +49,7 @@ public class ExprTestOfflinePlayer extends SimpleExpression<OfflinePlayer> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the test offline player";
 	}
 

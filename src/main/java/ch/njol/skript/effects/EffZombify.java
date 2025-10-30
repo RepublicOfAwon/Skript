@@ -15,10 +15,10 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.ZombieVillager;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
@@ -75,10 +75,10 @@ public class EffZombify extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		int ticks = 0;
 		if (timespan != null) {
-			Timespan timespan = this.timespan.getSingle(event);
+			Timespan timespan = this.timespan.executeSingle(event);
 			if (timespan != null)
 				ticks = (int) timespan.getAs(TimePeriod.TICK);
 		}
@@ -94,14 +94,14 @@ public class EffZombify extends Effect {
 		if (changeInPlace) {
 			entities.changeInPlace(event, changeFunction);
 		} else {
-			for (LivingEntity entity : entities.getAll(event)) {
+			for (LivingEntity entity : entities.executeAll(event)) {
 				changeFunction.apply(entity);
 			}
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		if (zombify) {
 			builder.append("zombify");

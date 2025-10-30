@@ -16,8 +16,8 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +49,7 @@ public class ExprHatchingType extends SimpleExpression<EntityData<?>> {
 
 	@Override
 	@Nullable
-	protected EntityData<?>[] get(Event event) {
+	protected EntityData<?>[] execute(VirtualFrame event) {
 		if (!(event instanceof PlayerEggThrowEvent))
 			return new EntityData[0];
 		return new EntityData[]{EntityUtils.toSkriptEntityData(((PlayerEggThrowEvent) event).getHatchingType())};
@@ -64,7 +64,7 @@ public class ExprHatchingType extends SimpleExpression<EntityData<?>> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (!(event instanceof PlayerEggThrowEvent))
 			return;
 		//noinspection ConstantConditions
@@ -86,7 +86,7 @@ public class ExprHatchingType extends SimpleExpression<EntityData<?>> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the hatching entity type";
 	}
 

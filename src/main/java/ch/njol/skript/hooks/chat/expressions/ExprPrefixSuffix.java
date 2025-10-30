@@ -13,8 +13,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -60,9 +60,9 @@ public class ExprPrefixSuffix extends SimplePropertyExpression<Player, String> {
 	}
 
 	@Override
-	public void change(Event event,  Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		CompletableFuture.runAsync(() -> {
-			for (Player player : getExpr().getArray(event)) {
+			for (Player player : getExpr().executeArray(event)) {
 				switch (mode) {
 					case SET -> {
 						if (prefix) {

@@ -1,6 +1,5 @@
 package ch.njol.skript.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -8,8 +7,8 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.WorldBorder;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Warning Distance of World Border")
@@ -39,13 +38,13 @@ public class ExprWorldBorderWarningDistance extends SimplePropertyExpression<Wor
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		int input = mode == ChangeMode.RESET ? 5 : ((Number) delta[0]).intValue();
 		if (mode != ChangeMode.RESET && Double.isNaN(((Number) delta[0]).doubleValue())) {
 			error("NaN is not a valid world border warning distance");
 			return;
 		}
-		for (WorldBorder worldBorder : getExpr().getArray(event)) {
+		for (WorldBorder worldBorder : getExpr().executeArray(event)) {
 			switch (mode) {
 				case SET, RESET:
 					worldBorder.setWarningDistance(Math.max(input, 0));

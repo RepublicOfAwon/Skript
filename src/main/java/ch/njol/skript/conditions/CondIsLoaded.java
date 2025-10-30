@@ -13,10 +13,10 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 
@@ -71,7 +71,7 @@ public class CondIsLoaded extends Condition {
 
 	@Override
 	@SuppressWarnings("null")
-	public boolean check(Event e) {
+	public boolean executeBoolean(VirtualFrame e) {
 		return switch (pattern) {
 			case 0 -> locations.check(e, location -> {
 				World world = location.getWorld();
@@ -82,8 +82,8 @@ public class CondIsLoaded extends Condition {
 			case 1 -> objects.check(e, object -> {
 				if (!(object instanceof World world))
 					return false;
-				Number x = this.x.getSingle(e);
-				Number z = this.z.getSingle(e);
+				Number x = this.x.executeSingle(e);
+				Number z = this.z.executeSingle(e);
 				if (x == null || z == null)
 					return false;
 				return world.isChunkLoaded(x.intValue(), z.intValue());
@@ -103,7 +103,7 @@ public class CondIsLoaded extends Condition {
 
 	@Override
 	@SuppressWarnings("null")
-	public String toString(@Nullable Event e, boolean d) {
+	public String toString(@Nullable VirtualFrame e, boolean d) {
 		String neg = isNegated() ? " not " : " ";
 		return switch (pattern) {
 			case 0 ->

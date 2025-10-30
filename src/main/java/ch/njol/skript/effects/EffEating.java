@@ -8,10 +8,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Panda;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Force Eating")
@@ -43,8 +43,8 @@ public class EffEating extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (LivingEntity entity : entities.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (LivingEntity entity : entities.executeArray(event)) {
 			if (entity instanceof Panda panda) {
 				panda.setEating(start);
 			} else if (SUPPORTS_HORSES && entity instanceof AbstractHorse horse) {
@@ -54,7 +54,7 @@ public class EffEating extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append("make", entities);
 		if (start) {

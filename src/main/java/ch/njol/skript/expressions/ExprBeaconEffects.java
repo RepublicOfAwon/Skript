@@ -9,10 +9,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent;
 import org.bukkit.block.Beacon;
 import org.bukkit.block.Block;
-import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +52,7 @@ public class ExprBeaconEffects extends PropertyExpression<Block, PotionEffectTyp
 	}
 
 	@Override
-	protected PotionEffectType[] get(Event event, Block[] blocks) {
+	protected PotionEffectType[] get(VirtualFrame event, Block[] blocks) {
 		return get(blocks, block -> {
 			if (!(block.getState() instanceof Beacon beacon))
 				return null;
@@ -78,10 +78,10 @@ public class ExprBeaconEffects extends PropertyExpression<Block, PotionEffectTyp
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		PotionEffectType type = delta == null ? null : (PotionEffectType) delta[0];
 		BiConsumer<Beacon, PotionEffectType> changer = primary ? Beacon::setPrimaryEffect : Beacon::setSecondaryEffect;
-		for (Block block : getExpr().getArray(event)) {
+		for (Block block : getExpr().executeArray(event)) {
 			if (!(block.getState() instanceof Beacon beacon))
 				continue;
 			changer.accept(beacon, type);
@@ -95,7 +95,7 @@ public class ExprBeaconEffects extends PropertyExpression<Block, PotionEffectTyp
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (primary ? "primary" : "secondary") + " beacon effect of " + getExpr().toString(event, debug);
 	}
 

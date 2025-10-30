@@ -8,9 +8,9 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 public class EvtPeriodical extends SkriptEvent {
@@ -82,7 +82,7 @@ public class EvtPeriodical extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -92,7 +92,7 @@ public class EvtPeriodical extends SkriptEvent {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "every " + period;
 	}
 

@@ -7,9 +7,9 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Display.Billboard;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Display Billboard")
@@ -41,9 +41,9 @@ public class ExprDisplayBillboard extends SimplePropertyExpression<Display, Bill
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		Billboard billboard = delta != null ? (Billboard) delta[0] : Billboard.FIXED;
-		for (Display display : getExpr().getArray(event))
+		for (Display display : getExpr().executeArray(event))
 			display.setBillboard(billboard);
 	}
 

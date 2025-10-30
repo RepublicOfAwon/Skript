@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.Nullable;
@@ -67,9 +67,9 @@ public class ExprAnvilRepairCost extends SimplePropertyExpression<Inventory, Int
 
 	@Override
 	@SuppressWarnings("removal")
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		int value = ((Number) delta[0]).intValue() * (mode == ChangeMode.REMOVE ? -1 : 1);
-		for (Inventory inventory : getExpr().getArray(event)) {
+		for (Inventory inventory : getExpr().executeArray(event)) {
 			if (inventory instanceof AnvilInventory) {
 				AnvilInventory anvilInventory = (AnvilInventory) inventory;
 				int change = mode == ChangeMode.SET ? 0 : (isMax ? anvilInventory.getMaximumRepairCost() : anvilInventory.getRepairCost());

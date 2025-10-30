@@ -15,10 +15,10 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Chunk")
@@ -60,7 +60,7 @@ public class ExprChunk extends SimpleExpression<Chunk> {
 	}
 
 	@Override
-	protected Chunk[] get(Event event) {
+	protected Chunk[] execute(VirtualFrame event) {
 		if (pattern != 2) {
 			return locations.stream(event)
 					.map(Location::getChunk)
@@ -81,9 +81,9 @@ public class ExprChunk extends SimpleExpression<Chunk> {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		assert mode == ChangeMode.RESET;
-		for (Chunk chunk : get(event))
+		for (Chunk chunk : execute(event))
 			chunk.getWorld().regenerateChunk(chunk.getX(), chunk.getZ());
 	}
 
@@ -100,7 +100,7 @@ public class ExprChunk extends SimpleExpression<Chunk> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (pattern == 2)
 			return "loaded chunks of " + worlds.toString(event, debug);
 		return "chunk at " + locations.toString(event, debug);

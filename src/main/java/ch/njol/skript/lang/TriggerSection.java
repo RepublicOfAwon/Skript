@@ -1,17 +1,17 @@
 package ch.njol.skript.lang;
 
-import com.oracle.truffle.api.nodes.ControlFlowException;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Represents a section of a trigger, e.g. a conditional or a loop
  */
 public abstract class TriggerSection extends TriggerItem {
 
+	@Children
 	protected TriggerItem[] children;
 
 	/**
@@ -29,18 +29,13 @@ public abstract class TriggerSection extends TriggerItem {
 		this.children = items.toArray(new TriggerItem[0]);
 	}
 
-	@Override
-	protected final boolean run(Event event) {
-		throw new UnsupportedOperationException();
-	}
-
 	int i = 0;
 
 	@Override
-	public Object walk(Event event) {
+	public Object execute(VirtualFrame frame) {
 		for (; i < children.length;) {
 			try {
-				children[i].walk(event);
+				children[i].execute(frame);
 			} finally {
 				i++;
 			}

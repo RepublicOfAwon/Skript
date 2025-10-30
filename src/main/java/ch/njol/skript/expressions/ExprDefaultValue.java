@@ -11,7 +11,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,12 +54,12 @@ public class ExprDefaultValue extends SimpleExpression<Object> {
 	}
 
 	@Override
-	protected Object[] get(Event event) {
-		Object[] values = this.values.getArray(event);
+	protected Object[] execute(VirtualFrame event) {
+		Object[] values = this.values.executeArray(event);
 		if (values.length != 0) {
 			return values;
 		}
-		return defaultValues.getArray(event);
+		return defaultValues.executeArray(event);
 	}
 
 	@Override
@@ -85,7 +86,7 @@ public class ExprDefaultValue extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public String toString(Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return values.toString(event, debug) + " or else " + defaultValues.toString(event, debug);
 	}
 

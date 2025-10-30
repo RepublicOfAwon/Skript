@@ -5,9 +5,9 @@ import java.util.Locale;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.Classes;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.Nullable;
@@ -87,12 +87,12 @@ public class EffOpenInventory extends Effect {
 	}
 	
 	@Override
-	protected void execute(final Event e) {
+	protected void executeVoid(final VirtualFrame e) {
 		if (invi != null) {
 			Inventory i;
 			
 			assert invi != null;
-			Object o = invi.getSingle(e);
+			Object o = invi.executeSingle(e);
 			if (o instanceof Inventory) {
 				i = (Inventory) o;
 			} else if (o instanceof InventoryType inventoryType && inventoryType.isCreatable()) {
@@ -103,7 +103,7 @@ public class EffOpenInventory extends Effect {
 			
 			if (i == null)
 				return;
-			for (final Player p : players.getArray(e)) {
+			for (final Player p : players.executeArray(e)) {
 				try {
 					p.openInventory(i);
 				} catch (IllegalArgumentException ex){
@@ -111,7 +111,7 @@ public class EffOpenInventory extends Effect {
 				}
 			}
 		} else {
-			for (final Player p : players.getArray(e)) {
+			for (final Player p : players.executeArray(e)) {
 				if (open) {
 					switch (invType) {
 						case WORKBENCH:
@@ -140,7 +140,7 @@ public class EffOpenInventory extends Effect {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return (open ? "open " + (invi != null ? invi.toString(e, debug) : "crafting table") + " to " : "close inventory view of ") + players.toString(e, debug);
 	}
 	

@@ -11,7 +11,7 @@ import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.NonNullIterator;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
 
@@ -24,7 +24,7 @@ import java.util.function.Predicate;
  *
  * @see UnparsedLiteral
  */
-public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
+public class SimpleLiteral<T> extends Literal<T> implements DefaultExpression<T> {
 
 	protected final Class<T> type;
 
@@ -92,7 +92,7 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 	}
 
 	@Override
-	public T[] getArray(Event event) {
+	public T[] executeArray(VirtualFrame frame) {
 		return this.data();
 	}
 
@@ -102,7 +102,7 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 	}
 
 	@Override
-	public T[] getAll(Event event) {
+	public T[] executeAll(VirtualFrame frame) {
 		return this.data();
 	}
 
@@ -112,7 +112,7 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 	}
 
 	@Override
-	public T getSingle(Event event) {
+	public T executeSingle(VirtualFrame frame) {
 		return getSingle();
 	}
 
@@ -133,7 +133,7 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (debug)
 			return "[" + Classes.toString(data, getAnd(), StringMode.DEBUG) + "]";
 		return Classes.toString(data, getAnd());
@@ -155,12 +155,12 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 	}
 
 	@Override
-	public boolean check(Event event, Predicate<? super T> checker, boolean negated) {
+	public boolean check(VirtualFrame event, Predicate<? super T> checker, boolean negated) {
 		return SimpleExpression.check(data, checker, negated, getAnd());
 	}
 
 	@Override
-	public boolean check(Event event, Predicate<? super T> checker) {
+	public boolean check(VirtualFrame event, Predicate<? super T> checker) {
 		return SimpleExpression.check(data, checker, false, getAnd());
 	}
 
@@ -177,7 +177,7 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 	}
 
 	@Override
-	public void change(final Event event, final Object @Nullable [] delta, final ChangeMode mode) throws UnsupportedOperationException {
+	public void change(final VirtualFrame event, final Object @Nullable [] delta, final ChangeMode mode) throws UnsupportedOperationException {
 		final ClassInfo<? super T> returnTypeInfo = this.returnTypeInfo;
 		if (returnTypeInfo == null)
 			throw new UnsupportedOperationException();
@@ -203,7 +203,7 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 	}
 
 	@Override
-	public NonNullIterator<T> iterator(final Event event) {
+	public NonNullIterator<T> iterator(final VirtualFrame event) {
 		return new NonNullIterator<>() {
 			private int i = 0;
 

@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -42,9 +42,9 @@ public class ExprHiddenPlayers extends SimpleExpression<Player> {
 
 	@Nullable
 	@Override
-	public Player[] get(Event event) {
+	public Player[] execute(VirtualFrame event) {
 		List<Player> list = new ArrayList<>();
-		for (Player player : viewers.getArray(event)) {
+		for (Player player : viewers.executeArray(event)) {
 			list.addAll(player.spigot().getHiddenPlayers());
 		}
 		return list.toArray(new Player[0]);
@@ -66,7 +66,7 @@ public class ExprHiddenPlayers extends SimpleExpression<Player> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "hidden players for " + viewers.toString(event, debug);
 	}
 }

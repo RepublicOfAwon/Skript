@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 import ch.njol.skript.aliases.ItemType;
@@ -41,7 +41,7 @@ public class ExprItemFlags extends PropertyExpression<ItemType, ItemFlag> {
 	}
 
 	@Override
-	protected ItemFlag[] get(Event event, ItemType[] source) {
+	protected ItemFlag[] get(VirtualFrame event, ItemType[] source) {
 		Set<ItemFlag> flags = new HashSet<>();
 		for (ItemType itemType : source) {
 			ItemMeta meta = itemType.getItemMeta();
@@ -59,10 +59,10 @@ public class ExprItemFlags extends PropertyExpression<ItemType, ItemFlag> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		ItemFlag[] flags = delta != null ? (ItemFlag[]) delta : new ItemFlag[0];
 
-		for (ItemType itemType : getExpr().getArray(event)) {
+		for (ItemType itemType : getExpr().executeArray(event)) {
 			ItemMeta meta = itemType.getItemMeta();
 			switch (mode) {
 				case SET -> {
@@ -91,7 +91,7 @@ public class ExprItemFlags extends PropertyExpression<ItemType, ItemFlag> {
 	}
 
 	@Override
-	public String toString(Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "item flags of " + getExpr().toString(event, debug);
 	}
 

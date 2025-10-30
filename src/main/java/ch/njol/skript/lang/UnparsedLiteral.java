@@ -13,7 +13,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.NonNullIterator;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.logging.Level;
  *
  * @see SimpleLiteral
  */
-public class UnparsedLiteral implements Literal<Object> {
+public class UnparsedLiteral extends Literal<Object> {
 
 	private final String data;
 	private final @Nullable LogEntry error;
@@ -95,7 +95,7 @@ public class UnparsedLiteral implements Literal<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "'" + data + "'";
 	}
 
@@ -183,7 +183,7 @@ public class UnparsedLiteral implements Literal<Object> {
 	}
 
 	@Override
-	public Object[] getAll(Event event) {
+	public Object[] executeAll(VirtualFrame event) {
 		throw invalidAccessException();
 	}
 
@@ -193,7 +193,7 @@ public class UnparsedLiteral implements Literal<Object> {
 	}
 
 	@Override
-	public Object[] getArray(Event event) {
+	public Object[] executeArray(VirtualFrame event) {
 		throw invalidAccessException();
 	}
 
@@ -203,17 +203,17 @@ public class UnparsedLiteral implements Literal<Object> {
 	}
 
 	@Override
-	public Object getSingle(Event event) {
+	public Object executeSingle(VirtualFrame event) {
 		throw invalidAccessException();
 	}
 
 	@Override
-	public NonNullIterator<Object> iterator(Event event) {
+	public NonNullIterator<Object> iterator(VirtualFrame event) {
 		throw invalidAccessException();
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) throws UnsupportedOperationException {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) throws UnsupportedOperationException {
 		throw invalidAccessException();
 	}
 
@@ -223,12 +223,12 @@ public class UnparsedLiteral implements Literal<Object> {
 	}
 
 	@Override
-	public boolean check(Event event, Predicate<? super Object> checker) {
+	public boolean check(VirtualFrame event, Predicate<? super Object> checker) {
 		throw invalidAccessException();
 	}
 
 	@Override
-	public boolean check(Event event, Predicate<? super Object> checker, boolean negated) {
+	public boolean check(VirtualFrame event, Predicate<? super Object> checker, boolean negated) {
 		throw invalidAccessException();
 	}
 

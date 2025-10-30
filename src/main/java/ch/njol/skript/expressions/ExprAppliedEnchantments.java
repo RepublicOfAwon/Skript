@@ -1,8 +1,8 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.Event;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +47,7 @@ public class ExprAppliedEnchantments extends SimpleExpression<EnchantmentType> {
 	@SuppressWarnings("null")
 	@Override
 	@Nullable
-	protected EnchantmentType[] get(Event e) {
+	protected EnchantmentType[] execute(VirtualFrame e) {
 		if (!(e instanceof EnchantItemEvent))
 			return null;
 
@@ -66,7 +66,7 @@ public class ExprAppliedEnchantments extends SimpleExpression<EnchantmentType> {
 
 	@SuppressWarnings("null")
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (!(event instanceof EnchantItemEvent))
 			return;
 
@@ -110,7 +110,7 @@ public class ExprAppliedEnchantments extends SimpleExpression<EnchantmentType> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "applied enchantments";
 	}
 

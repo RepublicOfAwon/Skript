@@ -12,7 +12,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.sections.SecLoop;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
@@ -166,7 +166,7 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 	}
 
 	@Override
-	protected Object @Nullable [] get(Event event) {
+	protected Object @Nullable [] execute(VirtualFrame event) {
 		if (isKeyedLoop) {
 			//noinspection unchecked
 			KeyedValue<Object> value = (KeyedValue<Object>) switch (selectedState) {
@@ -193,7 +193,7 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (event == null)
 			return name;
 		if (isKeyedLoop) {

@@ -2,7 +2,7 @@ package ch.njol.skript.lang;
 
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -22,15 +22,15 @@ public class EffectSectionEffect extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) { }
+	protected void executeVoid(VirtualFrame event) { }
 
 	@Override
-	public Object walk(Event event) {
-		return effectSection.walk(event);
+	public Object execute(VirtualFrame frame) {
+		return effectSection.execute(frame);
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return effectSection.toString(event, debug);
 	}
 

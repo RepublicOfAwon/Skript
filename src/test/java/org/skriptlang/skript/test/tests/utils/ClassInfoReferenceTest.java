@@ -6,7 +6,7 @@ import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.ClassInfoReference;
 import ch.njol.skript.variables.Variables;
@@ -31,21 +31,21 @@ public class ClassInfoReferenceTest {
 
 	@Test
 	public void testWrapper() {
-		ClassInfoReference reference = parseAndWrap("object").getSingle(null);
+		ClassInfoReference reference = parseAndWrap("object").executeSingle(null);
         Assert.assertEquals(Object.class, reference.getClassInfo().getC());
 		Assert.assertTrue(reference.isPlural().isFalse());
 
-		reference = parseAndWrap("string").getSingle(null);
+		reference = parseAndWrap("string").executeSingle(null);
 		Assert.assertEquals(String.class, reference.getClassInfo().getC());
 		Assert.assertTrue(reference.isPlural().isFalse());
 
-		reference = parseAndWrap("players").getSingle(null);
+		reference = parseAndWrap("players").executeSingle(null);
 		Assert.assertEquals(Player.class, reference.getClassInfo().getC());
 		Assert.assertTrue(reference.isPlural().isTrue());
 
-		Event event = ContextlessEvent.get();
+		Event event = ContextlessVirtualFrame.get();
 		Variables.setVariable("classinfo", Classes.getExactClassInfo(Block.class), event, true);
-		reference = parseAndWrap("{_classinfo}").getSingle(event);
+		reference = parseAndWrap("{_classinfo}").executeSingle(event);
 		Assert.assertEquals(Block.class, reference.getClassInfo().getC());
 		Assert.assertTrue(reference.isPlural().isUnknown());
 
@@ -53,15 +53,15 @@ public class ClassInfoReferenceTest {
         Assert.assertFalse(referenceList.getAnd());
 		Expression<? extends ClassInfoReference>[] childExpressions = referenceList.getExpressions();
 
-		ClassInfoReference firstReference = childExpressions[0].getSingle(null);
+		ClassInfoReference firstReference = childExpressions[0].executeSingle(null);
 		Assert.assertEquals(Block.class, firstReference.getClassInfo().getC());
 		Assert.assertTrue(firstReference.isPlural().isTrue());
 
-		ClassInfoReference secondReference = childExpressions[1].getSingle(null);
+		ClassInfoReference secondReference = childExpressions[1].executeSingle(null);
 		Assert.assertEquals(Player.class, secondReference.getClassInfo().getC());
 		Assert.assertTrue(secondReference.isPlural().isFalse());
 
-		ClassInfoReference thirdReference = childExpressions[2].getSingle(null);
+		ClassInfoReference thirdReference = childExpressions[2].executeSingle(null);
 		Assert.assertEquals(Entity.class, thirdReference.getClassInfo().getC());
 		Assert.assertTrue(thirdReference.isPlural().isTrue());
 
@@ -69,14 +69,14 @@ public class ClassInfoReferenceTest {
 		Assert.assertTrue(referenceList.getAnd());
 		childExpressions = referenceList.getExpressions();
 
-		event = ContextlessEvent.get();
+		event = ContextlessVirtualFrame.get();
 		Variables.setVariable("block", Classes.getExactClassInfo(Block.class), event, true);
 		Variables.setVariable("player", Classes.getExactClassInfo(Player.class), event, true);
-		firstReference = childExpressions[0].getSingle(event);
+		firstReference = childExpressions[0].executeSingle(event);
 		Assert.assertEquals(Block.class, firstReference.getClassInfo().getC());
 		Assert.assertTrue(firstReference.isPlural().isUnknown());
 
-		secondReference = childExpressions[1].getSingle(event);
+		secondReference = childExpressions[1].executeSingle(event);
 		Assert.assertEquals(Player.class, secondReference.getClassInfo().getC());
 		Assert.assertTrue(secondReference.isPlural().isUnknown());
 

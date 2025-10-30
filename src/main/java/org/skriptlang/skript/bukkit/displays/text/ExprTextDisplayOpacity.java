@@ -8,9 +8,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Text Display Opacity")
@@ -41,8 +41,8 @@ public class ExprTextDisplayOpacity extends SimplePropertyExpression<Display, By
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		Display[] displays = getExpr().getArray(event);
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
+		Display[] displays = getExpr().executeArray(event);
 		int change = delta == null ? -1 : ((Number) delta[0]).intValue();
 		switch (mode) {
 			case REMOVE_ALL:

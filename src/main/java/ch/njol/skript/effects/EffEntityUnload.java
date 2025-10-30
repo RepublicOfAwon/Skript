@@ -10,8 +10,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Entity Despawn")
@@ -48,14 +48,14 @@ public class EffEntityUnload extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (LivingEntity entity : entities.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (LivingEntity entity : entities.executeArray(event)) {
 			entity.setRemoveWhenFarAway(despawn);
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (despawn)
 			return "make " + entities.toString(event, debug) + " despawn on chunk unload";
 		return "prevent " + entities.toString(event, debug) + " from despawning on chunk unload";

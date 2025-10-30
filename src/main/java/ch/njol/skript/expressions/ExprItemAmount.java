@@ -9,7 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,14 +49,14 @@ public class ExprItemAmount extends SimplePropertyExpression<Object, Long> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		int amount = delta != null ? ((Number) delta[0]).intValue() : 0;
 		switch (mode) {
 			case REMOVE:
 				amount = -amount;
 				// fall through
 			case ADD:
-				for (Object obj : getExpr().getArray(event))
+				for (Object obj : getExpr().executeArray(event))
 					if (obj instanceof ItemType) {
 						ItemType item = ((ItemType) obj);
 						item.setAmount(item.getAmount() + amount);
@@ -73,7 +73,7 @@ public class ExprItemAmount extends SimplePropertyExpression<Object, Long> {
 				amount = 1;
 				// fall through
 			case SET:
-				for (Object obj : getExpr().getArray(event))
+				for (Object obj : getExpr().executeArray(event))
 					if (obj instanceof ItemType) {
 						((ItemType) obj).setAmount(amount);
 					} else if (obj instanceof Slot) {

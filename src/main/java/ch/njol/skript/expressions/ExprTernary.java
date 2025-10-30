@@ -10,7 +10,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -63,8 +64,8 @@ public class ExprTernary extends SimpleExpression<Object> {
 	}
 
 	@Override
-	protected Object[] get(Event event) {
-		return condition.check(event) ? ifTrue.getArray(event) : ifFalse.getArray(event);
+	protected Object[] execute(VirtualFrame event) {
+		return condition.executeBoolean(event) ? ifTrue.executeArray(event) : ifFalse.executeArray(event);
 	}
 
 	@Override
@@ -83,7 +84,7 @@ public class ExprTernary extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public String toString(Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return ifTrue.toString(event, debug)
 			+ " if " + condition.toString(event, debug)
 			+ " otherwise " + ifFalse.toString(event, debug);

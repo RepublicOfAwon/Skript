@@ -12,11 +12,11 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Sound;
 import org.bukkit.SoundGroup;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -91,7 +91,7 @@ public class ExprBlockSound extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected String @Nullable [] get(Event event) {
+	protected String @Nullable [] execute(VirtualFrame event) {
 		return objects.stream(event)
 			.map(this::convertAndGetSound)
 			.filter(Objects::nonNull)
@@ -130,7 +130,7 @@ public class ExprBlockSound extends SimpleExpression<String> {
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable VirtualFrame event, boolean debug) {
 		return this.soundType.name().toLowerCase() + " sound of " + objects.toString(event, debug);
 	}
 

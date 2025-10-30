@@ -13,7 +13,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
@@ -50,8 +50,8 @@ public class ExprShuffledList extends SimpleExpression<Object> {
 
 	@Override
 	@Nullable
-	protected Object[] get(Event e) {
-		Object[] origin = list.getArray(e).clone();
+	protected Object[] execute(VirtualFrame e) {
+		Object[] origin = list.executeArray(e).clone();
 		List<Object> shuffled = Arrays.asList(origin); // Not yet shuffled...
 		Collections.shuffle(shuffled);
 
@@ -94,7 +94,7 @@ public class ExprShuffledList extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "shuffled " + list.toString(e, debug);
 	}
 

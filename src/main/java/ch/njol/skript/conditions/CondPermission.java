@@ -1,8 +1,8 @@
 package ch.njol.skript.conditions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -49,7 +49,7 @@ public class CondPermission extends Condition {
 	}
 	
 	@Override
-	public boolean check(final Event e) {
+	public boolean executeBoolean(final VirtualFrame e) {
 		return senders.check(e,
 				s -> permissions.check(e,
 						perm -> {
@@ -68,7 +68,7 @@ public class CondPermission extends Condition {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return PropertyCondition.toString(this, PropertyType.HAVE, e, debug, senders,
 				"the permission" + (permissions.isSingle() ? " " : "s ") + permissions.toString());
 	}

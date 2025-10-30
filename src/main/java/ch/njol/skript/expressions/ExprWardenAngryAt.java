@@ -7,9 +7,9 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Warden;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Warden Most Angered At")
@@ -43,10 +43,10 @@ public class ExprWardenAngryAt extends SimplePropertyExpression<LivingEntity, Li
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		assert delta != null;
 		LivingEntity target = (LivingEntity) delta[0];
-		for (LivingEntity livingEntity : getExpr().getArray(event)) {
+		for (LivingEntity livingEntity : getExpr().executeArray(event)) {
 			if (livingEntity instanceof Warden warden)
 				warden.setAnger(target, 150);
 		}

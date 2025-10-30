@@ -1,6 +1,6 @@
 package ch.njol.skript.events;
 
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +31,7 @@ public class EvtPlantGrowth extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event e) {
+	public boolean check(VirtualFrame e) {
 		if (types != null) {
 			for (ItemType type : types.getAll()) {
 				if (new ItemType(((BlockGrowEvent) e).getBlock()).equals(type))
@@ -44,7 +44,7 @@ public class EvtPlantGrowth extends SkriptEvent {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "plant growth";
 	}
 }

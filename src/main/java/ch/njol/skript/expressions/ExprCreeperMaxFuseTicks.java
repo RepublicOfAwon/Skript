@@ -1,8 +1,8 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -39,9 +39,9 @@ public class ExprCreeperMaxFuseTicks extends SimplePropertyExpression<LivingEnti
 	}
 	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
+	public void change(final VirtualFrame e, final @Nullable Object[] delta, final ChangeMode mode) {
 		int d = delta == null ? 0 : ((Number) delta[0]).intValue();
-		for (LivingEntity le : getExpr().getArray(e)) {
+		for (LivingEntity le : getExpr().executeArray(e)) {
 			if (le instanceof Creeper) {
 				Creeper c = (Creeper) le;
 				switch (mode) {

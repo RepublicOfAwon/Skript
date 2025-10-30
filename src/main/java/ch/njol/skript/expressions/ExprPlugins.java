@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +40,7 @@ public class ExprPlugins extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String[] get(Event e) {
+	protected String[] execute(VirtualFrame e) {
 		return Arrays.stream(Bukkit.getPluginManager().getPlugins())
 			.map(Plugin::getName)
 			.toArray(String[]::new);
@@ -57,7 +57,7 @@ public class ExprPlugins extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the loaded plugins";
 	}
 

@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 import ch.njol.skript.lang.*;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -89,14 +89,14 @@ public class EffDebug extends Effect  {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		if (expressions == null)
 			return;
 		print(event, debug);
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "debug " + expressions.toString(event, debug);
 	}
 
@@ -104,11 +104,11 @@ public class EffDebug extends Effect  {
 		print(null, debug);
 	}
 
-	private void print(@Nullable Event event, boolean debug) {
+	private void print(@Nullable VirtualFrame frame, boolean debug) {
 		Skript.info("--------------------");
-		Skript.info(event == null ? "PARSE TIME" : "RUNTIME");
+		Skript.info(frame == null ? "PARSE TIME" : "RUNTIME");
 		Skript.info("\tExpression " + expressions.getClass().getName());
-		Skript.info("\ttoString: " + expressions.toString(event, debug));
+		Skript.info("\ttoString: " + expressions.toString(null, debug));
 		if (LiteralUtils.hasUnparsedLiteral(expressions)) {
 			Skript.info("EXPRESSION WAS UNPARSED LITERAL");
 			Skript.info("--------------------");
@@ -125,8 +125,8 @@ public class EffDebug extends Effect  {
 		if (expressions instanceof Literal) {
 			Skript.info("Literal Values: " + Arrays.toString(((Literal<?>) expressions).getArray()));
 			Skript.info("--------------------");
-		} else if (event != null) {
-			Skript.info("Values: " + Arrays.toString(expressions.getArray(event)));
+		} else if (frame != null) {
+			Skript.info("Values: " + Arrays.toString(expressions.executeArray(frame)));
 			Skript.info("--------------------");
 		}
 	}

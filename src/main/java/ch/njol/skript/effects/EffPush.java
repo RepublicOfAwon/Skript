@@ -12,9 +12,9 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,22 +56,22 @@ public class EffPush extends Effect {
 	}
 	
 	@Override
-	protected void execute(Event event) {
-		Number speed = this.speed != null ? this.speed.getSingle(event) : null;
+	protected void executeVoid(VirtualFrame event) {
+		Number speed = this.speed != null ? this.speed.executeSingle(event) : null;
 		if (this.speed != null && speed == null)
 			return;
 
 		Function<Entity, Vector> getDirection;
 		if (this.direction != null) {
 			// push along
-			Direction direction = this.direction.getSingle(event);
+			Direction direction = this.direction.executeSingle(event);
 			if (direction == null)
 				return;
 			getDirection = direction::getDirection;
 		} else {
 			// push towards
 			assert this.target != null;
-			Location target = this.target.getSingle(event);
+			Location target = this.target.executeSingle(event);
 			if (target == null)
 				return;
 			Vector targetVector = target.toVector();
@@ -83,7 +83,7 @@ public class EffPush extends Effect {
 				};
 		}
 
-		Entity[] entities = this.entities.getArray(event);
+		Entity[] entities = this.entities.executeArray(event);
 		for (Entity entity : entities) {
 			Vector pushDirection = getDirection.apply(entity);
 			if (speed != null)
@@ -97,7 +97,7 @@ public class EffPush extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		var ssb = new SyntaxStringBuilder(event, debug).append("push", entities);
 		if (direction != null) {
 			ssb.append(direction);

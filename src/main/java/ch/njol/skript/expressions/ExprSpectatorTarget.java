@@ -15,6 +15,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -64,7 +65,8 @@ public class ExprSpectatorTarget extends SimpleExpression<Entity> {
 
 	@Override
 	@Nullable
-	protected Entity[] get(Event event) {
+	protected Entity[] execute(VirtualFrame frame) {
+		Event event = (Event) frame.getArguments()[0];
 		if (EVENT_SUPPORT && players == null && !Delay.isDelayed(event)) {
 			if (event instanceof PlayerStartSpectatingEntityEvent) {
 				// Past state.
@@ -80,7 +82,7 @@ public class ExprSpectatorTarget extends SimpleExpression<Entity> {
 		}
 		if (players == null)
 			return new Entity[0];
-		return players.stream(event).map(Player::getSpectatorTarget).toArray(Entity[]::new);
+		return players.stream(frame).map(Player::getSpectatorTarget).toArray(Entity[]::new);
 	}
 
 	@Override
@@ -95,10 +97,10 @@ public class ExprSpectatorTarget extends SimpleExpression<Entity> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		// Make 'spectator target' act as an entity changer. Will error in init for unsupported server platform.
 		if (players == null) {
-			Entity[] entities = get(event);
+			Entity[] entities = execute(event);
 			if (entities.length == 0)
 				return;
 			ENTITY_CHANGER.change(entities, delta, mode);
@@ -107,14 +109,14 @@ public class ExprSpectatorTarget extends SimpleExpression<Entity> {
 		switch (mode) {
 			case SET:
 				assert delta != null;
-				for (Player player : players.getArray(event)) {
+				for (Player player : players.executeArray(event)) {
 					if (player.getGameMode() == GameMode.SPECTATOR)
 						player.setSpectatorTarget((Entity) delta[0]);
 				}
 				break;
 			case RESET:
 			case DELETE:
-				for (Player player : players.getArray(event)) {
+				for (Player player : players.executeArray(event)) {
 					if (player.getGameMode() == GameMode.SPECTATOR)
 						player.setSpectatorTarget(null);
 				}
@@ -144,7 +146,7 @@ public class ExprSpectatorTarget extends SimpleExpression<Entity> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "spectator target" + (players != null ? " of " + players.toString(event, debug) : "");
 	}
 

@@ -1,6 +1,7 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.*;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,18 +56,18 @@ public class EffDoIf extends Effect  {
 	}
 
 	@Override
-	protected void execute(Event e) {}
+	protected void executeVoid(VirtualFrame e) {}
 	
 	@Override
-	public Object walk(Event e) {
-		if (condition.check(e)) {
-			effect.walk(e);
+	public Object execute(VirtualFrame e) {
+		if (condition.executeBoolean(e)) {
+			effect.execute(e);
 		}
 		return null;
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return effect.toString(e, debug) + " if " + condition.toString(e, debug);
 	}
 

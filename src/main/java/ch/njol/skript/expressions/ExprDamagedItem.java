@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -42,8 +42,8 @@ public class ExprDamagedItem extends PropertyExpression<ItemType, ItemType> {
 	}
 	
 	@Override
-	protected ItemType[] get(Event e, ItemType[] source) {
-		Number damage = this.damage.getSingle(e);
+	protected ItemType[] get(VirtualFrame e, ItemType[] source) {
+		Number damage = this.damage.executeSingle(e);
 		if (damage == null)
 			return source;
 		return get(source.clone(), item -> {
@@ -58,7 +58,7 @@ public class ExprDamagedItem extends PropertyExpression<ItemType, ItemType> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, boolean debug) {
 		return getExpr().toString(e, debug) + " with damage value " + damage.toString(e, debug);
 	}
 	

@@ -11,6 +11,7 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +57,7 @@ public class ExprArmorChangeItem extends EventValueExpression<ItemStack> impleme
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return oldArmor ? "old armor item" : "new armor item";
 	}
 

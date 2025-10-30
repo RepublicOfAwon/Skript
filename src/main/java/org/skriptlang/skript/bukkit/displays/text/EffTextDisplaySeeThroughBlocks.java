@@ -10,9 +10,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Text Display See Through Blocks")
@@ -44,15 +44,15 @@ public class EffTextDisplaySeeThroughBlocks extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (Display display : displays.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (Display display : displays.executeArray(event)) {
 			if (display instanceof TextDisplay textDisplay)
 				textDisplay.setSeeThrough(canSee);
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (canSee)
 			return "force " + displays.toString(event, debug) + " to be visible through blocks";
 		return "prevent " + displays.toString(event, debug) + " from being visible through blocks";

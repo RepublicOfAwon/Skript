@@ -13,7 +13,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.event.player.PlayerReadyArrowEvent;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +48,7 @@ public class ExprReadiedArrow extends SimpleExpression<ItemStack> {
 
 	@Override
 	@Nullable
-	protected ItemStack[] get(Event event) {
+	protected ItemStack[] execute(VirtualFrame event) {
 		if (!(event instanceof PlayerReadyArrowEvent))
 			return null;
 		if (isArrow)
@@ -67,7 +67,7 @@ public class ExprReadiedArrow extends SimpleExpression<ItemStack> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the readied " + (isArrow ? "arrow" : "bow");
 	}
 

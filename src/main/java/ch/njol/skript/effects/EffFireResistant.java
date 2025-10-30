@@ -12,7 +12,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,8 +45,8 @@ public class EffFireResistant extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (ItemType item : this.items.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (ItemType item : this.items.executeArray(event)) {
 			ItemMeta meta = item.getItemMeta();
 			meta.setFireResistant(!not);
 			item.setItemMeta(meta);
@@ -54,7 +54,7 @@ public class EffFireResistant extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "make " + items.toString(event, debug) + (not ? " not" : "") + " fire resistant";
 	}
 

@@ -11,11 +11,11 @@ import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.entity.Allay;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Piglin;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Dance")
@@ -68,17 +68,17 @@ public class EffDancing extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		Location location = null;
 		long time = 0;
 		if (this.location != null)
-			location = this.location.getSingle(event);
+			location = this.location.executeSingle(event);
 		if (timespan != null) {
-			Timespan timespan1 = timespan.getSingle(event);
+			Timespan timespan1 = timespan.executeSingle(event);
 			if (timespan1 != null)
 				time = timespan1.getAs(TimePeriod.TICK);
 		}
-		for (LivingEntity entity : entities.getArray(event)) {
+		for (LivingEntity entity : entities.executeArray(event)) {
 			if (entity instanceof Allay allay) {
 				if (!start) {
 					allay.stopDancing();
@@ -100,7 +100,7 @@ public class EffDancing extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append("make", entities);
 		if (start) {

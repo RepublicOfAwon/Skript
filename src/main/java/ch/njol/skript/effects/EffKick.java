@@ -1,6 +1,7 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -46,16 +47,17 @@ public class EffKick extends Effect {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "kick " + players.toString(e, debug) + (reason != null ? " on account of " + reason.toString(e, debug) : "");
 	}
 	
 	@Override
-	protected void execute(final Event e) {
-		final String r = reason != null ? reason.getSingle(e) : "";
+	protected void executeVoid(final VirtualFrame frame) {
+		Event e = (Event) frame.getArguments()[0];
+		final String r = reason != null ? reason.executeSingle(frame) : "";
 		if (r == null)
 			return;
-		for (final Player p : players.getArray(e)) {
+		for (final Player p : players.executeArray(frame)) {
 			if (e instanceof PlayerLoginEvent && p.equals(((PlayerLoginEvent) e).getPlayer()) && !Delay.isDelayed(e)) {
 				((PlayerLoginEvent) e).disallow(Result.KICK_OTHER, r);
 			} else if (e instanceof PlayerKickEvent && p.equals(((PlayerKickEvent) e).getPlayer()) && !Delay.isDelayed(e)) {

@@ -10,6 +10,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +35,7 @@ public class ExprProjectileForce extends SimpleExpression<Float> implements Even
 	}
 
 	@Override
-	protected Float @Nullable [] get(Event event) {
+	protected Float @Nullable [] execute(VirtualFrame event) {
 		if (!(event instanceof EntityShootBowEvent shotBowEvent))
 			return null;
 		return new Float[]{shotBowEvent.getForce()};
@@ -56,7 +57,7 @@ public class ExprProjectileForce extends SimpleExpression<Float> implements Even
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "projectile force";
 	}
 

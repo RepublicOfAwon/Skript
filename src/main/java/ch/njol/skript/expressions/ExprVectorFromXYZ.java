@@ -2,7 +2,7 @@ package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,10 +44,10 @@ public class ExprVectorFromXYZ extends SimpleExpression<Vector> {
 
 	@Override
 	@SuppressWarnings("null")
-	protected Vector[] get(Event event) {
-		Number x = this.x.getSingle(event);
-		Number y = this.y.getSingle(event);
-		Number z = this.z.getSingle(event);
+	protected Vector[] execute(VirtualFrame event) {
+		Number x = this.x.executeSingle(event);
+		Number y = this.y.executeSingle(event);
+		Number z = this.z.executeSingle(event);
 		if (x == null || y == null || z == null)
 			return null;
 		return CollectionUtils.array(new Vector(x.doubleValue(), y.doubleValue(), z.doubleValue()));
@@ -71,7 +71,7 @@ public class ExprVectorFromXYZ extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "vector from x " + x.toString(event, debug) + ", y " + y.toString(event, debug) + ", z " + z.toString(event, debug);
 	}
 

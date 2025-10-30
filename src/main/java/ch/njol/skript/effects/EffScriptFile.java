@@ -11,6 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.log.RedirectingLogHandler;
 import ch.njol.skript.registrations.Feature;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +21,6 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.FileUtils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.OpenCloseable;
-import org.bukkit.event.Event;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -83,7 +83,7 @@ public class EffScriptFile extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		Set<CommandSender> recipients = new HashSet<>();
 		if (printErrors) {
 			recipients.addAll(Bukkit.getOnlinePlayers().stream()
@@ -93,12 +93,12 @@ public class EffScriptFile extends Effect {
 		RedirectingLogHandler logHandler = new RedirectingLogHandler(recipients, "").start();
 
 		if (scripts) {
-			for (Script script : scriptExpression.getArray(event)) {
+			for (Script script : scriptExpression.executeArray(event)) {
 				@Nullable File file = script.getConfig().getFile();
 				this.handle(file, script.getConfig().getFileName(), logHandler);
 			}
 		} else {
-			String name = scriptNameExpression.getSingle(event);
+			String name = scriptNameExpression.executeSingle(event);
 			if (name != null)
 				this.handle(ScriptLoader.getScriptFromName(name), name, logHandler);
 		}
@@ -191,7 +191,7 @@ public class EffScriptFile extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String start = switch (mark) {
 			case ENABLE -> "enable";
 			case DISABLE -> "disable";

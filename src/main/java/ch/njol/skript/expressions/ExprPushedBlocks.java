@@ -3,6 +3,7 @@ package ch.njol.skript.expressions;
 import ch.njol.skript.lang.EventRestrictedSyntax;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockPistonExtendEvent;
@@ -42,7 +43,7 @@ public class ExprPushedBlocks extends SimpleExpression<Block> implements EventRe
 
 	@Override
 	@Nullable
-	protected Block[] get(Event e) {
+	protected Block[] execute(VirtualFrame e) {
 		if (!CollectionUtils.isAnyInstanceOf(e, BlockPistonExtendEvent.class, BlockPistonRetractEvent.class))
 			return null;
 
@@ -61,7 +62,7 @@ public class ExprPushedBlocks extends SimpleExpression<Block> implements EventRe
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "moved blocks";
 	}
 	

@@ -14,9 +14,9 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.ConvertedExpression;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.ConverterInfo;
 
@@ -56,7 +56,7 @@ public class ExprBlock extends WrapperExpression<Block> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return getExpr() instanceof EventValueExpression ? "the block" : "the block " + getExpr().toString(e, debug);
 	}
 	

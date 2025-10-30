@@ -9,8 +9,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -35,7 +35,7 @@ public class ExprHealth extends PropertyExpression<LivingEntity, Number> {
 	}
 	
 	@Override
-	protected Number[] get(final Event e, final LivingEntity[] source) {
+	protected Number[] get(final VirtualFrame e, final LivingEntity[] source) {
 //		if (e instanceof EntityDamageEvent && getTime() > 0 && entities.getSource() instanceof ExprAttacked && !Delay.isDelayed(e)) {
 //			return ConverterUtils.convert(entities.getArray(e), Number.class, new Getter<Number, LivingEntity>() {
 //				@Override
@@ -48,7 +48,7 @@ public class ExprHealth extends PropertyExpression<LivingEntity, Number> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "the health of " + getExpr().toString(e, debug);
 	}
 	
@@ -77,12 +77,12 @@ public class ExprHealth extends PropertyExpression<LivingEntity, Number> {
 	}
 	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
+	public void change(final VirtualFrame e, final @Nullable Object[] delta, final ChangeMode mode) {
 		double d = delta == null ? 0 : ((Number) delta[0]).doubleValue();
 		switch (mode) {
 			case DELETE:
 			case SET:
-				for (final LivingEntity entity : getExpr().getArray(e)) {
+				for (final LivingEntity entity : getExpr().executeArray(e)) {
 					assert entity != null : getExpr();
 					HealthUtils.setHealth(entity, d);
 				}
@@ -91,13 +91,13 @@ public class ExprHealth extends PropertyExpression<LivingEntity, Number> {
 				d = -d;
 				//$FALL-THROUGH$
 			case ADD:
-				for (final LivingEntity entity : getExpr().getArray(e)) {
+				for (final LivingEntity entity : getExpr().executeArray(e)) {
 					assert entity != null : getExpr();
 					HealthUtils.heal(entity, d);
 				}
 				break;
 			case RESET:
-				for (final LivingEntity entity : getExpr().getArray(e)) {
+				for (final LivingEntity entity : getExpr().executeArray(e)) {
 					assert entity != null : getExpr();
 					HealthUtils.setHealth(entity, HealthUtils.getMaxHealth(entity));
 				}

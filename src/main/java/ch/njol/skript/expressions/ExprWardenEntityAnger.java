@@ -14,10 +14,10 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Warden;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -57,10 +57,10 @@ public class ExprWardenEntityAnger extends SimpleExpression<Integer> {
 	}
 
 	@Override
-	protected Integer @Nullable [] get(Event event) {
+	protected Integer @Nullable [] execute(VirtualFrame event) {
 		List<Integer> list = new ArrayList<>();
-		Entity[] entities = this.targets.getArray(event);
-		for (LivingEntity livingEntity : wardens.getArray(event)) {
+		Entity[] entities = this.targets.executeArray(event);
+		for (LivingEntity livingEntity : wardens.executeArray(event)) {
 			if (!(livingEntity instanceof Warden warden))
 				continue;
 			for (Entity entity : entities) {
@@ -79,7 +79,7 @@ public class ExprWardenEntityAnger extends SimpleExpression<Integer> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		int value = delta != null ? (Integer) delta[0] : 0;
 		BiConsumer<Warden, Entity> consumer = switch (mode) {
 			case SET -> (warden, entity) -> warden.setAnger(entity, Math2.fit(0, value, 150));
@@ -96,8 +96,8 @@ public class ExprWardenEntityAnger extends SimpleExpression<Integer> {
 			};
 			default -> throw new IllegalStateException("Unexpected value: " + mode);
 		};
-		Entity[] entities = this.targets.getArray(event);
-		for (LivingEntity livingEntity : wardens.getArray(event)) {
+		Entity[] entities = this.targets.executeArray(event);
+		for (LivingEntity livingEntity : wardens.executeArray(event)) {
 			if (!(livingEntity instanceof Warden warden))
 				continue;
 			for (Entity entity : entities) {
@@ -117,7 +117,7 @@ public class ExprWardenEntityAnger extends SimpleExpression<Integer> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the anger level of " + wardens.toString(event, debug) + " towards " + targets.toString(event, debug);
 	}
 

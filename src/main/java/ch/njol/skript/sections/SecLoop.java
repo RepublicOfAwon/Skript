@@ -16,6 +16,7 @@ import ch.njol.skript.util.Container.ContainerType;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.PeekingIterator;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -75,9 +76,9 @@ public class SecLoop extends LoopSection {
 
 	protected @UnknownNullability Expression<?> expression;
 
-	private final transient Map<Event, Object> current = new WeakHashMap<>();
-	private final transient Map<Event, Iterator<?>> iteratorMap = new WeakHashMap<>();
-	private final transient Map<Event, Object> previous = new WeakHashMap<>();
+	private final transient Map<VirtualFrame, Object> current = new WeakHashMap<>();
+	private final transient Map<VirtualFrame, Iterator<?>> iteratorMap = new WeakHashMap<>();
+	private final transient Map<VirtualFrame, Object> previous = new WeakHashMap<>();
 
 	private boolean guaranteedToLoop;
 	private Object nextValue = null;
@@ -125,12 +126,12 @@ public class SecLoop extends LoopSection {
 	}
 
 	@Override
-	public Object walk(Event event) {
+	public Object execute(VirtualFrame frame) {
 		while (true) {
-			Iterator<?> iter = iteratorMap.get(event);
+			Iterator<?> iter = iteratorMap.get(frame);
 			if (iter == null) {
 				if (iterableSingle) {
-					Object value = expression.getSingle(event);
+					Object value = expression.executeSingle(frame);
 					if (value instanceof Container<?> container) {
 						// Container may have special behaviour over regular iterator
 						iter = container.containerIterator();
@@ -141,10 +142,10 @@ public class SecLoop extends LoopSection {
 					}
 				} else {
 					iter = keyed
-						? ((KeyProviderExpression<?>) expression).keyedIterator(event)
-						: expression.iterator(event);
+						? ((KeyProviderExpression<?>) expression).keyedIterator(frame)
+						: expression.iterator(frame);
 					if (iter != null && iter.hasNext()) {
-						iteratorMap.put(event, iter);
+						iteratorMap.put(frame, iter);
 					} else {
 						iter = null;
 					}
@@ -152,18 +153,18 @@ public class SecLoop extends LoopSection {
 			}
 
 			if (iter == null || (!iter.hasNext() && nextValue == null)) {
-				exit(event);
+				exit(frame);
 				return null;
 			} else {
-				previous.put(event, current.get(event));
+				previous.put(frame, current.get(frame));
 				if (nextValue != null) {
-					this.store(event, nextValue);
+					this.store(frame, nextValue);
 					nextValue = null;
 				} else if (iter.hasNext()) {
-					this.store(event, iter.next());
+					this.store(frame, iter.next());
 				}
 				try {
-					super.walk(event);
+					super.execute(frame);
 				} catch (ContinueException ignored) {
 					continue;
 				} catch (BreakException ignored) {
@@ -174,7 +175,7 @@ public class SecLoop extends LoopSection {
 		return null;
 	}
 
-	protected void store(Event event, Object next) {
+	protected void store(VirtualFrame event, Object next) {
 		this.current.put(event, next);
 		this.currentLoopCounter.put(event, (currentLoopCounter.getOrDefault(event, 0L)) + 1);
 	}
@@ -185,15 +186,15 @@ public class SecLoop extends LoopSection {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "loop " + expression.toString(event, debug);
 	}
 
-	public @Nullable Object getCurrent(Event event) {
+	public @Nullable Object getCurrent(VirtualFrame event) {
 		return current.get(event);
 	}
 
-	public @Nullable Object getNext(Event event) {
+	public @Nullable Object getNext(VirtualFrame event) {
 		if (!loopPeeking)
 			return null;
 		Iterator<?> iter = iteratorMap.get(event);
@@ -205,7 +206,7 @@ public class SecLoop extends LoopSection {
 		return nextValue;
 	}
 
-	public @Nullable Object getPrevious(Event event) {
+	public @Nullable Object getPrevious(VirtualFrame event) {
 		return previous.get(event);
 	}
 
@@ -218,7 +219,7 @@ public class SecLoop extends LoopSection {
 	}
 
 	@Override
-	public void exit(Event event) {
+	public void exit(VirtualFrame event) {
 		current.remove(event);
 		iteratorMap.remove(event);
 		previous.remove(event);

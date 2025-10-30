@@ -1,8 +1,8 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +39,7 @@ public class ExprTamer extends SimpleExpression<Player> {
 	}
 	
 	@Override
-	protected Player[] get(final Event e) {
+	protected Player[] execute(final VirtualFrame e) {
 		if (!(e instanceof EntityTameEvent))
 			return null;
 
@@ -57,7 +57,7 @@ public class ExprTamer extends SimpleExpression<Player> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "the tamer";
 	}
 }

@@ -3,7 +3,7 @@ package org.skriptlang.skript.test.tests.syntaxes.expressions;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.test.runner.SkriptJUnitTest;
 import ch.njol.skript.variables.Variables;
 import org.bukkit.entity.Player;
@@ -41,12 +41,12 @@ public class ExprCurrentInputKeysTest extends SkriptJUnitTest {
 		if (inputKeyExpression == null)
 			Assert.fail("Input keys expression is null");
 
-		ContextlessEvent event = ContextlessEvent.get();
+		ContextlessVirtualFrame event = ContextlessVirtualFrame.get();
 		Variables.setVariable("player", player, event, true);
 
 		EasyMock.expect(player.getCurrentInput()).andReturn(InputHelper.fromKeys(InputKey.FORWARD, InputKey.JUMP));
 		EasyMock.replay(player);
-		InputKey[] keys = inputKeyExpression.getArray(event);
+		InputKey[] keys = inputKeyExpression.executeArray(event);
 		Assert.assertArrayEquals(keys, new InputKey[]{InputKey.FORWARD, InputKey.JUMP});
 		EasyMock.verify(player);
 	}

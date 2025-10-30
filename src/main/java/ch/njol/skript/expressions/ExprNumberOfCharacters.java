@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 
@@ -49,8 +49,8 @@ public class ExprNumberOfCharacters extends SimpleExpression<Long> {
 	@Override
 	@SuppressWarnings("null")
 	@Nullable
-	protected Long[] get(Event e) {
-		String str = expr.getSingle(e);
+	protected Long[] execute(VirtualFrame e) {
+		String str = expr.executeSingle(e);
 		if (str == null)
 			return null;
 		long size = 0;
@@ -88,7 +88,7 @@ public class ExprNumberOfCharacters extends SimpleExpression<Long> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		if (pattern == 0) {
 			return "number of uppercase characters";
 		} else if (pattern == 1) {

@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Test Block")
@@ -37,7 +37,7 @@ public class ExprTestBlock extends SimpleExpression<Block> {
 	}
 
 	@Override
-	protected Block @Nullable [] get(Event event) {
+	protected Block @Nullable [] execute(VirtualFrame event) {
 		return new Block[]{SkriptJUnitTest.getBlock()};
 	}
 
@@ -52,7 +52,7 @@ public class ExprTestBlock extends SimpleExpression<Block> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the test block";
 	}
 

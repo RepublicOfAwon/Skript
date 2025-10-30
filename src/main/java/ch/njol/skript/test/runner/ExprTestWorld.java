@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Test World")
@@ -38,7 +38,7 @@ public class ExprTestWorld extends SimpleExpression<World> {
 	}
 
 	@Override
-	protected World @Nullable [] get(Event event) {
+	protected World @Nullable [] execute(VirtualFrame event) {
 		return new World[]{SkriptJUnitTest.getTestWorld()};
 	}
 
@@ -53,7 +53,7 @@ public class ExprTestWorld extends SimpleExpression<World> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the test world";
 	}
 

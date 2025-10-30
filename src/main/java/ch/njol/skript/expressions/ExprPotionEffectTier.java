@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
@@ -45,9 +45,9 @@ public class ExprPotionEffectTier extends SimpleExpression<Integer> {
 
 	@Override
 	@Nullable
-	protected Integer[] get(Event event) {
-		PotionEffectType[] types = typeExpr.getArray(event);
-		LivingEntity[] entities = entityExpr.getArray(event);
+	protected Integer[] execute(VirtualFrame event) {
+		PotionEffectType[] types = typeExpr.executeArray(event);
+		LivingEntity[] entities = entityExpr.executeArray(event);
 		List<Integer> result = new ArrayList<>();
 		for (LivingEntity entity : entities) {
 			for (PotionEffectType type : types) {
@@ -69,7 +69,7 @@ public class ExprPotionEffectTier extends SimpleExpression<Integer> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "potion tier of " + typeExpr.toString(event, debug) + " of " + entityExpr.toString(event, debug);
 	}
 

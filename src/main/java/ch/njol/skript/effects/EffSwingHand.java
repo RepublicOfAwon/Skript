@@ -1,8 +1,8 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -48,20 +48,20 @@ public class EffSwingHand extends Effect {
 	}
 	
 	@Override
-	protected void execute(Event e) {
+	protected void executeVoid(VirtualFrame e) {
 		if (isMainHand) {
-			for (LivingEntity entity : entities.getArray(e)) {
+			for (LivingEntity entity : entities.executeArray(e)) {
 				entity.swingMainHand();
 			}
 		} else {
-			for (LivingEntity entity : entities.getArray(e)) {
+			for (LivingEntity entity : entities.executeArray(e)) {
 				entity.swingOffHand();
 			}
 		}
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "make " + entities.toString(e, debug) + " swing their " + (isMainHand ? "hand" : "off hand");
 	}
 	

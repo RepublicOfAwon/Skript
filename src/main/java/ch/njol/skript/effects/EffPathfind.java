@@ -1,10 +1,10 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -53,10 +53,10 @@ public class EffPathfind extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		Object target = this.target != null ? this.target.getSingle(event) : null;
-		double speed = this.speed != null ? this.speed.getOptionalSingle(event).orElse(1).doubleValue() : 1;
-		for (LivingEntity entity : entities.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		Object target = this.target != null ? this.target.executeSingle(event) : null;
+		double speed = this.speed != null ? this.speed.executeOptional(event).orElse(1).doubleValue() : 1;
+		for (LivingEntity entity : entities.executeArray(event)) {
 			if (!(entity instanceof Mob))
 				continue;
 			if (target instanceof LivingEntity) {
@@ -70,7 +70,7 @@ public class EffPathfind extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (target == null)
 			return "make " + entities.toString(event, debug) + " stop pathfinding";
 		String repr = "make " + entities.toString(event, debug) + " pathfind towards " + target.toString(event, debug);

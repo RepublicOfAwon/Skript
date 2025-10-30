@@ -1,7 +1,7 @@
 package ch.njol.skript.conditions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,8 +56,8 @@ public class CondDamageCause extends Condition {
 	}
 	
 	@Override
-	public boolean check(final Event e) {
-		final DamageCause cause = this.cause.getSingle(e);
+	public boolean executeBoolean(final VirtualFrame e) {
+		final DamageCause cause = this.cause.executeSingle(e);
 		if (cause == null)
 			return false;
 		return expected.check(e,
@@ -66,7 +66,7 @@ public class CondDamageCause extends Condition {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "damage was" + (isNegated() ? " not" : "") + " caused by " + expected.toString(e, debug);
 	}
 	

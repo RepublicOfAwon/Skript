@@ -9,6 +9,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerKickEvent;
 import ch.njol.skript.Skript;
@@ -36,7 +37,7 @@ public class ExprOnScreenKickMessage extends SimpleExpression<String> implements
 	}
 
 	@Override
-	protected String @Nullable [] get(Event event) {
+	protected String @Nullable [] execute(VirtualFrame event) {
 		if (event instanceof PlayerKickEvent playerKickEvent) {
 			return new String[] { playerKickEvent.getReason() };
 		}
@@ -49,7 +50,7 @@ public class ExprOnScreenKickMessage extends SimpleExpression<String> implements
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		assert delta != null;
 		assert delta.length == 1;
 		if (event instanceof PlayerKickEvent kickEvent && delta[0] instanceof String text) {
@@ -68,7 +69,7 @@ public class ExprOnScreenKickMessage extends SimpleExpression<String> implements
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the on-screen kick message";
 	}
 

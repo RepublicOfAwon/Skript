@@ -2,6 +2,7 @@ package ch.njol.skript.command;
 
 import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.util.Utils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +58,7 @@ public class CommandUsage {
 	 * @param event The event used to evaluate the usage message.
 	 * @return The evaluated usage message.
 	 */
-	public String getUsage(@Nullable Event event) {
+	public String getUsage(@Nullable VirtualFrame event) {
 		if (event != null || usage.isSimple())
 			return usage.toString(event);
 		return defaultUsage;

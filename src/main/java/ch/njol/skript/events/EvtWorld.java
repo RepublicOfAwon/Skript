@@ -5,8 +5,8 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.LiteralList;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldSaveEvent;
@@ -63,7 +63,7 @@ public class EvtWorld extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		if (worlds == null)
 			return true;
 		World evtWorld = ((WorldEvent) event).getWorld();
@@ -71,7 +71,7 @@ public class EvtWorld extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "world save/init/unload/load" + (worlds == null ? "" : " of " + worlds.toString(event,debug));
 	}
 

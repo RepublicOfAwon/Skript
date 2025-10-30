@@ -15,6 +15,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.inventory.ItemStack;
@@ -60,7 +61,7 @@ public class ExprBrewingResults extends SimpleExpression<ItemStack> implements E
 	}
 
 	@Override
-	protected ItemStack @Nullable [] get(Event event) {
+	protected ItemStack @Nullable [] execute(VirtualFrame event) {
 		if (!(event instanceof BrewEvent brewEvent))
 			return null;
 		return brewEvent.getResults().toArray(ItemStack[]::new);
@@ -79,7 +80,7 @@ public class ExprBrewingResults extends SimpleExpression<ItemStack> implements E
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (!(event instanceof BrewEvent brewEvent))
 			return;
 		List<ItemType> itemTypes = new ArrayList<>();
@@ -130,7 +131,7 @@ public class ExprBrewingResults extends SimpleExpression<ItemStack> implements E
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the brewing results";
 	}
 

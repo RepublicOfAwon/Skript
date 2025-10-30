@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingEvent;
@@ -51,7 +51,7 @@ public class ExprHanging extends SimpleExpression<Entity> {
 	
 	@Override
 	@Nullable
-	public Entity[] get(Event e) {
+	public Entity[] execute(VirtualFrame e) {
 		if (!(e instanceof HangingEvent))
 			return null;
 
@@ -77,7 +77,7 @@ public class ExprHanging extends SimpleExpression<Entity> {
 	
 	@Override
 	@SuppressWarnings("null")
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "hanging " + (isRemover ? "remover" : "entity");
 	}
 	

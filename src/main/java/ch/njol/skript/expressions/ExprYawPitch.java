@@ -10,10 +10,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -90,11 +90,11 @@ public class ExprYawPitch extends SimplePropertyExpression<Object, Float> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null && mode != ChangeMode.RESET)
 			return;
 		float value = ((Number) delta[0]).floatValue();
-		for (Object object : getExpr().getArray(event)) {
+		for (Object object : getExpr().executeArray(event)) {
 			if (object instanceof Player && !SUPPORTS_PLAYERS)
 				continue;
 

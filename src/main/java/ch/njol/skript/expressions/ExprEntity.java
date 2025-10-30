@@ -1,8 +1,8 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -91,8 +91,8 @@ public class ExprEntity extends SimpleExpression<Entity> {
 	
 	@Override
 	@Nullable
-	protected Entity[] get(final Event e) {
-		final Entity[] es = entity.getArray(e);
+	protected Entity[] execute(final VirtualFrame e) {
+		final Entity[] es = entity.executeArray(e);
 		if (es.length == 0 || type.isInstance(es[0]))
 			return es;
 		return null;
@@ -117,7 +117,7 @@ public class ExprEntity extends SimpleExpression<Entity> {
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "the " + type;
 	}
 	

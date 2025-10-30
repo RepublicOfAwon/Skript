@@ -2,6 +2,7 @@ package ch.njol.skript.command;
 
 import ch.njol.skript.effects.Delay;
 import ch.njol.skript.util.Date;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -56,12 +57,12 @@ public class ScriptCommandEvent extends CommandEvent {
 		return cooldownCancelled;
 	}
 
-	public void setCooldownCancelled(boolean cooldownCancelled) {
+	public void setCooldownCancelled(VirtualFrame frame, boolean cooldownCancelled) {
 		if (Delay.isDelayed(this)) {
 			CommandSender sender = getSender();
 			if (sender instanceof Player) {
 				Date date = cooldownCancelled ? null : executionDate;
-				scriptCommand.setLastUsage(((Player) sender).getUniqueId(), this, date);
+				scriptCommand.setLastUsage(((Player) sender).getUniqueId(), frame, date);
 			}
 		} else {
 			this.cooldownCancelled = cooldownCancelled;

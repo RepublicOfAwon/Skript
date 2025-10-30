@@ -14,7 +14,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
@@ -81,10 +81,10 @@ public class ExprMetadata<T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	protected T @Nullable [] get(Event event) {
+	protected T @Nullable [] execute(VirtualFrame event) {
 		List<Object> values = new ArrayList<>();
-		String[] keys = this.keys.getArray(event);
-		for (Metadatable holder : holders.getArray(event)) {
+		String[] keys = this.keys.executeArray(event);
+		for (Metadatable holder : holders.executeArray(event)) {
 			for (String key : keys) {
 				List<MetadataValue> metadata = holder.getMetadata(key);
 				if (!metadata.isEmpty())
@@ -108,9 +108,9 @@ public class ExprMetadata<T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		String[] keys = this.keys.getArray(event);
-		for (Metadatable holder : holders.getArray(event)) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
+		String[] keys = this.keys.executeArray(event);
+		for (Metadatable holder : holders.executeArray(event)) {
 			for (String key : keys) {
                 switch (mode) {
                     case SET -> holder.setMetadata(key, new FixedMetadataValue(Skript.getInstance(), delta[0]));
@@ -169,7 +169,7 @@ public class ExprMetadata<T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "metadata values " + keys.toString(event, debug) + " of " + holders.toString(event, debug);
 	}
 

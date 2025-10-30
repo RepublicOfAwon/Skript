@@ -16,7 +16,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,8 +70,8 @@ public class ExprXOf extends PropertyExpression<Object, Object> {
 	}
 
 	@Override
-	protected Object[] get(Event event, Object[] source) {
-		Number amount = this.amount.getSingle(event);
+	protected Object[] get(VirtualFrame event, Object[] source) {
+		Number amount = this.amount.executeSingle(event);
 		if (amount == null)
 			return (Object[]) Array.newInstance(getReturnType(), 0);
 
@@ -103,7 +103,7 @@ public class ExprXOf extends PropertyExpression<Object, Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return amount.toString(event, debug) + " of " + getExpr().toString(event, debug);
 	}
 

@@ -4,7 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
-import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.util.Kleenean;
 import ch.njol.yggdrasil.YggdrasilSerializable;
 import org.bukkit.Bukkit;
@@ -37,13 +37,13 @@ public class VisualEffect implements SyntaxElement, YggdrasilSerializable {
 
 		if (exprs.length > 4) {
 			int exprCount = exprs.length - 4; // some effects might have multiple expressions
-			ContextlessEvent event = ContextlessEvent.get();
+			ContextlessVirtualFrame event = ContextlessVirtualFrame.get();
 			if (exprCount == 1) {
-				data = exprs[0] != null ? exprs[0].getSingle(event) : null;
+				data = exprs[0] != null ? exprs[0].executeSingle(event) : null;
 			} else { // provide an array of expression values
 				Object[] dataArray = new Object[exprCount];
 				for (int i = 0; i < exprCount; i++)
-					dataArray[i] = exprs[i] != null ? exprs[i].getSingle(event) : null;
+					dataArray[i] = exprs[i] != null ? exprs[i].executeSingle(event) : null;
 				data = dataArray;
 			}
 		}
@@ -55,13 +55,13 @@ public class VisualEffect implements SyntaxElement, YggdrasilSerializable {
 		}
 
 		if ((parseResult.mark & 1) != 0) {
-			dX = ((Number) exprs[exprs.length - 4].getSingle(null)).floatValue();
-			dY = ((Number) exprs[exprs.length - 3].getSingle(null)).floatValue();
-			dZ = ((Number) exprs[exprs.length - 2].getSingle(null)).floatValue();
+			dX = ((Number) exprs[exprs.length - 4].executeSingle(null)).floatValue();
+			dY = ((Number) exprs[exprs.length - 3].executeSingle(null)).floatValue();
+			dZ = ((Number) exprs[exprs.length - 2].executeSingle(null)).floatValue();
 		}
 
 		if ((parseResult.mark & 2) != 0) {
-			speed = ((Number) exprs[exprs.length - 1].getSingle(null)).floatValue();
+			speed = ((Number) exprs[exprs.length - 1].executeSingle(null)).floatValue();
 		}
 
 		return this;

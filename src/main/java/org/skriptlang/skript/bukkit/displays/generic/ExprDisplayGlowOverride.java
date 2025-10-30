@@ -9,8 +9,8 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ColorRGB;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Display Glow Color Override")
@@ -41,9 +41,9 @@ public class ExprDisplayGlowOverride extends SimplePropertyExpression<Display, C
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		org.bukkit.Color color = delta != null ? ((Color) delta[0]).asBukkitColor() : null;
-		for (Display display : getExpr().getArray(event))
+		for (Display display : getExpr().executeArray(event))
 			display.setGlowColorOverride(color);
 	}
 

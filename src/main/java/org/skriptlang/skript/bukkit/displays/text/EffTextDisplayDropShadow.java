@@ -10,9 +10,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Text Display Drop Shadow")
@@ -46,15 +46,15 @@ public class EffTextDisplayDropShadow extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (Display display : displays.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (Display display : displays.executeArray(event)) {
 			if (display instanceof TextDisplay textDisplay)
 				textDisplay.setShadowed(addShadow);
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (addShadow)
 			return "add drop shadow to " + displays.toString(event, debug);
 		return "remove drop shadow from " + displays.toString(event, debug);

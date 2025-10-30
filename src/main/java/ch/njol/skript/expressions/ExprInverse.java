@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -37,8 +37,8 @@ public class ExprInverse extends SimpleExpression<Boolean> {
 	}
 	
 	@Override
-	protected Boolean @Nullable [] get(Event event) {
-		Boolean[] original = booleans.getArray(event);
+	protected Boolean @Nullable [] execute(VirtualFrame event) {
+		Boolean[] original = booleans.executeArray(event);
 		Boolean[] toggled = new Boolean[original.length];
 		for (int i = 0; i < original.length; i++) {
 			toggled[i] = !original[i];
@@ -57,7 +57,7 @@ public class ExprInverse extends SimpleExpression<Boolean> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "inverse of " + booleans.toString(event, debug);
 	}
 

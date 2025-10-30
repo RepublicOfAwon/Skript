@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Math2;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -57,13 +57,13 @@ public class ExprRandomNumber extends SimpleExpression<Number> {
 
 	@Override
 	@Nullable
-	protected Number[] get(Event event) {
-		Number lowerNumber = lower.getSingle(event);
-		Number upperNumber = upper.getSingle(event);
+	protected Number[] execute(VirtualFrame event) {
+		Number lowerNumber = lower.executeSingle(event);
+		Number upperNumber = upper.executeSingle(event);
 		if (upperNumber == null || lowerNumber == null || !Double.isFinite(lowerNumber.doubleValue()) || !Double.isFinite(upperNumber.doubleValue()))
 			return new Number[0];
 
-		Integer amount = this.amount == null ? Integer.valueOf(1) : this.amount.getSingle(event);
+		Integer amount = this.amount == null ? Integer.valueOf(1) : this.amount.executeSingle(event);
 		if (amount == null || amount <= 0)
 			return new Number[0];
 
@@ -113,7 +113,7 @@ public class ExprRandomNumber extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (amount == null ? "a" : amount.toString(event, debug)) + " random " + (isInteger ? "integer" : "number") +
 				(amount == null ? "" : "s") + " between " + lower.toString(event, debug) + " and " + upper.toString(event, debug);
 	}

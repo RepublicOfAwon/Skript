@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -50,8 +50,8 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	
 	@Override
 	@Nullable
-	protected Number[] get(final Event event) {
-		Number s = start.getSingle(event), f = end.getSingle(event);
+	protected Number[] execute(final VirtualFrame event) {
+		Number s = start.executeSingle(event), f = end.executeSingle(event);
 		if (s == null || f == null)
 			return null;
 		final boolean reverse = s.doubleValue() > f.doubleValue();
@@ -92,8 +92,8 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	
 	@Override
 	@Nullable
-	public Iterator<Number> iterator(final Event event) {
-		Number s = start.getSingle(event), f = end.getSingle(event);
+	public Iterator<Number> iterator(final VirtualFrame event) {
+		Number s = start.executeSingle(event), f = end.executeSingle(event);
 		if (s == null || f == null)
 			return null;
 		final boolean reverse = s.doubleValue() > f.doubleValue();
@@ -176,7 +176,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		final String modeString = mode == 0 ? "numbers" : (mode == 1 ? "integers" : "decimals");
 		return modeString + " from " + start.toString(e, debug) + " to " + end.toString(e, debug);
 	}

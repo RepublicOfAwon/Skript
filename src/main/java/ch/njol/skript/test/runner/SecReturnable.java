@@ -8,7 +8,7 @@ import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -33,8 +33,8 @@ public class SecReturnable extends Section implements ReturnHandler<Object> {
 	}
 
 	@Override
-	public void returnValues(Event event, Expression<?> value) {
-		returnedValues = value.getArray(event);
+	public void returnValues(VirtualFrame event, Expression<?> value) {
+		returnedValues = value.executeArray(event);
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class SecReturnable extends Section implements ReturnHandler<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "returnable " + (singleReturnValue ? "" : "plural ") + returnValueType.toString(event, debug) + " section";
 	}
 
@@ -65,7 +65,7 @@ public class SecReturnable extends Section implements ReturnHandler<Object> {
 		}
 
 		@Override
-		public @Nullable Object[] get(Event event) {
+		public @Nullable Object[] execute(VirtualFrame event) {
 			Object[] returnedValues = SecReturnable.returnedValues;
 			SecReturnable.returnedValues = null;
 			return returnedValues;
@@ -82,7 +82,7 @@ public class SecReturnable extends Section implements ReturnHandler<Object> {
 		}
 
 		@Override
-		public String toString(@Nullable Event event, boolean debug) {
+		public String toString(@Nullable VirtualFrame event, boolean debug) {
 			return "last returned values";
 		}
 

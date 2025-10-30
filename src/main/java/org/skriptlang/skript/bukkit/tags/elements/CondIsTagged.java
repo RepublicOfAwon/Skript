@@ -13,9 +13,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Keyed;
 import org.bukkit.Tag;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.tags.TagModule;
@@ -53,8 +53,8 @@ public class CondIsTagged extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
-		Tag<Keyed>[] tags = this.tags.getAll(event);
+	public boolean executeBoolean(VirtualFrame event) {
+		Tag<Keyed>[] tags = this.tags.executeAll(event);
 		if (tags.length == 0)
 			return isNegated();
 		boolean and = this.tags.getAnd();
@@ -101,7 +101,7 @@ public class CondIsTagged extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return PropertyCondition.toString(this, PropertyType.BE, event, debug, elements,
 				" tagged as " + tags.toString(event, debug));
 	}

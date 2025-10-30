@@ -13,9 +13,9 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Villager Level/Experience")
@@ -68,11 +68,11 @@ public class ExprVillagerLevel extends SimplePropertyExpression<LivingEntity, Nu
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		Number number = delta != null && delta[0] instanceof Number num ? num : 1;
 		int changeValue = number.intValue();
 
-		for (LivingEntity livingEntity : getExpr().getArray(event)) {
+		for (LivingEntity livingEntity : getExpr().executeArray(event)) {
 			if (!(livingEntity instanceof Villager villager)) continue;
 
 			int minLevel;

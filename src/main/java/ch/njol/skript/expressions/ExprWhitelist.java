@@ -2,9 +2,9 @@ package ch.njol.skript.expressions;
 
 import ch.njol.skript.effects.EffEnforceWhitelist;
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -44,7 +44,7 @@ public class ExprWhitelist extends SimpleExpression<OfflinePlayer> {
 	}
 
 	@Override
-	protected OfflinePlayer[] get(Event event) {
+	protected OfflinePlayer[] execute(VirtualFrame event) {
 		return Bukkit.getServer().getWhitelistedPlayers().toArray(new OfflinePlayer[0]);
 	}
 
@@ -63,7 +63,7 @@ public class ExprWhitelist extends SimpleExpression<OfflinePlayer> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		switch (mode) {
 			case SET:
 				boolean toggle = (Boolean) delta[0];
@@ -101,7 +101,7 @@ public class ExprWhitelist extends SimpleExpression<OfflinePlayer> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "whitelist";
 	}
 

@@ -5,11 +5,9 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
-import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
-import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +29,10 @@ public class SecIfChain extends Section {
     }
 
     @Override
-	public Object walk(Event event) {
+	public Object execute(VirtualFrame frame) {
 		if (!init) init();
 		try {
-			super.walk(event);
+			super.execute(frame);
 		} catch (SecConditional.SkipException e) {
 
 		}
@@ -47,7 +45,7 @@ public class SecIfChain extends Section {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "if chain";
 	}
 

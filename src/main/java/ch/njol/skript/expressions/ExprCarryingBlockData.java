@@ -9,12 +9,12 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,7 +53,7 @@ public class ExprCarryingBlockData extends SimplePropertyExpression<LivingEntity
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		BlockData data = null;
 		if (delta != null) {
 			if (delta[0] instanceof BlockData blockData) {
@@ -70,7 +70,7 @@ public class ExprCarryingBlockData extends SimplePropertyExpression<LivingEntity
 			}
 		}
 
-		for (LivingEntity entity : getExpr().getArray(event)) {
+		for (LivingEntity entity : getExpr().executeArray(event)) {
 			if (entity instanceof Enderman enderman)
 				enderman.setCarriedBlock(data);
 		}

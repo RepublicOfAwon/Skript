@@ -1,8 +1,8 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -41,13 +41,13 @@ public class EffToggleFlight extends Effect {
 	}
 
 	@Override
-	protected void execute(final Event e) {
-		for (Player player : players.getArray(e))
+	protected void executeVoid(final VirtualFrame e) {
+		for (Player player : players.executeArray(e))
 			player.setAllowFlight(allow);
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "allow flight to " + players.toString(e, debug);
 	}
 }

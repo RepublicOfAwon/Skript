@@ -9,9 +9,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Time;
 import ch.njol.util.Math2;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
@@ -90,7 +90,7 @@ public class EvtAtTime extends SkriptEvent implements Comparable<EvtAtTime> {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -155,7 +155,7 @@ public class EvtAtTime extends SkriptEvent implements Comparable<EvtAtTime> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "at " + Time.toString(time) + " in worlds " + Classes.toString(worlds, true);
 	}
 	

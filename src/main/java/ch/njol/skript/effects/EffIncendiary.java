@@ -1,9 +1,9 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Explosive;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,14 +55,14 @@ public class EffIncendiary extends Effect {
 	}
 
 	@Override
-	protected void execute(Event e) {
+	protected void executeVoid(VirtualFrame e) {
 		if (isEvent) {
 			if (!(e instanceof ExplosionPrimeEvent))
 				return;
 
 			((ExplosionPrimeEvent) e).setFire(causeFire);
 		} else {
-			for (Entity entity : entities.getArray(e)) {
+			for (Entity entity : entities.executeArray(e)) {
 				if (entity instanceof Explosive)
 					((Explosive) entity).setIsIncendiary(causeFire);
 			}
@@ -70,7 +70,7 @@ public class EffIncendiary extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		if (isEvent)
 			return "make the event-explosion " + (causeFire == true ? "" : "not") + " fiery";
 		return "make " + entities.toString(e, debug) + (causeFire == true ? "" : " not") + " incendiary";

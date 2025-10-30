@@ -13,11 +13,11 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -58,8 +58,8 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 
 	@Override
 	@SuppressWarnings("null")
-	protected Number[] get(Event event, Entity[] entities) {
-		Attribute attribute = attributes.getSingle(event);
+	protected Number[] get(VirtualFrame event, Entity[] entities) {
+		Attribute attribute = attributes.executeSingle(event);
 		return Stream.of(entities)
 		    .map(ent -> getAttribute(ent, attribute))
 			.filter(Objects::nonNull)
@@ -77,10 +77,10 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 
 	@Override
 	@SuppressWarnings("null")
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		Attribute attribute = attributes.getSingle(event);
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
+		Attribute attribute = attributes.executeSingle(event);
 		double deltaValue = delta == null ? 0 : ((Number) delta[0]).doubleValue();
-		for (Entity entity : getExpr().getArray(event)) {
+		for (Entity entity : getExpr().executeArray(event)) {
 			AttributeInstance instance = getAttribute(entity, attribute);
 			if (instance != null) {
 				switch(mode) {
@@ -113,7 +113,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 
 	@Override
 	@SuppressWarnings("null")
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "entity " + getExpr().toString(event, debug) + "'s " + (attributes == null ? "" : attributes.toString(event, debug)) + "attribute";
 	}
 	

@@ -12,9 +12,9 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Wake And Sleep")
@@ -72,12 +72,12 @@ public class EffWakeupSleep extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		Location location = null;
 		if (this.location != null)
-			location = this.location.getSingle(event);
+			location = this.location.executeSingle(event);
 		boolean failed = false;
-		for (LivingEntity entity : entities.getArray(event)) {
+		for (LivingEntity entity : entities.executeArray(event)) {
 			if (entity instanceof Bat bat) {
 				bat.setAwake(!sleep);
 			} else if (entity instanceof Villager villager) {
@@ -109,7 +109,7 @@ public class EffWakeupSleep extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append("make", entities);
 		if (sleep) {

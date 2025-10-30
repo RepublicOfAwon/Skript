@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.bukkit.event.entity.EntityUnleashEvent.UnleashReason;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +42,7 @@ public class ExprUnleashReason extends EventValueExpression<UnleashReason> {
 	}
 
 	@Override
-	protected UnleashReason[] get(Event event) {
+	protected UnleashReason[] execute(VirtualFrame event) {
 		if (!(event instanceof EntityUnleashEvent unleashEvent))
 			return new UnleashReason[0];
 		return new UnleashReason[] {unleashEvent.getReason()};
@@ -59,7 +59,7 @@ public class ExprUnleashReason extends EventValueExpression<UnleashReason> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the unleash reason";
 	}
 

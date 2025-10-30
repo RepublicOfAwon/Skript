@@ -5,6 +5,7 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptEvent.ListeningBehavior;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.entity.EntityEvent;
@@ -30,12 +31,12 @@ public class EventSyntaxInfoTest extends BaseSyntaxInfoTests<MockSkriptEvent, Bu
 		}
 
 		@Override
-		public boolean check(Event event) {
+		public boolean check(VirtualFrame event) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public String toString(@Nullable Event event, boolean debug) {
+		public String toString(@Nullable VirtualFrame event, boolean debug) {
 			throw new UnsupportedOperationException();
 		}
 

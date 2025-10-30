@@ -10,12 +10,12 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.parser.ParserInstance;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -71,12 +71,12 @@ public class ExprScript extends SimpleExpression<Script> {
 	}
 
 	@Override
-	protected Script[] get(Event event) {
+	protected Script[] execute(VirtualFrame event) {
 		if (script != null)
 			return new Script[]{script};
 		assert name != null;
 		if (isDirectory) {
-			@Nullable String string = name.getSingle(event);
+			@Nullable String string = name.executeSingle(event);
 			if (string == null)
 				return new Script[0];
 			File folder = new File(Skript.getInstance().getScriptsFolder(), string);
@@ -122,7 +122,7 @@ public class ExprScript extends SimpleExpression<Script> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (script != null)
 			return "the current script";
 		assert name != null;

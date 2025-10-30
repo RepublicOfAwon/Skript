@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -32,7 +32,7 @@ public class ExprNow extends SimpleExpression<Date> {
 	}
 	
 	@Override
-	protected Date[] get(final Event e) {
+	protected Date[] execute(final VirtualFrame e) {
 		return new Date[] {new Date()};
 	}
 	
@@ -47,7 +47,7 @@ public class ExprNow extends SimpleExpression<Date> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "now";
 	}
 	

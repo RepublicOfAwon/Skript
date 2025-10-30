@@ -14,6 +14,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -74,7 +75,7 @@ public class EffCancelEvent extends Effect {
 	}
 	
 	@Override
-	public void execute(Event event) {
+	public void executeVoid(VirtualFrame event) {
 		if (event instanceof Cancellable)
 			((Cancellable) event).setCancelled(cancel);
 		if (event instanceof PlayerInteractEvent) {
@@ -91,7 +92,7 @@ public class EffCancelEvent extends Effect {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (cancel ? "" : "un") + "cancel event";
 	}
 	

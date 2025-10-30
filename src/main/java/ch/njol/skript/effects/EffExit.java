@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.sections.SecConditional;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ControlFlowException;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -98,16 +98,16 @@ public class EffExit extends Effect {
 	}
 
 	@Override
-	public Object walk(Event event) {
+	public Object execute(VirtualFrame frame) {
 		for (SectionExitHandler section : sectionsToExit)
-			section.exit(event);
+			section.exit(frame);
 		if (outerSection == null) // "stop trigger"
 			throw new ControlFlowException();
 		throw new LoopSection.BreakException();
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		assert false;
 	}
 
@@ -119,7 +119,7 @@ public class EffExit extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (outerSection == null)
 			return "stop trigger";
 		return "stop " + breakLevels + " " + names[type];

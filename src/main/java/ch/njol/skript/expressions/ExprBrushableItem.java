@@ -1,15 +1,14 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.BrushableBlock;
 import org.bukkit.block.BlockState;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,10 +51,10 @@ public class ExprBrushableItem extends SimplePropertyExpression<Block, ItemStack
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE) {
 			ItemStack newItem = (mode == ChangeMode.SET) ? (ItemStack) delta[0] : null;
-			for (Block block : getExpr().getArray(event)) {
+			for (Block block : getExpr().executeArray(event)) {
 				BlockState state = block.getState();
 				if (state instanceof BrushableBlock brushableBlock) {
 					brushableBlock.setItem(newItem);

@@ -12,7 +12,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 @Name("Whether")
@@ -39,8 +40,8 @@ public class ExprWhether extends SimpleExpression<Boolean> {
 	}
 
 	@Override
-	protected Boolean[] get(Event event) {
-		return new Boolean[] {condition.check(event)};
+	protected Boolean[] execute(VirtualFrame event) {
+		return new Boolean[] {condition.executeBoolean(event)};
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class ExprWhether extends SimpleExpression<Boolean> {
 	}
 
 	@Override
-	public String toString(Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "whether " + condition.toString(event, debug);
 	}
 

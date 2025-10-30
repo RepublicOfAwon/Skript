@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +46,7 @@ public class ExprEnchantingExpCost extends SimpleExpression<Long> {
 
 	@Override
 	@Nullable
-	protected Long[] get(Event e) {
+	protected Long[] execute(VirtualFrame e) {
 		return new Long[]{(long) ((EnchantItemEvent) e).getExpLevelCost()};
 	}
 
@@ -59,7 +59,7 @@ public class ExprEnchantingExpCost extends SimpleExpression<Long> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null)
 			return;
 		Object c = delta[0];
@@ -95,7 +95,7 @@ public class ExprEnchantingExpCost extends SimpleExpression<Long> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the displayed cost of enchanting";
 	}
 

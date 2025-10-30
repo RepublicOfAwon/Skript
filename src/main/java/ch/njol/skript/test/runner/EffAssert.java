@@ -11,8 +11,8 @@ import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ControlFlowException;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 
@@ -79,30 +79,30 @@ public class EffAssert extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 	}
 
 	@Override
-	public Object walk(Event event) {
+	public Object execute(VirtualFrame frame) {
 		if (shouldFail && condition == null)
 			return null;
 
-		if (condition.check(event) == shouldFail) {
-			String message = errorMsg != null ? errorMsg.getOptionalSingle(event).orElse(DEFAULT_ERROR) : DEFAULT_ERROR;
+		if (condition.executeBoolean(frame) == shouldFail) {
+			String message = errorMsg != null ? errorMsg.executeOptional(frame).orElse(DEFAULT_ERROR) : DEFAULT_ERROR;
 
 			// generate expected/got message if possible
 			String expectedMessage = "";
 			String gotMessage = "";
 			if (expected != null)
-				expectedMessage = VerboseAssert.getExpressionValue(expected, event);
+				expectedMessage = VerboseAssert.getExpressionValue(expected, frame);
 			if (got != null)
-				gotMessage = VerboseAssert.getExpressionValue(got, event);
+				gotMessage = VerboseAssert.getExpressionValue(got, frame);
 
 			if (condition instanceof VerboseAssert) {
 				if (expectedMessage.isEmpty())
-					expectedMessage = ((VerboseAssert) condition).getExpectedMessage(event);
+					expectedMessage = ((VerboseAssert) condition).getExpectedMessage(frame);
 				if (gotMessage.isEmpty())
-					gotMessage = ((VerboseAssert) condition).getReceivedMessage(event);
+					gotMessage = ((VerboseAssert) condition).getReceivedMessage(frame);
 			}
 
 			if (!expectedMessage.isEmpty() && !gotMessage.isEmpty())
@@ -123,7 +123,7 @@ public class EffAssert extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (condition == null)
 			return "assertion";
 		return "assert " + condition.toString(event, debug);

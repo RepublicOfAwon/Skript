@@ -11,7 +11,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 import org.skriptlang.skript.lang.converter.ConverterInfo;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  *
  * @see ConvertedKeyProviderExpression
  */
-public class ConvertedExpression<F, T> implements Expression<T> {
+public class ConvertedExpression<F, T> extends Expression<T> {
 
 	protected Expression<? extends F> source;
 	protected Class<T> to;
@@ -140,7 +140,7 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (debug && event == null)
 			return "(" + source.toString(event, debug) + " >> " + converter + ": "
 				+ converterInfos.stream().map(Object::toString).collect(Collectors.joining(", ")) + ")";
@@ -190,42 +190,42 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		ClassInfo<? super T> returnTypeInfo = this.returnTypeInfo;
 		if (returnTypeInfo != null) {
 			Changer<? super T> changer = returnTypeInfo.getChanger();
 			if (changer != null)
-				changer.change(getArray(event), delta, mode);
+				changer.change(executeArray(event), delta, mode);
 		} else {
 			source.change(event, delta, mode);
 		}
 	}
 
 	@Override
-	public @Nullable T getSingle(Event event) {
-		F value = source.getSingle(event);
+	public @Nullable T executeSingle(VirtualFrame frame) {
+		F value = source.executeSingle(frame);
 		if (value == null)
 			return null;
 		return converter.convert(value);
 	}
 
 	@Override
-	public T[] getArray(Event event) {
-		return Converters.convert(source.getArray(event), to, converter);
+	public T[] executeArray(VirtualFrame frame) {
+		return Converters.convert(source.executeArray(frame), to, converter);
 	}
 
 	@Override
-	public T[] getAll(Event event) {
-		return Converters.convert(source.getAll(event), to, converter);
+	public T[] executeAll(VirtualFrame frame) {
+		return Converters.convert(source.executeAll(frame), to, converter);
 	}
 
 	@Override
-	public boolean check(Event event, Predicate<? super T> checker, boolean negated) {
+	public boolean check(VirtualFrame event, Predicate<? super T> checker, boolean negated) {
 		return negated ^ check(event, checker);
 	}
 
 	@Override
-	public boolean check(Event event, Predicate<? super T> checker) {
+	public boolean check(VirtualFrame event, Predicate<? super T> checker) {
 		return source.check(event, (Predicate<F>) value -> {
 			T convertedValue = converter.convert(value);
 			if (convertedValue == null) {
@@ -261,7 +261,7 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 	}
 
 	@Override
-	public @Nullable Iterator<T> iterator(Event event) {
+	public @Nullable Iterator<T> iterator(VirtualFrame event) {
 		Iterator<? extends F> iterator = source.iterator(event);
 		if (iterator == null)
 			return null;

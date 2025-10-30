@@ -5,7 +5,7 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.player.PlayerInputEvent;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.input.InputKey;
@@ -40,7 +40,7 @@ public class EvtPlayerInput extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		PlayerInputEvent inputEvent = (PlayerInputEvent) event;
 		Set<InputKey> previousKeys = InputKey.fromInput(inputEvent.getPlayer().getCurrentInput());
 		Set<InputKey> currentKeys = InputKey.fromInput(inputEvent.getInput());
@@ -50,7 +50,7 @@ public class EvtPlayerInput extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append("player");
 		builder.append(type.name().toLowerCase());

@@ -8,10 +8,10 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Phantom;
 import org.bukkit.entity.Slime;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Entity Size")
@@ -57,7 +57,7 @@ public class ExprEntitySize extends SimplePropertyExpression<LivingEntity, Integ
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (delta == null && mode != ChangeMode.RESET)
 			return;
 
@@ -71,7 +71,7 @@ public class ExprEntitySize extends SimplePropertyExpression<LivingEntity, Integ
 
 		switch (mode) {
 			case ADD, REMOVE -> {
-				for (LivingEntity entity : getExpr().getArray(event)) {
+				for (LivingEntity entity : getExpr().executeArray(event)) {
 					if (entity instanceof Phantom phantom) {
 						int newSize = Math2.fit(0, (phantom.getSize() + sizeDelta), MAXIMUM_PHANTOM_SIZE);
 						phantom.setSize(newSize);
@@ -82,7 +82,7 @@ public class ExprEntitySize extends SimplePropertyExpression<LivingEntity, Integ
 				}
 			}
 			case SET, RESET -> {
-				for (LivingEntity entity : getExpr().getArray(event)) {
+				for (LivingEntity entity : getExpr().executeArray(event)) {
 					if (entity instanceof Phantom phantom) {
 						phantom.setSize(Math2.fit(0, sizeDelta, MAXIMUM_PHANTOM_SIZE));
 					} else if (entity instanceof Slime slime) {

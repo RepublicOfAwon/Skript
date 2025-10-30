@@ -11,6 +11,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -172,10 +173,11 @@ public class ExprMessage extends SimpleExpression<String> {
 	}
 	
 	@Override
-	protected String[] get(final Event e) {
+	protected String[] execute(final VirtualFrame frame) {
+		Event event = (Event) frame.getArguments()[0];
 		for (final Class<? extends Event> c : type.events) {
-			if (c.isInstance(e))
-				return new String[] {type.get(e)};
+			if (c.isInstance(event))
+				return new String[] {type.get(event)};
 		}
 		return new String[0];
 	}
@@ -189,11 +191,12 @@ public class ExprMessage extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
+	public void change(final VirtualFrame frame, final @Nullable Object[] delta, final ChangeMode mode) {
 		assert mode == ChangeMode.SET || mode == ChangeMode.DELETE;
+		Event event = (Event) frame.getArguments()[0];
 		for (final Class<? extends Event> c : type.events) {
-			if (c.isInstance(e)) {
-				type.set(e, (mode == ChangeMode.DELETE) ? "" : delta[0].toString());
+			if (c.isInstance(event)) {
+				type.set(event, (mode == ChangeMode.DELETE) ? "" : delta[0].toString());
 			}
 		}
 	}
@@ -209,7 +212,7 @@ public class ExprMessage extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "the " + type.name + " message";
 	}
 	

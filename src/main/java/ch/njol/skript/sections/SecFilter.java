@@ -17,7 +17,7 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Pair;
 import ch.njol.util.StringUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -109,15 +109,15 @@ public class SecFilter extends Section implements InputSource {
 	}
 
 	@Override
-	public Object walk(Event event) {
+	public Object execute(VirtualFrame frame) {
 		// get the name only once to avoid issues where the name may change between evaluations.
-		String varName = unfilteredObjects.getName().toString(event);
+		String varName = unfilteredObjects.getName().toString(frame);
 		String varSubName = StringUtils.substring(varName, 0, -1);
 		boolean local = unfilteredObjects.isLocal();
 
 		// not ideal to get this AND the iterator, but using this value could be unreliable due to name change issue from above.
 		// since we just use it for a length optimization at the end, it's ok to be a little unreliable.
-		var rawVariable = ((Map<String, Object>) unfilteredObjects.getRaw(event));
+		var rawVariable = ((Map<String, Object>) unfilteredObjects.getRaw(frame));
 		if (rawVariable == null)
 			return null;
 		int initialSize = rawVariable.size();
@@ -126,13 +126,13 @@ public class SecFilter extends Section implements InputSource {
 		List<Pair<String, Object>> toKeep = new ArrayList<>();
 		List<String> toRemove = new ArrayList<>();
 
-		var variableIterator = Variables.getVariableIterator(varName, local, event);
+		var variableIterator = Variables.getVariableIterator(varName, local, frame);
 		var stream = StreamSupport.stream(Spliterators.spliteratorUnknownSize(variableIterator, Spliterator.ORDERED), false);
 		if (isAny) {
 			stream.forEach(pair -> {
 				currentValue = pair.getValue();
 				currentIndex = pair.getKey();
-				if (conditions.stream().anyMatch(c -> c.check(event))) {
+				if (conditions.stream().anyMatch(c -> c.executeBoolean(frame))) {
 					toKeep.add(pair);
 				} else {
 					toRemove.add(pair.getKey());
@@ -142,7 +142,7 @@ public class SecFilter extends Section implements InputSource {
 			stream.forEach(pair -> {
 				currentValue = pair.getValue();
 				currentIndex = pair.getKey();
-				if (conditions.stream().allMatch(c -> c.check(event))) {
+				if (conditions.stream().allMatch(c -> c.executeBoolean(frame))) {
 					toKeep.add(pair);
 				} else {
 					toRemove.add(pair.getKey());
@@ -153,12 +153,12 @@ public class SecFilter extends Section implements InputSource {
 		// optimize by either removing or clearing + adding depending on which is fewer operations
 		// for instances where only a handful of values are removed from a large list, this can be a 400% speedup
 		if (toKeep.size() < initialSize / 2) {
-			Variables.deleteVariable(varName, event, local);
+			Variables.deleteVariable(varName, frame, local);
 			for (Pair<String, Object> pair : toKeep)
-				Variables.setVariable(varSubName + pair.getKey(), pair.getValue(), event, local);
+				Variables.setVariable(varSubName + pair.getKey(), pair.getValue(), frame, local);
 		} else {
 			for (String index : toRemove)
-				Variables.setVariable(varSubName + index, null, event, local);
+				Variables.setVariable(varSubName + index, null, frame, local);
 		}
 		return null;
 	}
@@ -179,7 +179,7 @@ public class SecFilter extends Section implements InputSource {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "filter " + unfilteredObjects.toString(event, debug) + " to match " + (isAny ? "any" : "all");
 	}
 

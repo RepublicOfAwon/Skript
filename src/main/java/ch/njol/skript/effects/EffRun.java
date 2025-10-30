@@ -10,7 +10,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.function.DynamicFunctionReference;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.registrations.experiments.ReflectionExperimentSyntax;
 import org.skriptlang.skript.util.Executable;
@@ -61,8 +61,8 @@ public class EffRun extends Effect implements ReflectionExperimentSyntax {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		Executable task = executable.getSingle(event);
+	protected void executeVoid(VirtualFrame event) {
+		Executable task = executable.executeSingle(event);
 		if (task == null)
 			return;
 		Object[] arguments;
@@ -70,9 +70,9 @@ public class EffRun extends Effect implements ReflectionExperimentSyntax {
 			Expression<?> validated = reference.validate(input);
 			if (validated == null)
 				return;
-			arguments = validated.getArray(event);
+			arguments = validated.executeArray(event);
 		} else if (hasArguments) {
-			arguments = this.arguments.getArray(event);
+			arguments = this.arguments.executeArray(event);
 		} else {
 			arguments = new Object[0];
 		}
@@ -80,7 +80,7 @@ public class EffRun extends Effect implements ReflectionExperimentSyntax {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (hasArguments)
 			return "run " + executable.toString(event, debug) + " with arguments " + arguments.toString(event, debug);
 		return "run " + executable.toString(event, debug);

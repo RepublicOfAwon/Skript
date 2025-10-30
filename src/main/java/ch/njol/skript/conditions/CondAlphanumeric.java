@@ -1,8 +1,8 @@
 package ch.njol.skript.conditions;
 
 import ch.njol.skript.lang.*;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -38,7 +38,7 @@ public class CondAlphanumeric extends Condition {
 	}
 	
 	@Override
-	public boolean check(Event e) {
+	public boolean executeBoolean(VirtualFrame e) {
 		return isNegated() ^ strings.check(e, StringUtils::isAlphanumeric);
 	}
 
@@ -50,7 +50,7 @@ public class CondAlphanumeric extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return strings.toString(e, debug) + " is" + (isNegated() ? "n't" : "") + " alphanumeric";
 	}
 	

@@ -11,11 +11,11 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.TrialSpawner;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.Event;
 import org.bukkit.spawner.TrialSpawnerConfiguration;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,7 +79,7 @@ public class ExprSpawnerType extends SimplePropertyExpression<Block, EntityData>
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		EntityType entityType = null;
 		if (delta != null) {
 			//noinspection rawtypes
@@ -88,7 +88,7 @@ public class ExprSpawnerType extends SimplePropertyExpression<Block, EntityData>
 			entityType = EntityType.PIG;
 		}
 
-		for (Block block : getExpr().getArray(event)) {
+		for (Block block : getExpr().executeArray(event)) {
 			if (block.getState() instanceof CreatureSpawner creatureSpawner) {
 				creatureSpawner.setSpawnedType(entityType);
 				creatureSpawner.update(); // Actually trigger the spawner's update

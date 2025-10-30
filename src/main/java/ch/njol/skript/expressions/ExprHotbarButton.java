@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +38,7 @@ public class ExprHotbarButton extends SimpleExpression<Long> {
 	
 	@Nullable
 	@Override
-	protected Long[] get(Event e) {
+	protected Long[] execute(VirtualFrame e) {
 		if (e instanceof InventoryClickEvent)
 			return new Long[] {(long) ((InventoryClickEvent) e).getHotbarButton()};
 		return null;
@@ -55,7 +55,7 @@ public class ExprHotbarButton extends SimpleExpression<Long> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the hotbar button";
 	}
 

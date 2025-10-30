@@ -12,9 +12,9 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.ItemSource;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Equippable;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.itemcomponents.equippable.EquippableExperimentSyntax;
@@ -64,12 +64,12 @@ public class ExprEquippableComponent extends SimplePropertyExpression<Object, Eq
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		Equippable component = null;
 		if (delta != null)
 			component = ((EquippableWrapper) delta[0]).getComponent();
 
-		for (Object object : getExpr().getArray(event)) {
+		for (Object object : getExpr().executeArray(event)) {
 			if (object instanceof ItemType itemType) {
 				changeItemType(itemType, mode, component);
 			} else if (object instanceof Slot slot) {

@@ -1,7 +1,7 @@
 package ch.njol.skript.literals;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -35,7 +35,7 @@ public class LitNewLine extends SimpleLiteral<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "new line";
 	}
 }

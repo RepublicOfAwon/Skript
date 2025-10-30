@@ -11,7 +11,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.comparator.Comparators;
@@ -185,10 +185,10 @@ public class PropCondContains extends Condition implements PropertyBaseSyntax<Co
 	}
 
 	@Override
-	public boolean check(Event event) {
-		Object[] haystacks = haystack.getAll(event);
+	public boolean executeBoolean(VirtualFrame event) {
+		Object[] haystacks = haystack.executeAll(event);
 		boolean haystackAnd = haystack.getAnd();
-		Object[] needles = this.needles.getAll(event);
+		Object[] needles = this.needles.executeAll(event);
 		boolean needlesAnd = this.needles.getAnd();
 		if (haystacks.length == 0) {
 			return isNegated();
@@ -287,7 +287,7 @@ public class PropCondContains extends Condition implements PropertyBaseSyntax<Co
 	}
 
 	@Override
-	public String getExpectedMessage(Event event) {
+	public String getExpectedMessage(VirtualFrame event) {
 		StringJoiner joiner = new StringJoiner(" ");
 		joiner.add("to");
 		if (isNegated()) {
@@ -298,7 +298,7 @@ public class PropCondContains extends Condition implements PropertyBaseSyntax<Co
 	}
 
 	@Override
-	public String getReceivedMessage(Event event) {
+	public String getReceivedMessage(VirtualFrame event) {
 		StringJoiner joiner = new StringJoiner(" ");
 		if (!isNegated()) {
 			joiner.add("no");
@@ -310,7 +310,7 @@ public class PropCondContains extends Condition implements PropertyBaseSyntax<Co
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		var builder = new SyntaxStringBuilder(event, debug);
 		switch (matchedPattern) {
 			case 1, 2 -> {

@@ -14,8 +14,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.util.CachedServerIcon;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,7 +55,7 @@ public class ExprServerIcon extends SimpleExpression<CachedServerIcon> {
 
 	@Override
 	@Nullable
-	public CachedServerIcon[] get(Event e) {
+	public CachedServerIcon[] execute(VirtualFrame e) {
 		CachedServerIcon icon = null;
 		if ((isServerPingEvent && !isDefault) && PAPER_EVENT_EXISTS) {
 			if (!(e instanceof PaperServerListPingEvent))
@@ -85,7 +85,7 @@ public class ExprServerIcon extends SimpleExpression<CachedServerIcon> {
 
 	@SuppressWarnings("null")
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
 		if (!(e instanceof PaperServerListPingEvent))
 			return;
 
@@ -110,7 +110,7 @@ public class ExprServerIcon extends SimpleExpression<CachedServerIcon> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the " + (!isServerPingEvent || isDefault ? "default" : "shown") + " server icon";
 	}
 

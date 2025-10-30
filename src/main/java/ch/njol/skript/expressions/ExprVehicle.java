@@ -3,8 +3,8 @@ package ch.njol.skript.expressions;
 import java.util.function.Predicate;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDismountEvent;
 import org.bukkit.event.entity.EntityMountEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
@@ -57,7 +57,7 @@ public class ExprVehicle extends PropertyExpression<Entity, Entity> {
 	}
 
 	@Override
-	protected Entity[] get(Event event, Entity[] source) {
+	protected Entity[] get(VirtualFrame event, Entity[] source) {
 		if (event instanceof EntityDismountEvent entityDismountEvent && getTime() != EventValues.TIME_FUTURE) {
 			return get(source, e -> e.equals(entityDismountEvent.getEntity()) ? entityDismountEvent.getDismounted() : e.getVehicle());
 		} else if (event instanceof VehicleEnterEvent vehicleEnterEvent && getTime() != EventValues.TIME_PAST) {
@@ -84,7 +84,7 @@ public class ExprVehicle extends PropertyExpression<Entity, Entity> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (mode == ChangeMode.SET) {
 			// The player can desync if setting an entity as it's currently mounting it.
 			// Remember that there can be other entity types aside from players, so only cancel this for players.
@@ -95,7 +95,7 @@ public class ExprVehicle extends PropertyExpression<Entity, Entity> {
 			if (event instanceof VehicleEnterEvent vehicleEnterEvent && predicate.test(vehicleEnterEvent.getEntered())) {
 				return;
 			}
-			Entity[] passengers = getExpr().getArray(event);
+			Entity[] passengers = getExpr().executeArray(event);
 			if (passengers.length == 0)
 				return;
 			assert delta != null;
@@ -145,7 +145,7 @@ public class ExprVehicle extends PropertyExpression<Entity, Entity> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "vehicle of " + getExpr().toString(event, debug);
 	}
 

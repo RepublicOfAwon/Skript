@@ -13,7 +13,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
@@ -49,10 +49,10 @@ public class ExprVectorCylindrical extends SimpleExpression<Vector> {
 
 	@Override
 	@SuppressWarnings("null")
-	protected Vector[] get(Event event) {
-		Number radius = this.radius.getSingle(event);
-		Number yaw = this.yaw.getSingle(event);
-		Number height = this.height.getSingle(event);
+	protected Vector[] execute(VirtualFrame event) {
+		Number radius = this.radius.executeSingle(event);
+		Number yaw = this.yaw.executeSingle(event);
+		Number height = this.height.executeSingle(event);
 		if (radius == null || yaw == null || height == null)
 			return null;
 		return CollectionUtils.array(fromCylindricalCoordinates(radius.doubleValue(), ExprYawPitch.fromSkriptYaw(yaw.floatValue()), height.doubleValue()));
@@ -76,7 +76,7 @@ public class ExprVectorCylindrical extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "cylindrical vector with radius " + radius.toString(event, debug) + ", yaw " +
 				yaw.toString(event, debug) + " and height " + height.toString(event, debug);
 	}

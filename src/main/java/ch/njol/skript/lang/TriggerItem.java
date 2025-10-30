@@ -2,6 +2,7 @@ package ch.njol.skript.lang;
 
 import ch.njol.skript.Skript;
 import com.oracle.truffle.api.Truffle;
+import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import org.bukkit.event.Event;
@@ -25,20 +26,10 @@ public abstract class TriggerItem extends Node implements Debuggable {
 	 * <p>
 	 * If this method is overridden, {@link #run(Event)} is not used anymore and can be ignored.
 	 *
-	 * @param event The event
+	 * @param frame The event
 	 * @return The next item to run or null to stop execution
 	 */
-	public Object walk(Event event) {
-		return run(event);
-	}
-
-	/**
-	 * Executes this item.
-	 * 
-	 * @param event The event to run this item with
-	 * @return True if the next item should be run, or false for the item following this item's parent.
-	 */
-	protected abstract boolean run(Event event);
+	public abstract Object execute(VirtualFrame frame);
 
 	/**
 	 * @param start The item to start at
@@ -47,15 +38,14 @@ public abstract class TriggerItem extends Node implements Debuggable {
 	 */
 	public static boolean walk(Trigger start, Event event) {
 		try {
-			VirtualFrame vf = Truffle.getRuntime().createMaterializedFrame(new Object[]{event});
-			start.execute(vf);
+			start.getCallTarget().call(event);
 			return true;
 		} catch (StackOverflowError err) {
 			if (Skript.debug())
 				err.printStackTrace();
 		} catch (Exception ex) {
 			if (ex.getStackTrace().length != 0) // empty exceptions have already been printed
-				Skript.exception(ex, start.toString(event, Skript.debug()));
+				Skript.exception(ex, start.toString(null, Skript.debug()));
 		} catch (Throwable throwable) {
 			// not all Throwables are Exceptions, but we usually don't want to catch them (without rethrowing)
 			Skript.markErrored();

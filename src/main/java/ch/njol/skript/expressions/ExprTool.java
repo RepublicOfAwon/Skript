@@ -16,6 +16,7 @@ import ch.njol.skript.util.slot.EquipmentSlot;
 import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerBucketEvent;
@@ -54,7 +55,8 @@ public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 	}
 
 	@Override
-	protected Slot[] get(Event event, LivingEntity[] source) {
+	protected Slot[] get(VirtualFrame frame, LivingEntity[] source) {
+		Event event = (Event) frame.getArguments()[0];
 		boolean delayed = Delay.isDelayed(event);
 		return get(source, entity -> {
 			if (!delayed) {
@@ -94,7 +96,7 @@ public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 				return null;
 			return new EquipmentSlot(equipment, offHand ? org.bukkit.inventory.EquipmentSlot.OFF_HAND : org.bukkit.inventory.EquipmentSlot.HAND) {
 				@Override
-				public String toString(@Nullable Event event, boolean debug) {
+				public String toString(@Nullable VirtualFrame event, boolean debug) {
 					SyntaxStringBuilder syntaxBuilder = new SyntaxStringBuilder(event, debug);
 					switch (getTime()) {
 						case EventValues.TIME_FUTURE -> syntaxBuilder.append("future");
@@ -115,7 +117,7 @@ public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder syntaxBuilder = new SyntaxStringBuilder(event, debug);
 		if (offHand)
 			syntaxBuilder.append("off hand");

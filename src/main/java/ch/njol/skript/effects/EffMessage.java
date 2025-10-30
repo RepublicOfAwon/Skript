@@ -12,10 +12,10 @@ import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.MessageComponent;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public class EffMessage extends Effect {
 	private Expression<?>[] messages;
 
 	/**
-	 * Used for {@link EffMessage#toString(Event, boolean)}
+	 * Used for {@link Debuggable#toString(VirtualFrame, boolean)}
 	 */
 	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<?> messageExpr;
@@ -70,10 +70,10 @@ public class EffMessage extends Effect {
 	}
 
 	@Override
-	protected void execute(Event e) {
-		Player sender = this.sender != null ? this.sender.getSingle(e) : null;
+	protected void executeVoid(VirtualFrame e) {
+		Player sender = this.sender != null ? this.sender.executeSingle(e) : null;
 
-		CommandSender[] commandSenders = recipients.getArray(e);
+		CommandSender[] commandSenders = recipients.executeArray(e);
 
 		for (Expression<?> message : getMessages()) {
 
@@ -86,7 +86,7 @@ public class EffMessage extends Effect {
 						messageComponents = ((VariableString) message).getMessageComponents(e);
 				} else {
 					if (messageArray == null)
-						messageArray = message.getArray(e);
+						messageArray = message.executeArray(e);
 				}
 
 				if (receiver instanceof Player) { // Can use JSON formatting
@@ -132,7 +132,7 @@ public class EffMessage extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "send " + messageExpr.toString(e, debug) + " to " + recipients.toString(e, debug) +
 			(sender != null ? " from " + sender.toString(e, debug) : "");
 	}

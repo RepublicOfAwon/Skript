@@ -13,7 +13,7 @@ import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
@@ -61,9 +61,9 @@ public class ExprStringColor extends PropertyExpression<String, Object> {
 	}
 
 	@Override
-	protected Object @Nullable [] get(Event event, String[] source) {
+	protected Object @Nullable [] get(VirtualFrame event, String[] source) {
 		List<Object> colors = new ArrayList<>();
-		for (String string : getExpr().getArray(event)) {
+		for (String string : getExpr().executeArray(event)) {
 			List<Object> stringColors = getColors(string);
 			if (stringColors.isEmpty())
 				continue;
@@ -97,7 +97,7 @@ public class ExprStringColor extends PropertyExpression<String, Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append(switch (selectedState) {
 			case ALL -> "all of the";

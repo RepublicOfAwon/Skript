@@ -10,11 +10,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import io.papermc.paper.entity.Shearable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Snowman;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Shear")
@@ -54,8 +54,8 @@ public class EffShear extends Effect {
 	}
 	
 	@Override
-	protected void execute(Event event) {
-		for (LivingEntity entity : entity.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (LivingEntity entity : entity.executeArray(event)) {
 			if (shear && INTERFACE_METHOD) {
 				if (!(entity instanceof Shearable))
 					continue;
@@ -74,7 +74,7 @@ public class EffShear extends Effect {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (shear ? "" : "un") + "shear " + entity.toString(event, debug);
 	}
 	

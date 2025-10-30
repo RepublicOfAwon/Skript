@@ -4,6 +4,7 @@ import ch.njol.skript.command.ScriptCommandEvent;
 import ch.njol.skript.lang.EventRestrictedSyntax;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
@@ -58,7 +59,7 @@ public class ExprCommand extends SimpleExpression<String> implements EventRestri
 	
 	@Override
 	@Nullable
-	protected String[] get(final Event e) {
+	protected String[] execute(final VirtualFrame e) {
 		final String s;
 
 		if (e instanceof PlayerCommandPreprocessEvent) {
@@ -89,7 +90,7 @@ public class ExprCommand extends SimpleExpression<String> implements EventRestri
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return fullCommand ? "the full command" : "the command";
 	}
 

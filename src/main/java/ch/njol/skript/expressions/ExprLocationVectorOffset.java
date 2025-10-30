@@ -2,8 +2,8 @@ package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
-import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,12 +52,12 @@ public class ExprLocationVectorOffset extends SimpleExpression<Location> {
 
 	@SuppressWarnings("null")
 	@Override
-	protected Location[] get(Event e) {
-		Location l = location.getSingle(e);
+	protected Location[] execute(VirtualFrame e) {
+		Location l = location.executeSingle(e);
 		if (l == null)
 			return null;
 		Location clone = l.clone();
-		for (Vector v : vectors.getArray(e))
+		for (Vector v : vectors.executeArray(e))
 			clone.add(v);
 		return CollectionUtils.array(clone);
 	}
@@ -80,7 +80,7 @@ public class ExprLocationVectorOffset extends SimpleExpression<Location> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return location.toString() + " offset by " + vectors.toString();
 	}
 

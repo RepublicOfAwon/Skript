@@ -9,7 +9,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +47,7 @@ public class ExprItemWithTooltip extends PropertyExpression<ItemType, ItemType> 
 	}
 
 	@Override
-	protected ItemType[] get(Event event, ItemType[] source) {
+	protected ItemType[] get(VirtualFrame event, ItemType[] source) {
 		return get(source, itemType -> {
 			itemType = itemType.clone();
 			ItemMeta meta = itemType.getItemMeta();
@@ -71,7 +71,7 @@ public class ExprItemWithTooltip extends PropertyExpression<ItemType, ItemType> 
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return getExpr().toString(event, debug) + (without ? " without" : " with") + (entire ? " entire" : " additional") + " tooltip";
 	}
 

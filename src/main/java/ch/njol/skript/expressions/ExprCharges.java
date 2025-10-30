@@ -12,10 +12,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.RespawnAnchor;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import static java.lang.Math.max;
@@ -62,11 +62,11 @@ public class ExprCharges extends SimplePropertyExpression<Block, Integer> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		int charge = 0;
 		int charges = delta != null ? ((Number) delta[0]).intValue() : 0;
 
-		for (Block block : getExpr().getArray(event)) {
+		for (Block block : getExpr().executeArray(event)) {
 			if (block.getBlockData() instanceof RespawnAnchor respawnAnchor) {
 				switch (mode) {
 					case REMOVE:

@@ -1,8 +1,7 @@
 package org.skriptlang.skript.test.tests.regression;
 
 import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.test.runner.SkriptJUnitTest;
 import ch.njol.skript.variables.Variables;
 import org.bukkit.command.CommandSender;
@@ -30,7 +29,7 @@ public class EffSendEffConnectConflict7517Test extends SkriptJUnitTest {
 
 	@Test
 	public void test() {
-		Event event = ContextlessEvent.get();
+		Event event = ContextlessVirtualFrame.get();
 		Variables.setVariable("sender", sender, event, true);
 		Variables.setVariable("message", MESSAGE, event, true);
 

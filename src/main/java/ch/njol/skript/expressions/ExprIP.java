@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.util.stream.Stream;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -70,7 +71,7 @@ public class ExprIP extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String[] get(Event e) {
+	protected String[] execute(VirtualFrame e) {
 		if (!isProperty) {
 			InetAddress address;
 			if (e instanceof PlayerLoginEvent)
@@ -84,10 +85,10 @@ public class ExprIP extends SimpleExpression<String> {
 			return CollectionUtils.array(address.getHostAddress());
 		}
 
-		return Stream.of(players.getArray(e))
+		return Stream.of(players.executeArray(e))
 				.map(player -> {
 					assert player != null;
-					return getIP(player, e);
+					return getIP(player, (Event) e.getArguments()[0]);
 				})
 				.toArray(String[]::new);
 	}
@@ -120,7 +121,7 @@ public class ExprIP extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		if (e == null || !isProperty)
 			return "the IP address";
 		return "the IP address of " + players.toString(e, debug);

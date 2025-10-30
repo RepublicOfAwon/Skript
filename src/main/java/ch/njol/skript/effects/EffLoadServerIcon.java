@@ -10,8 +10,8 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.AsyncEffect;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.util.CachedServerIcon;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,8 +59,8 @@ public class EffLoadServerIcon extends AsyncEffect {
 	}
 
     @Override
-    protected void execute(Event e) {
-		String pathString = path.getSingle(e);
+    protected void executeVoid(VirtualFrame e) {
+		String pathString = path.executeSingle(e);
 		if (pathString == null)
 			return;
 		
@@ -76,7 +76,7 @@ public class EffLoadServerIcon extends AsyncEffect {
     }
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "load server icon from file " + path.toString(e, debug);
 	}
 

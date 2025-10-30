@@ -10,7 +10,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.function.FunctionEvent;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.registrations.Feature;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.experiment.ExperimentData;
@@ -75,7 +75,7 @@ public class StructExample extends Structure implements SimpleExperimentalSyntax
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "example";
 	}
 

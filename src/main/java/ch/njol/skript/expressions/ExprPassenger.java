@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
@@ -55,17 +56,18 @@ public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create '
 	
 	@Override
 	@Nullable
-	protected Entity[] get(Event e) {
-		Entity[] source = vehicle.getAll(e);
+	protected Entity[] execute(VirtualFrame frame) {
+		Event event = (Event) frame.getArguments()[0];
+		Entity[] source = vehicle.executeAll(frame);
 		Converter<Entity, Entity[]> conv = new Converter<Entity, Entity[]>(){
 			@Override
 			@Nullable
 			public Entity[] convert(Entity v) {
-				if (getTime() >= 0 && e instanceof VehicleEnterEvent && v.equals(((VehicleEnterEvent) e).getVehicle()) && !Delay.isDelayed(e)) {
-					return new Entity[] {((VehicleEnterEvent) e).getEntered()};
+				if (getTime() >= 0 && event instanceof VehicleEnterEvent && v.equals(((VehicleEnterEvent) event).getVehicle()) && !Delay.isDelayed(event)) {
+					return new Entity[] {((VehicleEnterEvent) event).getEntered()};
 				}
-				if (getTime() >= 0 && e instanceof VehicleExitEvent && v.equals(((VehicleExitEvent) e).getVehicle()) && !Delay.isDelayed(e)) {
-					return new Entity[] {((VehicleExitEvent) e).getExited()};
+				if (getTime() >= 0 && event instanceof VehicleExitEvent && v.equals(((VehicleExitEvent) event).getVehicle()) && !Delay.isDelayed(event)) {
+					return new Entity[] {((VehicleExitEvent) event).getExited()};
 				}
 				return PassengerUtils.getPassenger(v);
 			}};
@@ -101,8 +103,8 @@ public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create '
 
 	@SuppressWarnings("null")
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
-		Entity[] vehicles = this.vehicle.getArray(e);
+	public void change(final VirtualFrame e, final @Nullable Object[] delta, final ChangeMode mode) {
+		Entity[] vehicles = this.vehicle.executeArray(e);
 		if (!isSingle() || mode == ChangeMode.SET) {
 			for (Entity vehicle: vehicles){
 				if (vehicle == null)
@@ -155,7 +157,7 @@ public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create '
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the passenger of " + vehicle.toString(e, debug);
 	}
 	

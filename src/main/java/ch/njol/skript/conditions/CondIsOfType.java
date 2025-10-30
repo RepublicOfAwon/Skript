@@ -14,8 +14,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.comparator.Relation;
@@ -49,7 +49,7 @@ public class CondIsOfType extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		return what.check(event,
 			(Predicate<Object>) o1 -> types.check(event,
 				(Predicate<Object>) o2 -> {
@@ -67,7 +67,7 @@ public class CondIsOfType extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return PropertyCondition.toString(this, PropertyType.BE, event, debug, what,
 			"of " + (types.isSingle() ? "type " : "types ") + types.toString(event, debug));
 	}

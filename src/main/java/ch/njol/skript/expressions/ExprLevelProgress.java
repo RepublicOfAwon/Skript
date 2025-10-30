@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -56,11 +56,11 @@ public class ExprLevelProgress extends SimplePropertyExpression<Player, Number> 
 	}
 	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
+	public void change(final VirtualFrame e, final @Nullable Object[] delta, final ChangeMode mode) {
 		assert mode != ChangeMode.REMOVE_ALL;
 		
 		final float d = delta == null ? 0 : ((Number) delta[0]).floatValue();
-		for (final Player p : getExpr().getArray(e)) {
+		for (final Player p : getExpr().executeArray(e)) {
 			final float c;
 			switch (mode) {
 				case SET:

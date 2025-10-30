@@ -8,10 +8,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -53,22 +53,22 @@ public class EffEndermanTeleport extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		Consumer<Enderman> consumer = Enderman::teleport;
 		if (target != null) {
-			Entity target = this.target.getSingle(event);
+			Entity target = this.target.executeSingle(event);
 			if (target != null)
 				consumer = enderman -> enderman.teleportTowards(target);
 		}
 
-		for (LivingEntity entity : entities.getArray(event)) {
+		for (LivingEntity entity : entities.executeArray(event)) {
 			if (entity instanceof Enderman enderman)
 				consumer.accept(enderman);
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append("make", entities);
 		if (target == null) {

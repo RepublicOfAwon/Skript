@@ -7,6 +7,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -174,11 +175,11 @@ public abstract class SectionExpression<Value> extends SimpleExpression<Value> {
 	 * {@link #loadCode(SectionNode)},
 	 * {@link #loadOptionalCode(SectionNode)},
 	 * or {@link #setTriggerItems(List)}.
-	 * @param event The event to pass as context.
+	 * @param frame The frame to pass as context.
 	 * @return False if an exception occurred while executing the section.
 	 */
-	protected Object runSection(Event event) {
-		return this.section.runSection(event);
+	protected Object runSection(VirtualFrame frame) {
+		return this.section.runSection(frame);
 	}
 
 }

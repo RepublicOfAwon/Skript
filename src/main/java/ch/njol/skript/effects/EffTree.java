@@ -1,8 +1,8 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -47,18 +47,18 @@ public class EffTree extends Effect {
 	}
 	
 	@Override
-	public void execute(final Event e) {
-		final StructureType type = this.type.getSingle(e);
+	public void executeVoid(final VirtualFrame e) {
+		final StructureType type = this.type.executeSingle(e);
 		if (type == null)
 			return;
-		for (final Location l : blocks.getArray(e)) {
+		for (final Location l : blocks.executeArray(e)) {
 			assert l != null : blocks;
 			type.grow(l.getBlock());
 		}
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "grow tree of type " + type.toString(e, debug) + " " + blocks.toString(e, debug);
 	}
 	

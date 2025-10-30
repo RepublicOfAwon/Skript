@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.player.PlayerItemMendEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +42,7 @@ public class ExprMendingRepairAmount extends SimpleExpression<Long> {
 	}
 
 	@Override
-	protected Long[] get(final Event e) {
+	protected Long[] execute(final VirtualFrame e) {
 		if (!(e instanceof PlayerItemMendEvent))
 			return null;
 
@@ -64,7 +64,7 @@ public class ExprMendingRepairAmount extends SimpleExpression<Long> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (!(event instanceof PlayerItemMendEvent))
 			return;
 
@@ -101,7 +101,7 @@ public class ExprMendingRepairAmount extends SimpleExpression<Long> {
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "the mending repair amount";
 	}
 

@@ -15,7 +15,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.registrations.Feature;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.experiment.ExperimentSet;
 import org.skriptlang.skript.lang.experiment.ExperimentalSyntax;
@@ -63,9 +63,9 @@ public class SecCatchErrors extends Section implements ExperimentalSyntax {
 	}
 
 	@Override
-	public Object walk(Event event) {
+	public Object execute(VirtualFrame frame) {
 		RuntimeErrorCatcher catcher = new RuntimeErrorCatcher().start();
-		super.walk(event);
+		super.execute(frame);
         ExprCaughtErrors.lastErrors = catcher.getCachedErrors().stream().map(RuntimeError::error).toArray(String[]::new);
 		catcher.clearCachedErrors()
 			.stop();
@@ -73,7 +73,7 @@ public class SecCatchErrors extends Section implements ExperimentalSyntax {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "catch runtime errors";
 	}
 

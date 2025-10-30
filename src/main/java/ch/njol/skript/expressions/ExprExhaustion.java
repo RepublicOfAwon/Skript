@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.classes.Changer;
@@ -46,25 +46,25 @@ public class ExprExhaustion extends SimplePropertyExpression<Player, Number>{
 	
 	@SuppressWarnings("null")
 	@Override
-	public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		float exhaustion = ((Number)delta[0]).floatValue();
 		switch (mode) {
 			case ADD:
-				for (Player player : getExpr().getArray(event))
+				for (Player player : getExpr().executeArray(event))
 					player.setExhaustion(player.getExhaustion() + exhaustion);
 				break;
 			case REMOVE:
-				for (Player player : getExpr().getArray(event))
+				for (Player player : getExpr().executeArray(event))
 					player.setExhaustion(player.getExhaustion() - exhaustion);
 				break;
 			case SET:
-				for (Player player : getExpr().getArray(event))
+				for (Player player : getExpr().executeArray(event))
 					player.setExhaustion(((Number)delta[0]).floatValue());
 				break;
 			case DELETE:
 			case REMOVE_ALL:
 			case RESET:
-				for (Player player : getExpr().getArray(event))
+				for (Player player : getExpr().executeArray(event))
 					player.setExhaustion(0);
 				break;
 		}

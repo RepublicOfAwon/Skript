@@ -10,8 +10,8 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.FishHook;
-import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,7 +52,7 @@ public class ExprFishingWaitTime extends SimpleExpression<Timespan> {
 	}
 
 	@Override
-	protected Timespan @Nullable [] get(Event event) {
+	protected Timespan @Nullable [] execute(VirtualFrame event) {
 		if (!(event instanceof PlayerFishEvent fishEvent))
 			return null;
 
@@ -71,7 +71,7 @@ public class ExprFishingWaitTime extends SimpleExpression<Timespan> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (!(event instanceof PlayerFishEvent fishEvent))
 			return;
 
@@ -117,7 +117,7 @@ public class ExprFishingWaitTime extends SimpleExpression<Timespan> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (isMin ? "minimum" : "maximum") + " fishing waiting time";
 	}
 

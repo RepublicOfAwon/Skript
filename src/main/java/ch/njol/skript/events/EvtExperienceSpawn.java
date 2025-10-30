@@ -10,6 +10,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Experience;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
@@ -125,7 +126,7 @@ public class EvtExperienceSpawn extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -135,7 +136,7 @@ public class EvtExperienceSpawn extends SkriptEvent {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "experience spawn";
 	}
 	

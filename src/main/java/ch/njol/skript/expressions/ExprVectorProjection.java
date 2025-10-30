@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
@@ -39,9 +39,9 @@ public class ExprVectorProjection extends SimpleExpression<Vector> {
 
 	@Override
 	@Nullable
-	protected Vector[] get(Event event) {
-		Vector left = this.left.getOptionalSingle(event).orElse(new Vector());
-		Vector right = this.right.getOptionalSingle(event).orElse(new Vector());
+	protected Vector[] execute(VirtualFrame event) {
+		Vector left = this.left.executeOptional(event).orElse(new Vector());
+		Vector right = this.right.executeOptional(event).orElse(new Vector());
 		double dot = left.dot(right);
 		double length = right.lengthSquared();
 		double scalar = dot / length;
@@ -66,7 +66,7 @@ public class ExprVectorProjection extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "vector projection of " + left.toString(event, debug) + " onto " + right.toString(event, debug);
 	}
 

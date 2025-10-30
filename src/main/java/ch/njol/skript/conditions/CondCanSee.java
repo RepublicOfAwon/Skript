@@ -9,9 +9,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Can See")
@@ -55,7 +55,7 @@ public class CondCanSee extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		return viewers.check(event,
 				player -> entities.check(event,
 						player::canSee
@@ -63,7 +63,7 @@ public class CondCanSee extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return PropertyCondition.toString(this, PropertyType.CAN, event, debug, viewers,
 				"see " + entities.toString(event, debug));
 	}

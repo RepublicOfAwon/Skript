@@ -6,8 +6,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -53,8 +53,8 @@ public class ExprPlayerChatCompletions extends SimplePropertyExpression<Player, 
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		Player[] players = getExpr().getArray(event);
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
+		Player[] players = getExpr().executeArray(event);
 		if (players.length == 0)
 			return;
 		List<String> completions = new ArrayList<>();

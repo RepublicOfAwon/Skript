@@ -3,9 +3,9 @@ package ch.njol.skript.expressions;
 import java.util.ArrayList;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,9 +61,9 @@ public class ExprDropsOfBlock extends SimpleExpression<ItemType> {
 	@Nullable
 	@Override
 	@SuppressWarnings("null")
-	protected ItemType[] get(Event e) {
+	protected ItemType[] execute(VirtualFrame e) {
 		@Nullable
-		Block[] blocks = this.block.getArray(e);
+		Block[] blocks = this.block.executeArray(e);
 		if (block != null) {
 			if (this.item == null) {
 				ArrayList<ItemType> list = new ArrayList<>();
@@ -75,8 +75,8 @@ public class ExprDropsOfBlock extends SimpleExpression<ItemType> {
 				}
 				return list.toArray(new ItemType[0]);
 			} else if (this.entity != null) {
-				ItemType item = this.item.getSingle(e);
-				Entity entity = this.entity.getSingle(e);
+				ItemType item = this.item.executeSingle(e);
+				Entity entity = this.entity.executeSingle(e);
 				ArrayList<ItemType> list = new ArrayList<>();
 				for (Block block : blocks) {
 					ItemStack[] drops = block.getDrops(item.getRandom(), entity).toArray(new ItemStack[0]);
@@ -86,7 +86,7 @@ public class ExprDropsOfBlock extends SimpleExpression<ItemType> {
 				}
 				return list.toArray(new ItemType[0]);
 			} else {
-				ItemType item = this.item.getSingle(e);
+				ItemType item = this.item.executeSingle(e);
 				ArrayList<ItemType> list = new ArrayList<>();
 				for (Block block : blocks) {
 					ItemStack[] drops = block.getDrops(item.getRandom()).toArray(new ItemStack[0]);
@@ -111,7 +111,7 @@ public class ExprDropsOfBlock extends SimpleExpression<ItemType> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "drops of " + block.toString(e, debug) + (item != null ? (" using " + item.toString(e, debug) + (entity != null ? " as " + entity.toString(e, debug) : null)) : "");
 	}
 	

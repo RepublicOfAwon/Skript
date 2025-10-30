@@ -13,6 +13,9 @@ import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.variables.Variables;
 import com.google.common.base.Preconditions;
+import com.oracle.truffle.api.Truffle;
+import com.oracle.truffle.api.frame.FrameDescriptor;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -189,8 +192,9 @@ public abstract class Commands {
 						if (SkriptConfig.logEffectCommands.value() && !(sender instanceof ConsoleCommandSender))
 							Skript.info(sender.getName() + " issued effect command: " + SkriptColor.replaceColorChar(command));
 						//TriggerItem.walk(effect, effectCommand);
-						effect.run(effectCommand);
-						Variables.removeLocals(effectCommand);
+						VirtualFrame virtualFrame = Truffle.getRuntime().createVirtualFrame(new Object[]{effectCommand}, new FrameDescriptor());
+						effect.execute(virtualFrame);
+						Variables.removeLocals(virtualFrame);
 					} else {
 						sender.sendMessage(ChatColor.RED + "your effect command '" + SkriptColor.replaceColorChar(command) + "' was cancelled.");
 					}

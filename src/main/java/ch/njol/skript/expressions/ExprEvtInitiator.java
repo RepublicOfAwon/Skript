@@ -13,7 +13,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +43,7 @@ public class ExprEvtInitiator extends SimpleExpression<Inventory> {
 	}
 
 	@Override
-	protected Inventory[] get(Event event) {
+	protected Inventory[] execute(VirtualFrame event) {
 		if (!(event instanceof InventoryMoveItemEvent))
 			return new Inventory[0];
 		return CollectionUtils.array(((InventoryMoveItemEvent) event).getInitiator());
@@ -60,7 +60,7 @@ public class ExprEvtInitiator extends SimpleExpression<Inventory> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "event-initiator-inventory";
 	}
 

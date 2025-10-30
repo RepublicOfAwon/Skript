@@ -9,9 +9,9 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.google.common.base.Preconditions;
 import java.util.Arrays;
-import org.bukkit.event.Event;
+
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 import org.skriptlang.skript.lang.converter.Converter;
@@ -189,13 +189,13 @@ public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	protected final T[] get(Event event) {
-		return get(event, expr.getArray(event));
+	protected final T[] execute(VirtualFrame event) {
+		return get(event, expr.executeArray(event));
 	}
 
 	@Override
-	public final T[] getAll(Event event) {
-		T[] result = get(event, expr.getAll(event));
+	public final T[] executeAll(VirtualFrame frame) {
+		T[] result = get(frame, expr.executeAll(frame));
 		return Arrays.copyOf(result, result.length);
 	}
 
@@ -209,7 +209,7 @@ public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
 	 * @return An array of the converted objects, which may contain less elements than the source array, but must not be null.
 	 * @see Converters#convert(Object[], Class, Converter)
 	 */
-	protected abstract T[] get(Event event, F[] source);
+	protected abstract T[] get(VirtualFrame event, F[] source);
 
 	/**
 	 * @param source the array of the objects from the expressions.

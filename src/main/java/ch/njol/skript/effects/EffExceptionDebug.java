@@ -1,7 +1,7 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -25,12 +25,12 @@ public class EffExceptionDebug extends Effect {
 	
 
 	@Override
-	protected void execute(Event e) {
+	protected void executeVoid(VirtualFrame e) {
 		Skript.exception("Created by a script (debugging)...");
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "cause exception";
 	}
 	

@@ -3,6 +3,7 @@ package ch.njol.skript.lang.util;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.KeyProviderExpression;
 import ch.njol.skript.lang.KeyReceiverExpression;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -37,19 +38,19 @@ public class ConvertedKeyProviderExpression<F, T> extends ConvertedExpression<F,
 	}
 
 	@Override
-	public T[] getArray(Event event) {
+	public T[] executeArray(VirtualFrame frame) {
 		if (!canReturnKeys()) {
-			return super.getArray(event);
+			return super.executeArray(frame);
 		}
-		return get(getSource().getArray(event), getSource().getArrayKeys(event), keys -> arrayKeysCache.put(event, keys));
+		return get(getSource().getArray(frame), getSource().getArrayKeys(frame), keys -> arrayKeysCache.put(frame, keys));
 	}
 
 	@Override
-	public T[] getAll(Event event) {
+	public T[] executeAll(VirtualFrame frame) {
 		if (!canReturnKeys()) {
-			return super.getAll(event);
+			return super.executeAll(frame);
 		}
-		return get(getSource().getAll(event), getSource().getAllKeys(event), keys -> allKeysCache.put(event, keys));
+		return get(getSource().getAll(frame), getSource().getAllKeys(frame), keys -> allKeysCache.put(frame, keys));
 	}
 
 	private T[] get(F[] source, String[] keys, Consumer<String[]> convertedKeysConsumer) {
@@ -69,14 +70,14 @@ public class ConvertedKeyProviderExpression<F, T> extends ConvertedExpression<F,
 	}
 
 	@Override
-	public @NotNull String @NotNull [] getArrayKeys(Event event) throws IllegalStateException {
+	public @NotNull String @NotNull [] getArrayKeys(VirtualFrame event) throws IllegalStateException {
 		if (!arrayKeysCache.containsKey(event))
 			throw new IllegalStateException();
 		return arrayKeysCache.remove(event);
 	}
 
 	@Override
-	public @NotNull String @NotNull [] getAllKeys(Event event) {
+	public @NotNull String @NotNull [] getAllKeys(VirtualFrame event) {
 		if (!allKeysCache.containsKey(event))
 			throw new IllegalStateException();
 		return allKeysCache.remove(event);
@@ -106,4 +107,8 @@ public class ConvertedKeyProviderExpression<F, T> extends ConvertedExpression<F,
 		return getSource().isLoopOf(input);
 	}
 
+	@Override
+	public boolean isSingle() {
+		return false;
+	}
 }

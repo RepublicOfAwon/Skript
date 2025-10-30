@@ -1,6 +1,6 @@
 package ch.njol.skript.events;
 
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent.Status;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +44,7 @@ public class EvtResourcePackResponse extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("null")
-	public boolean check(final Event e) {
+	public boolean check(final VirtualFrame e) {
 		if (states != null) {
 			Status state = ((PlayerResourcePackStatusEvent) e).getStatus();
 			return states.check(e, state::equals);
@@ -53,7 +53,7 @@ public class EvtResourcePackResponse extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return states != null ? "resource pack " + states.toString(e, debug) : "resource pack request response";
 	}
 

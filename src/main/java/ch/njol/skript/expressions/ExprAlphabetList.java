@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 
@@ -40,8 +40,8 @@ public class ExprAlphabetList extends SimpleExpression<String>{
 	
 	@Override
 	@Nullable
-	protected String[] get(Event event) {
-		String[] sorted = texts.getAll(event).clone(); // Not yet sorted
+	protected String[] execute(VirtualFrame event) {
+		String[] sorted = texts.executeAll(event).clone(); // Not yet sorted
 		Arrays.sort(sorted); // Now sorted
 		return sorted;
 	}
@@ -64,7 +64,7 @@ public class ExprAlphabetList extends SimpleExpression<String>{
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "alphabetically sorted " + texts.toString(event, debug);
 	}
 	

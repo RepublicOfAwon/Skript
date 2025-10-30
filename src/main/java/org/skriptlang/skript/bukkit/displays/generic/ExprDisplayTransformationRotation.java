@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
-import org.bukkit.event.Event;
 import org.bukkit.util.Transformation;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -52,7 +52,7 @@ public class ExprDisplayTransformationRotation extends SimplePropertyExpression<
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		Quaternionf quaternion = null;
 		if (mode == ChangeMode.RESET)
 			quaternion = new Quaternionf(0, 0, 0, 1);
@@ -61,7 +61,7 @@ public class ExprDisplayTransformationRotation extends SimplePropertyExpression<
 		}
 		if (quaternion == null || !quaternion.isFinite())
 			return;
-		for (Display display : getExpr().getArray(event)) {
+		for (Display display : getExpr().executeArray(event)) {
 			Transformation transformation = display.getTransformation();
 			Transformation change;
 			if (left) {

@@ -12,12 +12,12 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -60,10 +60,10 @@ public class ExprFromUUID extends SimpleExpression<Object> {
 	}
 
 	@Override
-	protected Object @Nullable [] get(Event event) {
+	protected Object @Nullable [] execute(VirtualFrame event) {
 		List<Object> entities = new ArrayList<>();
 
-		for (UUID uuid : uuids.getArray(event)) {
+		for (UUID uuid : uuids.executeArray(event)) {
 			if (player) {
 				if (offline) {
 					entities.add(Bukkit.getOfflinePlayer(uuid));
@@ -120,7 +120,7 @@ public class ExprFromUUID extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 
 		if (world) {

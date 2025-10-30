@@ -11,9 +11,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("All Banned Players/IPs")
@@ -40,7 +40,7 @@ public class ExprAllBannedEntries extends SimpleExpression<Object> {
 
 	@Override
 	@Nullable
-	protected Object[] get(Event event) {
+	protected Object[] execute(VirtualFrame event) {
 		if (ip)
 			return Bukkit.getIPBans().toArray(new String[0]);
 		return Bukkit.getBannedPlayers().toArray(new OfflinePlayer[0]);
@@ -57,7 +57,7 @@ public class ExprAllBannedEntries extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "all banned " + (ip ? "ip addresses" : "players");
 	}
 

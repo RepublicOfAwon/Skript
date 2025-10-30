@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -41,8 +41,8 @@ public class ExprRawName extends SimpleExpression<String> {
 	
 	@Override
 	@Nullable
-	protected String[] get(final Event e) {
-		return Arrays.stream(types.getAll(e))
+	protected String[] execute(final VirtualFrame e) {
+		return Arrays.stream(types.executeAll(e))
 				.map(ItemType::getRawNames)
 				.flatMap(List::stream)
 				.toArray(String[]::new);
@@ -60,7 +60,7 @@ public class ExprRawName extends SimpleExpression<String> {
 	
 	@SuppressWarnings("null")
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "minecraft name of " + types.toString(e, debug);
 	}
 	

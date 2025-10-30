@@ -2,9 +2,9 @@ package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -48,7 +48,7 @@ public class ExprBiome extends PropertyExpression<Location, Biome> {
 	}
 
 	@Override
-	protected Biome[] get(Event event, Location[] source) {
+	protected Biome[] get(VirtualFrame event, Location[] source) {
 		return get(source, location -> location.getBlock().getBiome());
 	}
 
@@ -61,14 +61,14 @@ public class ExprBiome extends PropertyExpression<Location, Biome> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (mode != ChangeMode.SET) {
 			super.change(event, delta, mode);
 			return;
 		}
 		assert delta != null;
 		Biome biome = (Biome) delta[0];
-		for (Location location : getExpr().getArray(event))
+		for (Location location : getExpr().executeArray(event))
 			location.getBlock().setBiome(biome);
 	}
 
@@ -85,7 +85,7 @@ public class ExprBiome extends PropertyExpression<Location, Biome> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the biome at " + getExpr().toString(event, debug);
 	}
 

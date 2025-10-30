@@ -3,6 +3,7 @@ package ch.njol.skript.lang;
 import ch.njol.skript.lang.util.ConvertedLiteral;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
@@ -36,7 +37,7 @@ public class LiteralString extends VariableString implements Literal<String> {
 	}
 
 	@Override
-	public Optional<String> getOptionalSingle(Event event) {
+	public Optional<String> executeOptional(VirtualFrame frame) {
 		return Optional.of(original);
 	}
 
@@ -56,7 +57,7 @@ public class LiteralString extends VariableString implements Literal<String> {
 	 * Use {@link #toString(Event)} to get the actual string. This method is for debugging.
 	 */
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return '"' + original + '"';
 	}
 

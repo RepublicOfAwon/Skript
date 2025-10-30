@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.classes.Changer;
@@ -35,12 +35,12 @@ public class ExprAI extends SimplePropertyExpression<LivingEntity, Boolean> {
 	}
 	
 	@Override
-	public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		if (delta == null || delta[0] == null) {
 			return;
 		}
 		boolean value = (Boolean) delta[0];
-		for (LivingEntity entity : getExpr().getArray(event)) {
+		for (LivingEntity entity : getExpr().executeArray(event)) {
 			entity.setAI(value);
 		}
 	}

@@ -17,6 +17,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -73,7 +74,7 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public SyntaxElement init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
-		type = exprs[matchedPattern] == null ? null : (EntityData<?>) exprs[matchedPattern].getSingle(null);
+		type = exprs[matchedPattern] == null ? null : (EntityData<?>) exprs[matchedPattern].executeSingle(null);
 		setExpr((Expression<? extends LivingEntity>) exprs[1 - matchedPattern]);
 		targetBlockDistance = SkriptConfig.maxTargetBlockDistance.value();
 		if (targetBlockDistance < 0)
@@ -84,8 +85,9 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	}
 
 	@Override
-	protected Entity[] get(Event event, LivingEntity[] source) {
-		double raysize = this.raysize != null ? this.raysize.getOptionalSingle(event).orElse(0.0).doubleValue() : 0.0D;
+	protected Entity[] get(VirtualFrame frame, LivingEntity[] source) {
+		Event event = (Event) frame.getArguments()[0];
+		double raysize = this.raysize != null ? this.raysize.executeOptional(frame).orElse(0.0).doubleValue() : 0.0D;
 		return get(source, entity -> {
 			if (event instanceof EntityTargetEvent && entity.equals(((EntityTargetEvent) event).getEntity()) && !Delay.isDelayed(event)) {
 				Entity target = ((EntityTargetEvent) event).getTarget();
@@ -111,18 +113,18 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (mode == ChangeMode.SET || mode == ChangeMode.RESET || mode == ChangeMode.DELETE) {
 			LivingEntity target = delta == null ? null : (LivingEntity) delta[0]; // null will make the entity target-less (reset target) but for players it will remove them.
 			if (event instanceof EntityTargetEvent) {
 				EntityTargetEvent targetEvent = (EntityTargetEvent) event;
-				for (LivingEntity entity : getExpr().getArray(event)) {
+				for (LivingEntity entity : getExpr().executeArray(event)) {
 					if (entity.equals(targetEvent.getEntity()))
 						targetEvent.setTarget(target);
 				}
 			} else {
-				double raysize = this.raysize != null ? this.raysize.getOptionalSingle(event).orElse(0.0).doubleValue() : 0.0D;
-				for (LivingEntity entity : getExpr().getArray(event)) {
+				double raysize = this.raysize != null ? this.raysize.executeOptional(event).orElse(0.0).doubleValue() : 0.0D;
+				for (LivingEntity entity : getExpr().executeArray(event)) {
 					if (entity instanceof Mob) {
 						((Mob) entity).setTarget(target);
 					} else if (entity instanceof Player && mode == ChangeMode.DELETE) {
@@ -150,7 +152,7 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "target" + (type == null ? "" : "ed " + type) + (getExpr().isDefault() ? "" : " of " + getExpr().toString(event, debug));
 	}
 

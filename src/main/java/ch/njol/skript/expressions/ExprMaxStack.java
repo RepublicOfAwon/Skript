@@ -1,8 +1,8 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -65,9 +65,9 @@ public class ExprMaxStack extends SimplePropertyExpression<Object, Integer> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		int change = delta == null ? 0 : ((Number) delta[0]).intValue();
-		for (Object source : getExpr().getArray(event)) {
+		for (Object source : getExpr().executeArray(event)) {
 			if (source instanceof ItemType itemType) {
 				if (!CHANGEABLE_ITEM_STACK_SIZE)
 					continue;

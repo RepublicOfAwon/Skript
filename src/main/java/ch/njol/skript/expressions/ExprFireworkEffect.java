@@ -2,8 +2,8 @@ package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.ColorRGB;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.FireworkEffect;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -64,20 +64,20 @@ public class ExprFireworkEffect extends SimpleExpression<FireworkEffect> {
 	
 	@Override
 	@Nullable
-	protected FireworkEffect[] get(Event e) {
-		FireworkEffect.Type type = this.type.getSingle(e);
+	protected FireworkEffect[] execute(VirtualFrame e) {
+		FireworkEffect.Type type = this.type.executeSingle(e);
 		if (type == null)
 			return null;
 		FireworkEffect.Builder builder = FireworkEffect.builder().with(type);
 		
-		for (Color colour : color.getArray(e)) {
+		for (Color colour : color.executeArray(e)) {
 			if (colour instanceof ColorRGB)
 				builder.withColor(colour.asBukkitColor());
 			else
 				builder.withColor(colour.asDyeColor().getFireworkColor());
 		}
 		if (hasFade)
-			for (Color colour : fade.getArray(e)) {
+			for (Color colour : fade.executeArray(e)) {
 				if (colour instanceof ColorRGB)
 					builder.withFade(colour.asBukkitColor());
 				else
@@ -90,7 +90,7 @@ public class ExprFireworkEffect extends SimpleExpression<FireworkEffect> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "Firework effect " + type.toString(e, debug) + " with color " + color.toString(e, debug);
 	}	
 	

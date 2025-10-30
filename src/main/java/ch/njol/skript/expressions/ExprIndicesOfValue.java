@@ -9,7 +9,7 @@ import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.StringUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -114,14 +114,14 @@ public class ExprIndicesOfValue extends SimpleExpression<Object> {
 	}
 
 	@Override
-	protected Object @Nullable [] get(Event event) {
-		Object value = this.value.getSingle(event);
+	protected Object @Nullable [] execute(VirtualFrame event) {
+		Object value = this.value.executeSingle(event);
 		if (value == null)
 			return (Object[]) Array.newInstance(getReturnType(), 0);
 
 		if (this.position) {
 			if (string) {
-				String haystack = (String) objects.getSingle(event);
+				String haystack = (String) objects.executeSingle(event);
 				if (haystack == null)
 					return new Long[0];
 
@@ -159,7 +159,7 @@ public class ExprIndicesOfValue extends SimpleExpression<Object> {
 		return new Long[]{position + 1};
 	}
 
-	private Long[] getListPositions(Expression<?> list, Object value, Event event) {
+	private Long[] getListPositions(Expression<?> list, Object value, VirtualFrame event) {
 		boolean caseSensitive = SkriptConfig.caseSensitive.value();
 
 		Iterator<?> iterator = list.iterator(event);
@@ -187,7 +187,7 @@ public class ExprIndicesOfValue extends SimpleExpression<Object> {
 		return positions.toArray(Long[]::new);
 	}
 
-	private String[] getIndices(KeyProviderExpression<?> expression, Object value, Event event) {
+	private String[] getIndices(KeyProviderExpression<?> expression, Object value, VirtualFrame event) {
 		boolean caseSensitive = SkriptConfig.caseSensitive.value();
 
 		Iterator<? extends KeyedValue<?>> iterator = expression.keyedIterator(event);
@@ -245,7 +245,7 @@ public class ExprIndicesOfValue extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 
 		builder.append(indexType.name().toLowerCase(Locale.ENGLISH));

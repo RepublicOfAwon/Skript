@@ -16,6 +16,7 @@ import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
 import org.bukkit.block.Banner;
@@ -25,7 +26,6 @@ import org.bukkit.entity.Display;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.TextDisplay;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Colorable;
 import org.bukkit.material.MaterialData;
@@ -66,7 +66,7 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 	}
 
 	@Override
-	protected Color[] get(Event event, Object[] source) {
+	protected Color[] get(VirtualFrame event, Object[] source) {
 		if (source instanceof FireworkEffect[]) {
 			List<Color> colors = new ArrayList<>();
 			for (FireworkEffect effect : (FireworkEffect[]) source) {
@@ -111,11 +111,11 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 
 	@Override
 	@SuppressWarnings("removal")
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		Color[] colors = delta != null ? (Color[]) delta : null;
 		Consumer<TextDisplay> displayChanger = getDisplayChanger(mode, colors);
 		Consumer<FireworkEffect> fireworkChanger = getFireworkChanger(mode, colors);
-		for (Object object : getExpr().getArray(event)) {
+		for (Object object : getExpr().executeArray(event)) {
 			if (object instanceof TextDisplay display) {
 				displayChanger.accept(display);
 			} else if (object instanceof FireworkEffect effect) {
@@ -161,7 +161,7 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "color of " + getExpr().toString(event, debug);
 	}
 

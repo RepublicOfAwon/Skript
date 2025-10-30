@@ -8,10 +8,10 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.regex.Pattern;
@@ -61,12 +61,12 @@ public class EffStopSound extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		// All sounds pattern wants explicitly defined master category
-		SoundCategory category = this.category == null ? null : this.category.getOptionalSingle(event)
+		SoundCategory category = this.category == null ? null : this.category.executeOptional(event)
 				.orElse(allSounds ? null : SoundCategory.MASTER);
 
-		Player[] targets = players.getArray(event);
+		Player[] targets = players.executeArray(event);
 		if (allSounds) {
 			if (category == null) {
 				for (Player player : targets)
@@ -76,7 +76,7 @@ public class EffStopSound extends Effect {
 					player.stopSound(category);
 			}
 		} else if (sounds != null) {
-			for (String soundString : sounds.getArray(event)) {
+			for (String soundString : sounds.executeArray(event)) {
 				Sound sound = SoundUtils.getSound(soundString);
 				if (sound != null) {
 					for (Player player : targets)
@@ -90,7 +90,7 @@ public class EffStopSound extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (allSounds ? "stop all sounds " : "stop sound " + sounds.toString(event, debug)) +
 				(category != null ? " in " + category.toString(event, debug) : "") +
 				" from playing to " + players.toString(event, debug);

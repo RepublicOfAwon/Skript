@@ -11,11 +11,11 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.SeaPickle;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Sea Pickles")
@@ -80,7 +80,7 @@ public class ExprSeaPickles extends SimplePropertyExpression<Block, Integer> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (delta == null && mode != ChangeMode.RESET && mode != ChangeMode.DELETE)
 			return;
 
@@ -88,7 +88,7 @@ public class ExprSeaPickles extends SimplePropertyExpression<Block, Integer> {
 		if (mode == ChangeMode.REMOVE)
 			change *= -1;
 
-		for (Block block : getExpr().getArray(event)) {
+		for (Block block : getExpr().executeArray(event)) {
 			// Obtain pickle data
 			BlockData blockData = block.getBlockData();
 			if (!(blockData instanceof SeaPickle))

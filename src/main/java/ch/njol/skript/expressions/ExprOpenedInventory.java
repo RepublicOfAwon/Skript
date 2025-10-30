@@ -12,8 +12,8 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,12 +41,12 @@ public class ExprOpenedInventory extends PropertyExpression<Player, Inventory> {
 	}
 
 	@Override
-	protected Inventory[] get(Event event, Player[] source) {
+	protected Inventory[] get(VirtualFrame event, Player[] source) {
 		return get(source, player -> InventoryUtils.getTopInventory(player.getOpenInventory()));
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "current inventory" + (getExpr().isDefault() ? "" : " of " + getExpr().toString(event, debug));
 	}
 	

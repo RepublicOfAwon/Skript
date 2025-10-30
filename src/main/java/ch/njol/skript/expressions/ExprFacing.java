@@ -12,11 +12,11 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,11 +82,11 @@ public class ExprFacing extends SimplePropertyExpression<Object, Direction> {
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
+	public void change(final VirtualFrame e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
 		assert mode == ChangeMode.SET;
 		assert delta != null;
 		
-		final Block b = (Block) getExpr().getSingle(e);
+		final Block b = (Block) getExpr().executeSingle(e);
 		if (b == null)
 			return;
 		BlockData data = b.getBlockData();

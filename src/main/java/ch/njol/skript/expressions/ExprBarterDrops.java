@@ -14,7 +14,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.entity.PiglinBarterEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -55,7 +55,7 @@ public class ExprBarterDrops extends SimpleExpression<ItemType> {
 	
 	@Override
 	@Nullable
-	protected ItemType[] get(Event event) {
+	protected ItemType[] execute(VirtualFrame event) {
 		if (!(event instanceof PiglinBarterEvent))
 			return null;
 
@@ -85,7 +85,7 @@ public class ExprBarterDrops extends SimpleExpression<ItemType> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (!(event instanceof PiglinBarterEvent))
 			return;
 
@@ -126,7 +126,7 @@ public class ExprBarterDrops extends SimpleExpression<ItemType> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the barter drops";
 	}
 

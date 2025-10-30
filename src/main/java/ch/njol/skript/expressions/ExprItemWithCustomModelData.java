@@ -10,7 +10,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Color;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,8 +51,8 @@ public class ExprItemWithCustomModelData extends PropertyExpression<ItemType, It
 
 	@Override
 	@SuppressWarnings("UnstableApiUsage")
-	protected ItemType[] get(Event event, ItemType[] source) {
-		Object[] data = this.data.getArray(event);
+	protected ItemType[] get(VirtualFrame event, ItemType[] source) {
+		Object[] data = this.data.executeArray(event);
 		if (data.length == 0)
 			return source;
 		if (!USE_NEW_CMD) {
@@ -103,7 +103,7 @@ public class ExprItemWithCustomModelData extends PropertyExpression<ItemType, It
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return getExpr().toString(event, debug) + " with custom model data " + data.toString(event, debug);
 	}
 	

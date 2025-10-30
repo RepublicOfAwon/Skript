@@ -10,9 +10,9 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Allay;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Allay Duplication Cooldown")
@@ -50,10 +50,10 @@ public class ExprDuplicateCooldown extends SimplePropertyExpression<LivingEntity
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		long ticks = delta == null ? 0 : ((Timespan) delta[0]).getAs(TimePeriod.TICK);
 		ticks = Math2.fit(0, ticks, Long.MAX_VALUE);
-		for (LivingEntity entity : getExpr().getArray(event)) {
+		for (LivingEntity entity : getExpr().executeArray(event)) {
 			if (!(entity instanceof Allay allay))
 				continue;
 			switch (mode) {

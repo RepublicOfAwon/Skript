@@ -13,7 +13,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.registrations.experiments.ReflectionExperimentSyntax;
 
@@ -49,7 +49,7 @@ public class ExprConfig extends SimpleExpression<Config> implements ReflectionEx
 	}
 
 	@Override
-	protected Config[] get(Event event) {
+	protected Config[] execute(VirtualFrame event) {
 		if (config == null || !config.valid())
 			this.config = SkriptConfig.getConfig();
 		if (config != null && config.valid())
@@ -68,7 +68,7 @@ public class ExprConfig extends SimpleExpression<Config> implements ReflectionEx
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the skript config";
 	}
 

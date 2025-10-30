@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
@@ -63,14 +63,14 @@ public class ExprSets extends SimpleExpression<Object> {
 	}
 
 	@Override
-	protected Object[] get(Event event) {
+	protected Object[] execute(VirtualFrame event) {
 		List<?> objects = Lists.newArrayList(supplier.get());
 		return objects.toArray((Object[]) Array.newInstance(classInfo.getC(), objects.size()));
 	}
 
 	@Override
 	@Nullable
-	public Iterator<?> iterator(Event event) {
+	public Iterator<?> iterator(VirtualFrame event) {
 		return supplier.get();
 	}
 
@@ -85,7 +85,7 @@ public class ExprSets extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "all of the " + classInfo.getName().getPlural();
 	}
 

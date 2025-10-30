@@ -10,8 +10,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +47,7 @@ public class CondIsPluginEnabled extends Condition {
 	}
 
 	@Override
-	public boolean check(Event e) {
+	public boolean executeBoolean(VirtualFrame e) {
 		return plugins.check(e, plugin -> {
 			Plugin p = Bukkit.getPluginManager().getPlugin(plugin);
 			switch (pattern) {
@@ -62,7 +62,7 @@ public class CondIsPluginEnabled extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		String plugin = plugins.isSingle() ? "plugin " : "plugins ";
 		String plural = plugins.isSingle() ? " is" : " are";
 		String pattern = this.pattern == 0 ? " enabled" : this.pattern == 1 ? " not enabled" : " disabled";

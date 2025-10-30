@@ -5,8 +5,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.effects.EffApplyBoneMeal;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.SyntaxElementInfo;
-import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.test.runner.SkriptJUnitTest;
 import ch.njol.skript.variables.Variables;
 import org.bukkit.block.Block;
@@ -44,7 +43,7 @@ public class EffApplyBoneMealTest {
 			Assert.fail("Multiple effect is null");
 
 		int countOfBonemealToApply = 5;
-		ContextlessEvent event = ContextlessEvent.get();
+		ContextlessVirtualFrame event = ContextlessVirtualFrame.get();
 		Variables.setVariable("block", getMockBlock(), event, true);
 		Variables.setVariable("times", countOfBonemealToApply, event, true);
 

@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 
@@ -43,9 +43,9 @@ public class ExprPercent extends SimpleExpression<Number> {
 	}
 
 	@Override
-	protected @Nullable Number[] get(Event event) {
-		Number percent = this.percent.getSingle(event);
-		Number[] numbers = this.numbers.getArray(event);
+	protected @Nullable Number[] execute(VirtualFrame event) {
+		Number percent = this.percent.executeSingle(event);
+		Number[] numbers = this.numbers.executeArray(event);
 		if (percent == null || numbers.length == 0)
 			return null;
 
@@ -75,7 +75,7 @@ public class ExprPercent extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return percent.toString(event, debug) + " percent of " + numbers.toString(event, debug);
 	}
 

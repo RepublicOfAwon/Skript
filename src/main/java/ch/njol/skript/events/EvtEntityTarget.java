@@ -1,6 +1,6 @@
 package ch.njol.skript.events;
 
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,12 +30,12 @@ public class EvtEntityTarget extends SkriptEvent {
 	}
 	
 	@Override
-	public boolean check(final Event e) {
+	public boolean check(final VirtualFrame e) {
 		return ((EntityTargetEvent) e).getTarget() == null ^ target;
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "entity " + (target ? "" : "un") + "target";
 	}
 	

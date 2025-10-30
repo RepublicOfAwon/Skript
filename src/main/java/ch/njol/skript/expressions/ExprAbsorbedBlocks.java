@@ -4,8 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.BlockState;
-import org.bukkit.event.Event;
 import org.bukkit.event.block.SpongeAbsorbEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,7 +45,7 @@ public class ExprAbsorbedBlocks extends SimpleExpression<BlockStateBlock> {
 	
 	@Override
 	@Nullable
-	protected BlockStateBlock[] get(Event e) {
+	protected BlockStateBlock[] execute(VirtualFrame e) {
 		if (!(e instanceof SpongeAbsorbEvent))
 			return null;
 
@@ -57,7 +57,7 @@ public class ExprAbsorbedBlocks extends SimpleExpression<BlockStateBlock> {
 	
 	@Override
 	@Nullable
-	public Iterator<BlockStateBlock> iterator(Event e) {
+	public Iterator<BlockStateBlock> iterator(VirtualFrame e) {
 		if (!(e instanceof SpongeAbsorbEvent))
 			return null;
 
@@ -78,7 +78,7 @@ public class ExprAbsorbedBlocks extends SimpleExpression<BlockStateBlock> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "absorbed blocks";
 	}
 	

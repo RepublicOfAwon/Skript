@@ -1,10 +1,10 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -65,7 +65,7 @@ public class EffVisualEffect extends Effect {
 
 		if (effects instanceof Literal) {
 			//noinspection ConstantConditions
-			VisualEffect[] effs = effects.getArray(null);
+			VisualEffect[] effs = effects.executeArray(null);
 
 			boolean hasLocationEffect = false;
 			boolean hasEntityEffect = false;
@@ -90,13 +90,13 @@ public class EffVisualEffect extends Effect {
 	}
 	
 	@Override
-	protected void execute(Event e) {
-		VisualEffect[] effects = this.effects.getArray(e);
-		Direction[] directions = direction.getArray(e);
-		Object[] os = where.getArray(e);
-		Player[] ps = players != null ? players.getArray(e) : null;
-		Number rad = radius != null ? radius.getSingle(e) : 32; // 32=default particle radius
-		Number cnt = count != null ? count.getSingle(e) : 0;
+	protected void executeVoid(VirtualFrame e) {
+		VisualEffect[] effects = this.effects.executeArray(e);
+		Direction[] directions = direction.executeArray(e);
+		Object[] os = where.executeArray(e);
+		Player[] ps = players != null ? players.executeArray(e) : null;
+		Number rad = radius != null ? radius.executeSingle(e) : 32; // 32=default particle radius
+		Number cnt = count != null ? count.executeSingle(e) : 0;
 
 		// noinspection ConstantConditions
 		if (effects == null || directions == null || os == null || rad == null || cnt == null)
@@ -122,7 +122,7 @@ public class EffVisualEffect extends Effect {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "play " + effects.toString(e, debug) + " " + direction.toString(e, debug) + " "
 			+ where.toString(e, debug) + (players != null ? " to " + players.toString(e, debug) : "");
 	}

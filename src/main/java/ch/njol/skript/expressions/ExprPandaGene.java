@@ -11,10 +11,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Panda;
 import org.bukkit.entity.Panda.Gene;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Panda Gene")
@@ -53,10 +53,10 @@ public class ExprPandaGene extends SimplePropertyExpression<LivingEntity, Gene> 
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		assert delta != null;
 		Gene gene = (Gene) delta[0];
-		for (LivingEntity entity : getExpr().getArray(event)) {
+		for (LivingEntity entity : getExpr().executeArray(event)) {
 			if (!(entity instanceof Panda panda))
 				continue;
 			if (mainGene) {

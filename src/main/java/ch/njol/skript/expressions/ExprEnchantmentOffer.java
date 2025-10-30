@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Random;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.enchantments.EnchantmentOffer;
-import org.bukkit.event.Event;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,7 +73,7 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 	@SuppressWarnings({"null", "unused"})
 	@Override
 	@Nullable
-	protected EnchantmentOffer[] get(Event e) {
+	protected EnchantmentOffer[] execute(VirtualFrame e) {
 		if (!(e instanceof PrepareItemEnchantEvent))
 			return null;
 
@@ -82,7 +82,7 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 		if (exprOfferNumber == null)
 			return new EnchantmentOffer[0];
 		if (exprOfferNumber.isSingle()) {
-			Number offerNumber = exprOfferNumber.getSingle(e);
+			Number offerNumber = exprOfferNumber.executeSingle(e);
 			if (offerNumber == null)
 				return new EnchantmentOffer[0];
 			int offer = offerNumber.intValue();
@@ -92,7 +92,7 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 		}
 		List<EnchantmentOffer> offers = new ArrayList<>();
 		int i;
-		for (Number n : exprOfferNumber.getArray(e)) {
+		for (Number n : exprOfferNumber.executeArray(e)) {
 			i = n.intValue();
 			if (i >= 1 || i <= ((PrepareItemEnchantEvent) e).getOffers().length)
 				offers.add(((PrepareItemEnchantEvent) e).getOffers()[i - 1]);
@@ -110,12 +110,12 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 
 	@SuppressWarnings("null")
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null && mode != ChangeMode.DELETE)
 			return;
 		EnchantmentType et = mode != ChangeMode.DELETE ? (EnchantmentType) delta[0] : null;
 		if (event instanceof PrepareItemEnchantEvent) {
-			PrepareItemEnchantEvent e = (PrepareItemEnchantEvent) event;
+			PrepareItemEnchantEvent e = (PrepareItemEnchantEvent) event.getArguments()[0];
 			switch (mode) {
 				case SET:
 					if (all) {
@@ -130,7 +130,7 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 							}
 						}
 					} else {
-						for (Number n : exprOfferNumber.getArray(e)) {
+						for (Number n : exprOfferNumber.executeArray(event)) {
 							int slot = n.intValue() - 1;
 							EnchantmentOffer eo = e.getOffers()[slot];
 							if (eo == null) {
@@ -147,7 +147,7 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 					if (all) {
 						Arrays.fill(e.getOffers(), null);
 					} else {
-						for (Number n : exprOfferNumber.getArray(e))
+						for (Number n : exprOfferNumber.executeArray(event))
 							e.getOffers()[n.intValue() - 1] = null;
 					}
 					break;
@@ -171,7 +171,7 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return all ? "the enchantment offers" : "enchantment offer(s) " + exprOfferNumber.toString(e, debug);
 	}
 

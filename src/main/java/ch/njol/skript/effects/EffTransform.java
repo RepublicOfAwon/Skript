@@ -14,6 +14,7 @@ import ch.njol.skript.variables.HintManager;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -90,7 +91,7 @@ public class EffTransform extends Effect implements InputSource {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		Map<String, Object> mappedValues = new HashMap<>();
 		assert mappingExpr != null;
 		boolean isSingle = mappingExpr.isSingle();
@@ -106,9 +107,9 @@ public class EffTransform extends Effect implements InputSource {
 			currentValue = keyedValue.value();
 
 			if (isSingle) {
-				mappedValues.put(currentIndex, mappingExpr.getSingle(event));
+				mappedValues.put(currentIndex, mappingExpr.executeSingle(event));
 			} else {
-				for (Object value : mappingExpr.getArray(event)) {
+				for (Object value : mappingExpr.executeArray(event)) {
 					mappedValues.put(String.valueOf(i++), value);
 					mappedValues.putIfAbsent(currentIndex, null); // clears only unused indices instead of having to delete entire var.
 				}
@@ -140,7 +141,7 @@ public class EffTransform extends Effect implements InputSource {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "transform " + unmappedObjects.toString(event, debug) + " using " + mappingExpr.toString(event, debug);
 	}
 

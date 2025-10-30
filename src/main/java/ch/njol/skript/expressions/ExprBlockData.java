@@ -8,10 +8,10 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.BlockDisplay;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Block Data")
@@ -51,10 +51,10 @@ public class ExprBlockData extends SimplePropertyExpression<Object, BlockData> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		assert delta != null; // reset/delete not supported
 		BlockData blockData = ((BlockData) delta[0]);
-		for (Object object : getExpr().getArray(event)) {
+		for (Object object : getExpr().executeArray(event)) {
 			if (object instanceof Block block) {
 				block.setBlockData(blockData);
 			} else if (object instanceof BlockDisplay blockDisplay) {

@@ -1,7 +1,7 @@
 package ch.njol.skript.conditions;
 
 import ch.njol.skript.lang.*;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -41,8 +41,8 @@ public class CondStartsEndsWith extends Condition {
 	}
 	
 	@Override
-	public boolean check(Event e) {
-		String[] affixes = this.affix.getAll(e);
+	public boolean executeBoolean(VirtualFrame e) {
+		String[] affixes = this.affix.executeAll(e);
 		if (affixes.length < 1)
 			return false;
 		return strings.check(e,
@@ -87,7 +87,7 @@ public class CondStartsEndsWith extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		if (isNegated())
 			return strings.toString(e, debug) + " doesn't " + (usingEnds ? "end" : "start") + " with " + affix.toString(e, debug);
 		else

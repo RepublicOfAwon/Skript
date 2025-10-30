@@ -8,7 +8,7 @@ import java.util.Locale;
 
 import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -63,7 +63,7 @@ public class ExprHash extends PropertyExpression<String, String> {
 	}
 
 	@Override
-	protected String[] get(Event event, String[] source) {
+	protected String[] get(VirtualFrame event, String[] source) {
 		// Apply it to all strings
 		String[] result = new String[source.length];
 		for (int i = 0; i < result.length; i++)
@@ -85,7 +85,7 @@ public class ExprHash extends PropertyExpression<String, String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "hash of " + getExpr().toString(event, debug);
 	}
 

@@ -8,8 +8,8 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.localization.Noun;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.iterator.ArrayIterator;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -474,7 +474,7 @@ public class ClassInfo<T> implements Debuggable {
 
 	@Override
 	@NotNull
-	public String toString(final @Nullable Event event, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame event, final boolean debug) {
 		if (debug)
 			return codeName + " (" + c.getCanonicalName() + ")";
 		return getName().getSingular();

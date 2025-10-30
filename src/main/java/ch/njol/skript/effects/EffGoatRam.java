@@ -7,9 +7,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Goat;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Make Goat Ram")
@@ -41,11 +41,11 @@ public class EffGoatRam extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		LivingEntity target = this.target.getSingle(event);
+	protected void executeVoid(VirtualFrame event) {
+		LivingEntity target = this.target.executeSingle(event);
 		if (target == null)
 			return;
-		for (LivingEntity entity : entities.getArray(event)) {
+		for (LivingEntity entity : entities.executeArray(event)) {
 			if (entity instanceof Goat goat) {
 				goat.ram(target);
 			}
@@ -53,7 +53,7 @@ public class EffGoatRam extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "make " + entities.toString(event, debug) + " ram " + target.toString(event, debug);
 	}
 

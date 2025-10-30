@@ -1,9 +1,9 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,12 +46,12 @@ public class EffOpenBook extends Effect {
 	}
 	
 	@Override
-	protected void execute(final Event e) {
-		ItemType itemType = book.getSingle(e);
+	protected void executeVoid(final VirtualFrame e) {
+		ItemType itemType = book.executeSingle(e);
 		if (itemType != null) {
 			ItemStack itemStack = itemType.getRandom();
 			if (itemStack != null && itemStack.getType() == Material.WRITTEN_BOOK) {
-				for (Player player : players.getArray(e)) {
+				for (Player player : players.executeArray(e)) {
 					player.openBook(itemStack);
 				}
 			}
@@ -59,7 +59,7 @@ public class EffOpenBook extends Effect {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "open book " + book.toString(e, debug) + " to " + players.toString(e, debug);
 	}
 	

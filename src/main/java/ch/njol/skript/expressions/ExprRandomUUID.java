@@ -3,7 +3,7 @@ package ch.njol.skript.expressions;
 import java.util.UUID;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -33,7 +33,7 @@ public class ExprRandomUUID extends SimpleExpression<UUID> {
 	}
 
 	@Override
-	protected UUID @Nullable [] get(Event e) {
+	protected UUID @Nullable [] execute(VirtualFrame e) {
 		return new UUID[]{ UUID.randomUUID() };
 	}
 
@@ -48,7 +48,7 @@ public class ExprRandomUUID extends SimpleExpression<UUID> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "random uuid";
 	}
 

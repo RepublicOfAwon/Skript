@@ -12,8 +12,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SectionUtils;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Direction;
-import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -196,22 +196,22 @@ public class EffSecShoot extends EffectSection {
 	}
 
 	@Override
-	public Object walk(Event event) {
+	public Object execute(VirtualFrame frame) {
 		lastSpawned = null;
-		Number finalVelocity = velocity != null ? velocity.getSingle(event) : DEFAULT_SPEED;
-		Direction finalDirection = direction != null ? direction.getSingle(event) : Direction.IDENTITY;
+		Number finalVelocity = velocity != null ? velocity.executeSingle(frame) : DEFAULT_SPEED;
+		Direction finalDirection = direction != null ? direction.executeSingle(frame) : Direction.IDENTITY;
 		if (finalVelocity == null || finalDirection == null)
 			return null;
-		EntityData<?>[] data = types.getArray(event);
+		EntityData<?>[] data = types.executeArray(frame);
 
-		for (Object shooter : shooters.getArray(event)) {
+		for (Object shooter : shooters.executeArray(frame)) {
 			for (EntityData<?> entityData : data) {
 				Entity finalProjectile = null;
 				Vector vector;
 				if (shooter instanceof LivingEntity livingShooter) {
 					vector = finalDirection.getDirection(livingShooter.getLocation()).multiply(finalVelocity.doubleValue());
 					//noinspection rawtypes
-					Consumer afterSpawn = afterSpawn(event, entityData, livingShooter, vector);
+					Consumer afterSpawn = afterSpawn(frame, entityData, livingShooter, vector);
 					Class<? extends Entity> type = entityData.getType();
 					Location shooterLoc = livingShooter.getLocation();
 					shooterLoc.setY(shooterLoc.getY() + livingShooter.getEyeHeight() / 2);
@@ -245,7 +245,7 @@ public class EffSecShoot extends EffectSection {
 					vector = finalDirection.getDirection((Location) shooter).multiply(finalVelocity.doubleValue());
 					if (trigger != null) {
 						//noinspection unchecked,rawtypes
-						entityData.spawn((Location) shooter, (Consumer) afterSpawn(event, entityData, null, vector));
+						entityData.spawn((Location) shooter, (Consumer) afterSpawn(frame, entityData, null, vector));
 					} else {
 						finalProjectile = entityData.spawn((Location) shooter);
 					}
@@ -261,7 +261,7 @@ public class EffSecShoot extends EffectSection {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "shoot " + types.toString(event, debug) + " from " + shooters.toString(event, debug)
 			+ (velocity != null ? " at speed " + velocity.toString(event, debug) : "")
 			+ (direction != null ? " " + direction.toString(event, debug) : "");
@@ -292,7 +292,7 @@ public class EffSecShoot extends EffectSection {
 		return CaseUsage.PROJECTILE_WORLD_TRIGGER;
 	}
 
-	private Consumer<? extends Entity> afterSpawn(Event event, EntityData<?> entityData, @Nullable LivingEntity shooter, Vector vector) {
+	private Consumer<? extends Entity> afterSpawn(VirtualFrame frame, EntityData<?> entityData, @Nullable LivingEntity shooter, Vector vector) {
 		return entity -> {
 			entity.setVelocity(vector);
 			if (entity instanceof Fireball fireball)
@@ -303,7 +303,10 @@ public class EffSecShoot extends EffectSection {
 			}
 			ShootEvent shootEvent = new ShootEvent(entity, shooter);
 			lastSpawned = entity;
-			Variables.withLocalVariables(event, shootEvent, () -> TriggerItem.walk(trigger, shootEvent));
+			Event previousEvent = (Event) frame.getArguments()[0];
+			frame.getArguments()[0] = shootEvent;
+			trigger.execute(frame);
+			frame.getArguments()[0] = previousEvent;
 		};
 	}
 

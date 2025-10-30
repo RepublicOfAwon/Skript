@@ -12,8 +12,8 @@ import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.util.SectionUtils;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Direction;
-import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.bukkit.loot.LootContext;
@@ -61,17 +61,19 @@ public class ExprSecCreateLootContext extends SectionExpression<LootContext> {
 	}
 
 	@Override
-	protected LootContext @Nullable [] get(Event event) {
-		Location loc = location.getSingle(event);
+	protected LootContext @Nullable [] execute(VirtualFrame frame) {
+		Location loc = location.executeSingle(frame);
 		if (loc == null)
 			return new LootContext[0];
 
 		LootContextWrapper wrapper = new LootContextWrapper(loc);
 		if (trigger != null) {
 			LootContextCreateEvent contextEvent = new LootContextCreateEvent(wrapper);
-			Variables.withLocalVariables(event, contextEvent, () ->
-				TriggerItem.walk(trigger, contextEvent)
-			);
+			Event previousEvent = (Event) frame.getArguments()[0];
+			frame.getArguments()[0] = contextEvent;
+			trigger.execute(frame);
+			frame.getArguments()[0] = previousEvent;
+
 		}
 		return new LootContext[]{wrapper.getContext()};
 	}
@@ -87,7 +89,7 @@ public class ExprSecCreateLootContext extends SectionExpression<LootContext> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "a loot context " + location.toString(event, debug);
 	}
 

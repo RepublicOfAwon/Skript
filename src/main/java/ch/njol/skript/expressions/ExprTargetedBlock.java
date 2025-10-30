@@ -13,9 +13,9 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Targeted Block")
@@ -52,7 +52,7 @@ public class ExprTargetedBlock extends PropertyExpression<LivingEntity, Block> {
 	}
 
 	@Override
-	protected Block[] get(Event event, LivingEntity[] source) {
+	protected Block[] get(VirtualFrame event, LivingEntity[] source) {
 		Integer distance = SkriptConfig.maxTargetBlockDistance.value();
 		return get(source, livingEntity -> {
 			Block block;
@@ -79,7 +79,7 @@ public class ExprTargetedBlock extends PropertyExpression<LivingEntity, Block> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String block = getExpr().isSingle() ? "block" : "blocks";
 		return "the " + (this.actual ? "actual " : "") + "target " + block + " of " + getExpr().toString(event, debug);
 	}

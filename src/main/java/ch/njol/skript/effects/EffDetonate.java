@@ -1,13 +1,13 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.WindCharge;
 import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.TNTPrimed;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -41,8 +41,8 @@ public class EffDetonate extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (Entity entity : entities.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (Entity entity : entities.executeArray(event)) {
 			if (entity instanceof Firework firework) {
 				firework.detonate();
 			} else if (HAS_WINDCHARGE && entity instanceof WindCharge windCharge) {
@@ -57,7 +57,7 @@ public class EffDetonate extends Effect {
 		}
 	}
 
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "detonate " + entities.toString(event, debug);
 	}
 

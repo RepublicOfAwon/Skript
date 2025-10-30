@@ -15,6 +15,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -41,10 +42,10 @@ public class ExprFoodLevel extends PropertyExpression<Player, Number> {
 	}
 	
 	@Override
-	protected Number[] get(Event event, Player[] source) {
+	protected Number[] get(VirtualFrame event, Player[] source) {
 		return get(source, player -> {
 			if (getTime() >= 0 && event instanceof FoodLevelChangeEvent foodLevelChangeEvent
-				&& player.equals(foodLevelChangeEvent.getEntity()) && !Delay.isDelayed(event)) {
+				&& player.equals(foodLevelChangeEvent.getEntity()) && !Delay.isDelayed((Event) event.getArguments()[0])) {
 				return 0.5f * foodLevelChangeEvent.getFoodLevel();
 			}
 			return 0.5f * player.getFoodLevel();
@@ -57,7 +58,7 @@ public class ExprFoodLevel extends PropertyExpression<Player, Number> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "the food level of " + getExpr().toString(e, debug);
 	}
 	
@@ -70,12 +71,12 @@ public class ExprFoodLevel extends PropertyExpression<Player, Number> {
 	}
 	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
+	public void change(final VirtualFrame e, final @Nullable Object[] delta, final ChangeMode mode) {
 		assert mode != ChangeMode.REMOVE_ALL;
 		
 		final int s = delta == null ? 0 : Math.round(((Number) delta[0]).floatValue() * 2);
-		for (final Player player : getExpr().getArray(e)) {
-			final boolean event = getTime() >= 0 && e instanceof FoodLevelChangeEvent && ((FoodLevelChangeEvent) e).getEntity() == player && !Delay.isDelayed(e);
+		for (final Player player : getExpr().executeArray(e)) {
+			final boolean event = getTime() >= 0 && e.getArguments()[0] instanceof FoodLevelChangeEvent && ((FoodLevelChangeEvent) e).getEntity() == player && !Delay.isDelayed((Event) e.getArguments()[0]);
 			int food;
 			if (event)
 				food = ((FoodLevelChangeEvent) e).getFoodLevel();

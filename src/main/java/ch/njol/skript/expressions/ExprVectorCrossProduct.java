@@ -2,7 +2,7 @@ package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,9 +42,9 @@ public class ExprVectorCrossProduct extends SimpleExpression<Vector> {
 
 	@Override
 	@SuppressWarnings("null")
-	protected Vector[] get(Event event) {
-		Vector first = this.first.getSingle(event);
-		Vector second = this.second.getSingle(event);
+	protected Vector[] execute(VirtualFrame event) {
+		Vector first = this.first.executeSingle(event);
+		Vector second = this.second.executeSingle(event);
 		if (first == null || second == null)
 			return null;
 		return CollectionUtils.array(first.clone().crossProduct(second));
@@ -68,7 +68,7 @@ public class ExprVectorCrossProduct extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return first.toString(event, debug) + " cross " + second.toString(event, debug);
 	}
 

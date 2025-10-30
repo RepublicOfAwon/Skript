@@ -18,7 +18,7 @@ import ch.njol.skript.util.Container;
 import ch.njol.skript.util.Container.ContainerType;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.experiment.ExperimentData;
 import org.skriptlang.skript.lang.experiment.SimpleExperimentalSyntax;
@@ -147,25 +147,25 @@ public class SecFor extends SecLoop implements SimpleExperimentalSyntax {
 	}
 
 	@Override
-	protected void store(Event event, Object next) {
-		super.store(event, next);
+	protected void store(VirtualFrame frame, Object next) {
+		super.store(frame, next);
 		//<editor-fold desc="Store the loop index/value in the variables" defaultstate="collapsed">
 		if (next instanceof KeyedValue<?> keyedValue) {
 			if (keyStore != null)
-				this.keyStore.change(event, new Object[] {keyedValue.key()}, Changer.ChangeMode.SET);
+				this.keyStore.change(frame, new Object[] {keyedValue.key()}, Changer.ChangeMode.SET);
 			if (valueStore != null)
-				this.valueStore.change(event, new Object[] {keyedValue.value()}, Changer.ChangeMode.SET);
+				this.valueStore.change(frame, new Object[] {keyedValue.value()}, Changer.ChangeMode.SET);
 		} else {
 			if (keyStore != null)
-				this.keyStore.change(event, new Object[] {this.getLoopCounter(event)}, Changer.ChangeMode.SET);
+				this.keyStore.change(frame, new Object[] {this.getLoopCounter(frame)}, Changer.ChangeMode.SET);
 			if (valueStore != null)
-				this.valueStore.change(event, new Object[] {next}, Changer.ChangeMode.SET);
+				this.valueStore.change(frame, new Object[] {next}, Changer.ChangeMode.SET);
 		}
 		//</editor-fold>
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (keyStore != null && valueStore != null) {
 			return "for each key " + keyStore.toString(event, debug)
 				+ " and value " + valueStore.toString(event, debug) + " in "

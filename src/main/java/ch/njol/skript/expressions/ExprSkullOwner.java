@@ -10,11 +10,11 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
@@ -69,11 +69,11 @@ public class ExprSkullOwner extends SimplePropertyExpression<Object, OfflinePlay
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		OfflinePlayer offlinePlayer = (OfflinePlayer) delta[0];
 		Consumer<Skull> blockChanger = getBlockChanger(offlinePlayer);
 		Consumer<SkullMeta> metaChanger = getMetaChanger(offlinePlayer);
-		for (Object object : getExpr().getArray(event)) {
+		for (Object object : getExpr().executeArray(event)) {
 			if (object instanceof Block block && block.getState() instanceof Skull skull) {
 				blockChanger.accept(skull);
 				skull.update(true, false);

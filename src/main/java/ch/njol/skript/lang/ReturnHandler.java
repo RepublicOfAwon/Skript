@@ -4,6 +4,7 @@ import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.parser.ParserInstance;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.ApiStatus.NonExtendable;
 import org.jetbrains.annotations.Nullable;
@@ -116,7 +117,7 @@ public interface ReturnHandler<T> {
 	 * @param event the event providing context
 	 * @param value an expression representing the value(s) to return
 	 */
-	void returnValues(Event event, Expression<? extends T> value);
+	void returnValues(VirtualFrame event, Expression<? extends T> value);
 
 	/**
 	 * @return whether this return handler may accept multiple return values

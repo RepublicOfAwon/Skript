@@ -1,7 +1,7 @@
 package ch.njol.skript.conditions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -44,15 +44,15 @@ public class CondChance extends Condition {
 	}
 	
 	@Override
-	public boolean check(final Event e) {
-		final Number n = chance.getSingle(e);
+	public boolean executeBoolean(final VirtualFrame e) {
+		final Number n = chance.executeSingle(e);
 		if (n == null)
 			return false;
 		return Math.random() < (percent ? n.doubleValue() / 100 : n.doubleValue());
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "chance of " + chance.toString(e, debug) + (percent ? "%" : "");
 	}
 	

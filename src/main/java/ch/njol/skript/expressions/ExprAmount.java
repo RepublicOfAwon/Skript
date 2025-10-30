@@ -17,7 +17,7 @@ import ch.njol.skript.lang.util.common.AnyAmount;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.common.properties.expressions.PropExprAmount;
 
@@ -70,10 +70,10 @@ public class ExprAmount extends SimpleExpression<Number> {
 	}
 
 	@Override
-	protected Number[] get(Event event) {
+	protected Number[] execute(VirtualFrame event) {
 		if (any != null)
-			return new Number[] {any.getOptionalSingle(event).orElse(() -> 0).amount()};
-		return new Long[]{(long) exprs.getArray(event).length};
+			return new Number[] {any.executeOptional(event).orElse(() -> 0).amount()};
+		return new Long[]{(long) exprs.executeArray(event).length};
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class ExprAmount extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (any == null) {
 			super.change(event, delta, mode);
 			return;
@@ -101,13 +101,13 @@ public class ExprAmount extends SimpleExpression<Number> {
 				amount = -amount;
 				//$FALL-THROUGH$
 			case ADD:
-				for (AnyAmount obj : any.getArray(event)) {
+				for (AnyAmount obj : any.executeArray(event)) {
 					if (obj.supportsAmountChange())
 						obj.setAmount(obj.amount().doubleValue() + amount);
 				}
 				break;
 			case RESET, DELETE, SET:
-				for (AnyAmount any : any.getArray(event)) {
+				for (AnyAmount any : any.executeArray(event)) {
 					if (any.supportsAmountChange())
 						any.setAmount(amount);
 				}
@@ -126,7 +126,7 @@ public class ExprAmount extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (any != null)
 			return "amount of " + any.toString(event, debug);
 		return "amount of " + exprs.toString(event, debug);

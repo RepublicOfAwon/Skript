@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,7 +53,7 @@ public class ExprVectorFromDirection extends SimpleExpression<Vector> {
 
 	@Override
 	@Nullable
-	protected Vector[] get(Event event) {
+	protected Vector[] execute(VirtualFrame event) {
 		return direction.stream(event)
 				.map(Direction::getDirection)
 				.toArray(Vector[]::new);
@@ -70,7 +70,7 @@ public class ExprVectorFromDirection extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "vector " + direction.toString(event, debug);
 	}
 

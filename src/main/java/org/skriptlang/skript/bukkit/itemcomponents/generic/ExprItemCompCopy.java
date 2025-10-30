@@ -7,7 +7,7 @@ import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.SyntaxStringBuilder;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.itemcomponents.ComponentWrapper;
 import org.skriptlang.skript.registration.SyntaxInfo;
@@ -48,7 +48,7 @@ public class ExprItemCompCopy extends SimplePropertyExpression<ComponentWrapper,
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append("the item component");
 		if (isSingle()) {

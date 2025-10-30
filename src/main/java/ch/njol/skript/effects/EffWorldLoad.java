@@ -10,11 +10,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Load World")
@@ -59,9 +59,9 @@ public class EffWorldLoad extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		Environment environment = this.environment != null ? this.environment.getSingle(event) : null;
-		for (Object world : worlds.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		Environment environment = this.environment != null ? this.environment.executeSingle(event) : null;
+		for (Object world : worlds.executeArray(event)) {
 			if (load && world instanceof String) {
 				WorldCreator worldCreator = new WorldCreator((String) world);
 				if (environment != null)
@@ -74,7 +74,7 @@ public class EffWorldLoad extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (load)
 			return "load the world(s) " + worlds.toString(event, debug) + (environment == null ? "" : " with environment " + environment.toString(event, debug));
 		return "unload the world(s) " + worlds.toString(event, debug) + " " + (save ? "with saving" : "without saving");

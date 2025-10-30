@@ -1,8 +1,8 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -42,14 +42,14 @@ public class EffSilence extends Effect {
 	}
 	
 	@Override
-	protected void execute(Event e) {
-		for (Entity entity : entities.getArray(e)) {
+	protected void executeVoid(VirtualFrame e) {
+		for (Entity entity : entities.executeArray(e)) {
 			entity.setSilent(silence);
 		}
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return (silence ? "silence " : "unsilence ") + entities.toString(e, debug);
 	}
 }

@@ -2,6 +2,7 @@ package ch.njol.skript.lang;
 
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  * @see Expression
  * @see KeyReceiverExpression
  */
-public interface KeyReceiverExpression<T> extends Expression<T> {
+public interface KeyReceiverExpression<T> {
 
 	/**
 	 * An alternative changer method that provides a set of keys as well as a set of values.
@@ -26,6 +27,6 @@ public interface KeyReceiverExpression<T> extends Expression<T> {
 	 * @param mode  The key-safe change mode {@link ChangeMode#SET}
 	 * @param keys  The keys, matching the length and order of the values array
 	 */
-	void change(Event event, Object @NotNull [] delta, ChangeMode mode, @NotNull String @NotNull [] keys);
+	void change(VirtualFrame event, Object @NotNull [] delta, ChangeMode mode, @NotNull String @NotNull [] keys);
 
 }

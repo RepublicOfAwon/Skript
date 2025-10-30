@@ -1,8 +1,7 @@
 package org.skriptlang.skript.test.tests.regression;
 
 import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.test.runner.SkriptJUnitTest;
 import ch.njol.skript.variables.Variables;
 import org.bukkit.block.data.type.Tripwire;
@@ -23,7 +22,7 @@ public class BlockDataNotCloned6829Test extends SkriptJUnitTest {
 
 	@Test
 	public void test() {
-		Event event = ContextlessEvent.get();
+		Event event = ContextlessVirtualFrame.get();
 		run("set {_original tripwire} to tripwire[]", event);
 		run("set {_another tripwire} to {_original tripwire}", event);
 		Tripwire originalTripwire = (Tripwire) Objects.requireNonNull(Variables.getVariable("original tripwire", event, true));

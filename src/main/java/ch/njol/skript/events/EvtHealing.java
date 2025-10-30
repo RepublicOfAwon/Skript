@@ -1,7 +1,7 @@
 package ch.njol.skript.events;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +42,7 @@ public class EvtHealing extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		if (!(event instanceof EntityRegainHealthEvent))
 			return false;
 		EntityRegainHealthEvent healthEvent = (EntityRegainHealthEvent) event;
@@ -74,7 +74,7 @@ public class EvtHealing extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "heal" + (entityDatas != null ? " of " + entityDatas.toString(event, debug) : "") +
 				(healReasons != null ? " by " + healReasons.toString(event, debug) : "");
 	}

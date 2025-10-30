@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
-import org.bukkit.event.Event;
 import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +50,7 @@ public class ExprDisplayTransformationScaleTranslation extends SimplePropertyExp
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		Vector3f vector = null;
 		if (mode == ChangeMode.RESET)
 			vector = scale ? new Vector3f(1F, 1F, 1F) : new Vector3f(0F, 0F, 0F);
@@ -58,7 +58,7 @@ public class ExprDisplayTransformationScaleTranslation extends SimplePropertyExp
 			vector = ((Vector) delta[0]).toVector3f();
 		if (vector == null || !vector.isFinite())
 			return;
-		for (Display display : getExpr().getArray(event)) {
+		for (Display display : getExpr().executeArray(event)) {
 			Transformation transformation = display.getTransformation();
 			Transformation change;
 			if (scale) {

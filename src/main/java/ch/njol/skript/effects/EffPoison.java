@@ -1,8 +1,8 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
@@ -54,16 +54,16 @@ public class EffPoison extends Effect {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "poison " + entites.toString(e, debug);
 	}
 	
 	@Override
-	protected void execute(final Event e) {
-		for (final LivingEntity le : entites.getArray(e)) {
+	protected void executeVoid(final VirtualFrame e) {
+		for (final LivingEntity le : entites.executeArray(e)) {
 			if (!cure) {
 				Timespan dur;
-				int d = (int) (duration != null && (dur = duration.getSingle(e)) != null ? 
+				int d = (int) (duration != null && (dur = duration.executeSingle(e)) != null ?
 						(dur.getAs(Timespan.TimePeriod.TICK) >= Integer.MAX_VALUE ? Integer.MAX_VALUE : dur.getAs(Timespan.TimePeriod.TICK)) : DEFAULT_DURATION);
 				if (le.hasPotionEffect(PotionEffectType.POISON)) {
 					for (final PotionEffect pe : le.getActivePotionEffects()) {

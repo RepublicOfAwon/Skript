@@ -10,7 +10,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Experimental Only")
@@ -29,12 +29,12 @@ public class ExprExperimentalOnly extends SimpleExpression<Boolean> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "experimental only";
 	}
 
 	@Override
-	protected @Nullable Boolean[] get(Event event) {
+	protected @Nullable Boolean[] execute(VirtualFrame event) {
 		return new Boolean[]{true};
 	}
 

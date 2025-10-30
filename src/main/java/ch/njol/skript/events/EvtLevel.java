@@ -1,6 +1,6 @@
 package ch.njol.skript.events;
 
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +29,7 @@ public class EvtLevel extends SkriptEvent {
 	}
 	
 	@Override
-	public boolean check(Event e) {
+	public boolean check(VirtualFrame e) {
 		PlayerLevelChangeEvent event = (PlayerLevelChangeEvent) e;
 		if (leveling.isTrue())
 			return event.getNewLevel() > event.getOldLevel();
@@ -40,7 +40,7 @@ public class EvtLevel extends SkriptEvent {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "level " + (leveling.isTrue() ? "up" : leveling.isFalse() ? "down" : "change");
 	}
 }

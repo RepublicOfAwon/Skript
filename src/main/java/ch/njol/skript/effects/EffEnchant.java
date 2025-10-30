@@ -12,8 +12,8 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -75,12 +75,12 @@ public class EffEnchant extends Effect {
 	}
 	
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		Function<ItemType, ItemType> changeFunction;
 
 		switch (operation) {
 			case ENCHANT -> {
-				EnchantmentType[] types = enchantments.getArray(event);
+				EnchantmentType[] types = enchantments.executeArray(event);
 				if (types.length == 0)
 					return;
 				changeFunction = item -> {
@@ -89,7 +89,7 @@ public class EffEnchant extends Effect {
 				};
 			}
 			case ENCHANT_AT_LEVEL -> {
-				Number levelValue = level.getSingle(event);
+				Number levelValue = level.executeSingle(event);
 				if (levelValue == null || levelValue.intValue() < 0) {
 					return;
 				}
@@ -114,7 +114,7 @@ public class EffEnchant extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return switch (operation) {
 			case ENCHANT -> "enchant " + items.toString(event, debug) + " with " + enchantments.toString(event, debug);
 			case ENCHANT_AT_LEVEL -> "enchant " + items.toString(event, debug) + " at level " + level.toString(event, debug)

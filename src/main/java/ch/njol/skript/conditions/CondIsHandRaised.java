@@ -10,8 +10,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,7 +62,7 @@ public class CondIsHandRaised extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		// True if hand is raised AND hand matches the hand we're checking for (null for both)
 		return entities.check(event, livingEntity ->
 				livingEntity.isHandRaised() && ((hand == null) || livingEntity.getHandRaised().equals(hand)),
@@ -71,7 +71,7 @@ public class CondIsHandRaised extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return entities.toString(event, debug) + "'s  " + (hand == null ? "" : (hand == EquipmentSlot.HAND ? "main " : "off ")) + "hand" +
 				(entities.isSingle() ? " is" : "s are") + (isNegated() ? " not " : "") + " raised";
 	}

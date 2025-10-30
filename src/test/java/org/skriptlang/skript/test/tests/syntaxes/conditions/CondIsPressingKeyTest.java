@@ -2,7 +2,7 @@ package org.skriptlang.skript.test.tests.syntaxes.conditions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.test.runner.SkriptJUnitTest;
 import ch.njol.skript.variables.Variables;
 import org.bukkit.entity.Player;
@@ -41,33 +41,33 @@ public class CondIsPressingKeyTest extends SkriptJUnitTest {
 		if (isPressingKeyCondition == null)
 			Assert.fail("Is pressing key condition is null");
 
-		ContextlessEvent event = ContextlessEvent.get();
+		ContextlessVirtualFrame event = ContextlessVirtualFrame.get();
 		Variables.setVariable("player", testPlayer, event, true);
 		Variables.setVariable("input-keys::1", testInputKeys[0], event, true);
 
 		EasyMock.expect(testPlayer.getCurrentInput()).andReturn(InputHelper.fromKeys(testInputKeys));
 		EasyMock.replay(testPlayer);
-		assert isPressingKeyCondition.check(event);
+		assert isPressingKeyCondition.executeBoolean(event);
 		EasyMock.verify(testPlayer);
 
 		EasyMock.resetToNice(testPlayer);
 		EasyMock.expect(testPlayer.getCurrentInput()).andReturn(InputHelper.fromKeys(testInputKeys[1]));
 		EasyMock.replay(testPlayer);
-		assert !isPressingKeyCondition.check(event);
+		assert !isPressingKeyCondition.executeBoolean(event);
 		EasyMock.verify(testPlayer);
 
 		EasyMock.resetToNice(testPlayer);
 		Variables.setVariable("input-keys::2", testInputKeys[1], event, true);
 		EasyMock.expect(testPlayer.getCurrentInput()).andReturn(InputHelper.fromKeys(testInputKeys));
 		EasyMock.replay(testPlayer);
-		assert isPressingKeyCondition.check(event);
+		assert isPressingKeyCondition.executeBoolean(event);
 		EasyMock.verify(testPlayer);
 
 		EasyMock.resetToNice(testPlayer);
 		Variables.setVariable("input-keys::3", InputKey.SNEAK, event, true);
 		EasyMock.expect(testPlayer.getCurrentInput()).andReturn(InputHelper.fromKeys(testInputKeys));
 		EasyMock.replay(testPlayer);
-		assert !isPressingKeyCondition.check(event);
+		assert !isPressingKeyCondition.executeBoolean(event);
 		EasyMock.verify(testPlayer);
 	}
 

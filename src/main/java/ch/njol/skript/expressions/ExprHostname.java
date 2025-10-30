@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +41,7 @@ public class ExprHostname extends SimpleExpression<String> {
 	
 	@Override
 	@Nullable
-	protected String[] get(Event e) {
+	protected String[] execute(VirtualFrame e) {
 		if (!(e instanceof PlayerLoginEvent))
 			return null;
 
@@ -59,7 +59,7 @@ public class ExprHostname extends SimpleExpression<String> {
 	}	
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "hostname";
 	}
 	

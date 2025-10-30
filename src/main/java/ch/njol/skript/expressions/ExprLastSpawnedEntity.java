@@ -6,11 +6,11 @@ import ch.njol.skript.effects.EffFireworkLaunch;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.sections.EffSecShoot;
 import ch.njol.skript.sections.EffSecSpawn;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LightningStrike;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -75,7 +75,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
 	
 	@Override
 	@Nullable
-	protected Entity[] get(Event event) {
+	protected Entity[] execute(VirtualFrame event) {
 		Entity en;
 		switch (from) {
 			case 0:
@@ -118,7 +118,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String word = "";
 		switch (from) {
 			case 0:

@@ -1,7 +1,7 @@
 package ch.njol.skript.events;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import io.papermc.paper.event.player.PlayerStonecutterRecipeSelectEvent;
-import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -137,7 +137,7 @@ public class EvtItem extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("null")
-	public boolean check(final Event event) {
+	public boolean check(final VirtualFrame event) {
 		if (event instanceof ItemSpawnEvent itemSpawnEvent) // To make 'last dropped item' possible.
 			EffSecSpawn.lastSpawned = itemSpawnEvent.getEntity();
 		if ((!entity && event instanceof EntityPickupItemEvent) || (entity && event instanceof PlayerPickupItemEvent))
@@ -196,7 +196,7 @@ public class EvtItem extends SkriptEvent {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "dispense/spawn/drop/craft/pickup/consume/break/despawn/merge/move/stonecutting" + (types == null ? "" : " of " + types);
 	}
 	

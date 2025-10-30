@@ -14,7 +14,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Plain Item")
@@ -40,8 +40,8 @@ public class ExprPlain extends SimpleExpression<ItemType> {
 	
 	@Override
 	@Nullable
-	protected ItemType[] get(Event e) {
-		ItemType itemType = item.getSingle(e);
+	protected ItemType[] execute(VirtualFrame e) {
+		ItemType itemType = item.executeSingle(e);
 		if (itemType == null)
 			return new ItemType[0];
 		ItemData data = new ItemData(itemType.getMaterial());
@@ -61,7 +61,7 @@ public class ExprPlain extends SimpleExpression<ItemType> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "plain " + item.toString(e, debug);
 	}
 	

@@ -10,12 +10,12 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -86,8 +86,8 @@ public class EffRegisterTag extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		String name = this.name.getSingle(event);
+	protected void executeVoid(VirtualFrame event) {
+		String name = this.name.executeSingle(event);
 		if (name == null)
 			return;
 
@@ -98,7 +98,7 @@ public class EffRegisterTag extends Effect {
 
 		NamespacedKey key = new NamespacedKey(Skript.getInstance(), name);
 
-		Object[] contents = this.contents.getArray(event);
+		Object[] contents = this.contents.executeArray(event);
 		if (contents.length == 0)
 			return;
 
@@ -155,7 +155,7 @@ public class EffRegisterTag extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
 			.append("register a new", type.toString(), "tag named", name, "containing", contents)
 			.toString();

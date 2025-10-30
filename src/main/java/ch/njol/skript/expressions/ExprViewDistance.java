@@ -6,10 +6,10 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -62,7 +62,7 @@ public class ExprViewDistance extends SimplePropertyExpression<Object, Integer> 
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		int value = 2;
 		if (mode == ChangeMode.RESET) {
 			value = Bukkit.getViewDistance();
@@ -71,7 +71,7 @@ public class ExprViewDistance extends SimplePropertyExpression<Object, Integer> 
 			if (mode == ChangeMode.REMOVE)
 				value = -value;
 		}
-		for (Object object : getExpr().getArray(event)) {
+		for (Object object : getExpr().executeArray(event)) {
 			if (object instanceof Player player) {
 				changeViewDistance(mode, value, player::getViewDistance, player::setViewDistance);
 			} else if (RUNNING_1_21 && object instanceof World world) {

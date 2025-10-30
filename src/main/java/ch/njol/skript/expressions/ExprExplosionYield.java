@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +48,7 @@ public class ExprExplosionYield extends SimpleExpression<Number> {
 
 	@Override
 	@Nullable
-	protected Number[] get(Event e) {
+	protected Number[] execute(VirtualFrame e) {
 		if (!(e instanceof ExplosionPrimeEvent))
 			return null;
 
@@ -70,7 +70,7 @@ public class ExprExplosionYield extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public void change(final Event event, final @Nullable Object[] delta, final ChangeMode mode) {
+	public void change(final VirtualFrame event, final @Nullable Object[] delta, final ChangeMode mode) {
 		float f = delta == null ? 0 : ((Number) delta[0]).floatValue();
 		if (f < 0 || !(event instanceof ExplosionPrimeEvent)) // Negative values will throw an error.
 			return;
@@ -110,7 +110,7 @@ public class ExprExplosionYield extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the yield of the explosion";
 	}
 

@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
@@ -55,23 +55,23 @@ public class EffGenerateLoot extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		Random random = ThreadLocalRandom.current();
 
 		LootContext context;
 		if (this.context != null) {
-			context = this.context.getSingle(event);
+			context = this.context.executeSingle(event);
 			if (context == null)
 				return;
 		} else {
 			context = new LootContextWrapper(Bukkit.getWorlds().get(0).getSpawnLocation()).getContext();
 		}
 
-		LootTable table = lootTable.getSingle(event);
+		LootTable table = lootTable.executeSingle(event);
 		if (table == null)
 			return;
 
-		for (Inventory inventory : inventories.getArray(event)) {
+		for (Inventory inventory : inventories.executeArray(event)) {
 			try {
 				// todo: perhaps runtime error in the future
 				table.fillInventory(inventory, random, context);
@@ -80,7 +80,7 @@ public class EffGenerateLoot extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 
 		builder.append("generate loot using", lootTable);

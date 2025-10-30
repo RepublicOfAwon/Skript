@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Item;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,11 +55,11 @@ public class ExprItem extends EventValueExpression<ItemStack> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		assert mode != ChangeMode.RESET;
 		ItemType itemType = delta == null ? null : (ItemType) delta[0];
-		Item item = this.item != null ? this.item.getSingle(event) : null;
-		Slot slot = this.slot != null ? this.slot.getSingle(event) : null;
+		Item item = this.item != null ? this.item.executeSingle(event) : null;
+		Slot slot = this.slot != null ? this.slot.executeSingle(event) : null;
 		if (item == null && slot == null)
 			return;
 		ItemStack itemstack = item != null ? item.getItemStack() : slot != null ? slot.getItem() : null;

@@ -11,7 +11,7 @@ import ch.njol.skript.util.Utils;
 import ch.njol.skript.util.slot.Slot;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent.SlotType;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -82,7 +82,7 @@ public class EvtPlayerArmorChange extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		PlayerArmorChangeEvent changeEvent = (PlayerArmorChangeEvent) event;
 		if (slot == null)
 			return true;
@@ -90,7 +90,7 @@ public class EvtPlayerArmorChange extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		if (slot == null) {
 			builder.append("armor change");

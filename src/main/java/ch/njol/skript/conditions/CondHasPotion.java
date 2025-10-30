@@ -13,8 +13,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,7 +53,7 @@ public class CondHasPotion extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		if (potionEffects == null) {
 			return livingEntities.check(event, entity -> !entity.getActivePotionEffects().isEmpty(), isNegated());
 		}
@@ -63,7 +63,7 @@ public class CondHasPotion extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String effects = (potionEffects == null) ? "any potion effect" : "potion " + potionEffects.toString(event, debug);
 		return PropertyCondition.toString(this, PropertyType.HAVE, event, debug, livingEntities, effects);
 	}

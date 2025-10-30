@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.HashMultimap;
@@ -49,10 +49,10 @@ public class EffObjectives extends Effect  {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		String junit = this.junit.getSingle(event);
+	protected void executeVoid(VirtualFrame event) {
+		String junit = this.junit.executeSingle(event);
 		assert junit != null;
-		String[] objectives = this.objectives.getArray(event);
+		String[] objectives = this.objectives.executeArray(event);
 		assert objectives.length > 0;
 		if (setup) {
 			requirements.putAll(junit, Lists.newArrayList(objectives));
@@ -62,7 +62,7 @@ public class EffObjectives extends Effect  {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (setup)
 			return "ensure junit test " + junit.toString(event, debug) + " completes objectives " + objectives.toString(event, debug);
 		return "complete objectives " + objectives.toString(event, debug) + " on junit test " + junit.toString(event, debug);

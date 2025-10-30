@@ -12,10 +12,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Age of Block/Entity")
@@ -79,13 +79,13 @@ public class ExprAge extends SimplePropertyExpression<Object, Integer> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (mode != ChangeMode.RESET && delta == null)
 			return;
 
 		int newValue = mode != ChangeMode.RESET ? ((Number) delta[0]).intValue() : 0;
 
-		for (Object obj : getExpr().getArray(event)) {
+		for (Object obj : getExpr().executeArray(event)) {
 			Number oldValue = convert(obj);
 			if (oldValue == null && mode != ChangeMode.RESET)
 				continue;

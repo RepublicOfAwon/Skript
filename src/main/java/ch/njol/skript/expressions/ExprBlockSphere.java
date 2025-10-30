@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -52,9 +52,9 @@ public class ExprBlockSphere extends SimpleExpression<Block> {
 	}
 	
 	@Override
-	public Iterator<Block> iterator(final Event e) {
-		final Location l = center.getSingle(e);
-		final Number r = radius.getSingle(e);
+	public Iterator<Block> iterator(final VirtualFrame e) {
+		final Location l = center.executeSingle(e);
+		final Number r = radius.executeSingle(e);
 		if (l == null || r == null)
 			return new EmptyIterator<>();
 		return new BlockSphereIterator(l, r.doubleValue());
@@ -62,8 +62,8 @@ public class ExprBlockSphere extends SimpleExpression<Block> {
 	
 	@Override
 	@Nullable
-	protected Block[] get(final Event e) {
-		final Number r = radius.getSingle(e);
+	protected Block[] execute(final VirtualFrame e) {
+		final Number r = radius.executeSingle(e);
 		if (r == null)
 			return new Block[0];
 		final ArrayList<Block> list = new ArrayList<>((int) (1.1 * 4 / 3. * Math.PI * Math.pow(r.doubleValue(), 3)));
@@ -78,7 +78,7 @@ public class ExprBlockSphere extends SimpleExpression<Block> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "the blocks in radius " + radius + " around " + center.toString(e, debug);
 	}
 	

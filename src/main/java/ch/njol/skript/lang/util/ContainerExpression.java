@@ -5,7 +5,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Container;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
@@ -25,12 +25,12 @@ public class ContainerExpression extends SimpleExpression<Object> {
 	}
 
 	@Override
-	protected Object[] get(Event e) {
+	protected Object[] execute(VirtualFrame e) {
 		throw new UnsupportedOperationException("ContainerExpression must only be used by Loops");
 	}
 
 	@Override
-	public @Nullable Iterator<Object> iterator(Event event) {
+	public @Nullable Iterator<Object> iterator(VirtualFrame event) {
 		Iterator<? extends Container<?>> iterator = expr.iterator(event);
 		if (iterator == null)
 			return null;
@@ -81,7 +81,7 @@ public class ContainerExpression extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return expr.toString(event, debug);
 	}
 

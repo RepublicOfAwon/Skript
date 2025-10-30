@@ -1,9 +1,9 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -35,7 +35,7 @@ public class ExprMe extends SimpleExpression<Player> {
 
 	@Override
 	@Nullable
-	protected Player[] get(Event e) {
+	protected Player[] execute(VirtualFrame e) {
 		if (!(e instanceof EffectCommandEvent))
 			return null;
 
@@ -56,7 +56,7 @@ public class ExprMe extends SimpleExpression<Player> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "me";
 	}
 

@@ -14,11 +14,11 @@ import ch.njol.skript.util.chat.BungeeConverter;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -68,9 +68,9 @@ public class ExprChestInventory extends SimpleExpression<Inventory> {
 	}
 
 	@Override
-	protected Inventory[] get(Event event) {
-		String name = this.name != null ? this.name.getOptionalSingle(event).orElse(DEFAULT_CHEST_TITLE) : DEFAULT_CHEST_TITLE;
-		Number rows = this.rows != null ? this.rows.getOptionalSingle(event).orElse(DEFAULT_CHEST_ROWS) : DEFAULT_CHEST_ROWS;
+	protected Inventory[] execute(VirtualFrame event) {
+		String name = this.name != null ? this.name.executeOptional(event).orElse(DEFAULT_CHEST_TITLE) : DEFAULT_CHEST_TITLE;
+		Number rows = this.rows != null ? this.rows.executeOptional(event).orElse(DEFAULT_CHEST_ROWS) : DEFAULT_CHEST_ROWS;
 
 		int size = rows.intValue() * 9;
 		if (size % 9 != 0)
@@ -100,7 +100,7 @@ public class ExprChestInventory extends SimpleExpression<Inventory> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "chest inventory named " +
 				(name != null ? name.toString(event, debug) : "\"" + DEFAULT_CHEST_TITLE + "\"") +
 				" with " + (rows != null ? rows.toString(event, debug) : "" + DEFAULT_CHEST_ROWS + " rows");

@@ -9,7 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -64,20 +64,20 @@ public class SecWhile extends LoopSection {
 	}
 
 	@Override
-	public Object walk(Event event) {
+	public Object execute(VirtualFrame frame) {
 		while (true) {
-			if ((doWhile && !ranDoWhile) || condition.check(event)) {
+			if ((doWhile && !ranDoWhile) || condition.executeBoolean(frame)) {
 				ranDoWhile = true;
-				currentLoopCounter.put(event, (currentLoopCounter.getOrDefault(event, 0L)) + 1);
+				currentLoopCounter.put(frame, (currentLoopCounter.getOrDefault(frame, 0L)) + 1);
 				try {
-					super.walk(event);
+					super.execute(frame);
 				} catch (ContinueException ignored) {
 					continue;
 				} catch (BreakException ignored) {
 					break;
 				}
 			} else {
-				exit(event);
+				exit(frame);
 				return null;
 			}
 		}
@@ -90,14 +90,14 @@ public class SecWhile extends LoopSection {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (doWhile ? "do " : "") + "while " + condition.toString(event, debug);
 	}
 
 	@Override
-	public void exit(Event event) {
+	public void exit(VirtualFrame frame) {
 		ranDoWhile = false;
-		super.exit(event);
+		super.exit(frame);
 	}
 
 }

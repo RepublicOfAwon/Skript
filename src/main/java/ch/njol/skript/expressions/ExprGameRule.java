@@ -3,9 +3,9 @@ package ch.njol.skript.expressions;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.GameRule;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -44,13 +44,13 @@ public class ExprGameRule extends SimpleExpression<GameruleValue> {
 	}
 
 	@Override
-	protected GameruleValue<?> @Nullable [] get(Event event) {
-		GameRule<?> gamerule = this.gamerule.getSingle(event);
+	protected GameruleValue<?> @Nullable [] execute(VirtualFrame event) {
+		GameRule<?> gamerule = this.gamerule.executeSingle(event);
 		if (gamerule == null) {
 			return null;
 		}
 
-		World[] worlds = this.worlds.getArray(event);
+		World[] worlds = this.worlds.executeArray(event);
 		GameruleValue<?>[] gameruleValues = new GameruleValue[worlds.length];
 
 		for (int i = 0; i < worlds.length; i++) {
@@ -71,12 +71,12 @@ public class ExprGameRule extends SimpleExpression<GameruleValue> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (mode != ChangeMode.SET) {
 			return;
 		}
 
-		GameRule gamerule = this.gamerule.getSingle(event);
+		GameRule gamerule = this.gamerule.executeSingle(event);
 		if (gamerule == null) {
 			return;
 		}
@@ -94,7 +94,7 @@ public class ExprGameRule extends SimpleExpression<GameruleValue> {
 			return;
 		}
 
-		for (World gameruleWorld : worlds.getArray(event)) {
+		for (World gameruleWorld : worlds.executeArray(event)) {
 			gameruleWorld.setGameRule(gamerule, value);
 		}
 	}
@@ -110,7 +110,7 @@ public class ExprGameRule extends SimpleExpression<GameruleValue> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the gamerule " + gamerule.toString(event, debug) + " of " + worlds.toString(event, debug);
 	}
 

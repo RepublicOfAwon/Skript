@@ -15,6 +15,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.ArrayIterator;
 import com.google.common.collect.PeekingIterator;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +32,7 @@ import java.util.function.Predicate;
  *
  * @see Skript#registerExpression(Class, Class, ExpressionType, String...)
  */
-public abstract class SimpleExpression<T> implements Expression<T>, SyntaxRuntimeErrorProducer {
+public abstract class SimpleExpression<T> extends Expression<T> implements SyntaxRuntimeErrorProducer {
 
 	private int time = 0;
 	private Node node;
@@ -41,12 +42,12 @@ public abstract class SimpleExpression<T> implements Expression<T>, SyntaxRuntim
 	@Override
 	public boolean preInit() {
 		node = getParser().getNode();
-		return Expression.super.preInit();
+		return super.preInit();
 	}
 
 	@Override
-	public final @Nullable T getSingle(Event event) {
-		T[] values = getArray(event);
+	public final @Nullable T executeSingle(VirtualFrame frame) {
+		T[] values = executeArray(frame);
 		if (values.length == 0)
 			return null;
 		if (values.length > 1)
@@ -55,8 +56,8 @@ public abstract class SimpleExpression<T> implements Expression<T>, SyntaxRuntim
 	}
 
 	@Override
-	public T[] getAll(Event event) {
-		T[] values = get(event);
+	public T[] executeAll(VirtualFrame frame) {
+		T[] values = execute(frame);
 		if (values == null) {
 			//noinspection unchecked
 			T[] emptyArray = (T[]) Array.newInstance(getReturnType(), 0);
@@ -82,8 +83,8 @@ public abstract class SimpleExpression<T> implements Expression<T>, SyntaxRuntim
 	}
 
 	@Override
-	public final T[] getArray(Event event) {
-		T[] values = get(event);
+	public final T[] executeArray(VirtualFrame frame) {
+		T[] values = execute(frame);
 		if (values == null) {
 			//noinspection unchecked
 			return (T[]) Array.newInstance(getReturnType(), 0);
@@ -127,21 +128,21 @@ public abstract class SimpleExpression<T> implements Expression<T>, SyntaxRuntim
 
 	/**
 	 * This is the internal method to get an expression's values.<br>
-	 * To get the expression's value from the outside use {@link #getSingle(Event)} or {@link #getArray(Event)}.
+	 * To get the expression's value from the outside use {@link Expression#executeSingle(VirtualFrame)} or {@link Expression#executeArray(VirtualFrame)}.
 	 *
 	 * @param event The event with which this expression is evaluated.
 	 * @return An array of values for this event. May not contain nulls.
 	 */
-	protected abstract T @Nullable [] get(Event event);
+	protected abstract T @Nullable [] execute(VirtualFrame event);
 
 	@Override
-	public final boolean check(Event event, Predicate<? super T> checker) {
+	public final boolean check(VirtualFrame event, Predicate<? super T> checker) {
 		return check(event, checker, false);
 	}
 
 	@Override
-	public final boolean check(Event event, Predicate<? super T> checker, boolean negated) {
-		return check(get(event), checker, negated, getAnd());
+	public final boolean check(VirtualFrame event, Predicate<? super T> checker, boolean negated) {
+		return check(execute(event), checker, negated, getAnd());
 	}
 
 	// TODO return a kleenean (UNKNOWN if 'values' is null or empty)
@@ -212,7 +213,7 @@ public abstract class SimpleExpression<T> implements Expression<T>, SyntaxRuntim
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		ClassInfo<?> returnTypeInfo = this.returnTypeInfo;
 		if (returnTypeInfo == null)
 			throw new UnsupportedOperationException();
@@ -220,7 +221,7 @@ public abstract class SimpleExpression<T> implements Expression<T>, SyntaxRuntim
 		if (changer == null)
 			throw new UnsupportedOperationException();
 		//noinspection unchecked
-		((Changer<T>) changer).change(getArray(event), delta, mode);
+		((Changer<T>) changer).change(executeArray(event), delta, mode);
 	}
 
 	/**
@@ -324,8 +325,8 @@ public abstract class SimpleExpression<T> implements Expression<T>, SyntaxRuntim
 	 * @return {@link ArrayIterator}
 	 */
 	@Override
-	public @Nullable Iterator<? extends T> iterator(Event event) {
-		return new ArrayIterator<>(getArray(event));
+	public @Nullable Iterator<? extends T> iterator(VirtualFrame event) {
+		return new ArrayIterator<>(executeArray(event));
 	}
 
 	@Override

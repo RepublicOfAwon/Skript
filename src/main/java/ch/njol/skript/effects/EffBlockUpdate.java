@@ -10,9 +10,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,17 +50,17 @@ public class EffBlockUpdate extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		BlockData data = this.blockData.getSingle(event);
+	protected void executeVoid(VirtualFrame event) {
+		BlockData data = this.blockData.executeSingle(event);
 		if (data == null)
 			return;
-		for (Block block : this.blocks.getArray(event)) {
+		for (Block block : this.blocks.executeArray(event)) {
 			block.setBlockData(data, this.physics);
 		}
 	}
 
 	@Override
-	public @NotNull String toString(@Nullable Event event, boolean debug) {
+	public @NotNull String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "update " + this.blocks.toString(event, debug) + " as "
 			+ this.blockData.toString(event, debug) + (this.physics ? "without neighbour updates" : "");
 	}

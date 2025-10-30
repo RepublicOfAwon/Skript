@@ -10,9 +10,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Breedable;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Allow Aging")
@@ -47,8 +47,8 @@ public class EffAllowAging extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (LivingEntity livingEntity : entities.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (LivingEntity livingEntity : entities.executeArray(event)) {
 			if (!(livingEntity instanceof Breedable breedable))
 				continue;
 
@@ -57,7 +57,7 @@ public class EffAllowAging extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (unlock ? "allow" : "prevent") + " aging of " + entities.toString(event,debug);
 	}
 

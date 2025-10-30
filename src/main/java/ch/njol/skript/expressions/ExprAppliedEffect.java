@@ -9,7 +9,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.event.block.BeaconEffectEvent;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +43,7 @@ public class ExprAppliedEffect extends SimpleExpression<PotionEffectType> {
 	}
 
 	@Override
-	protected PotionEffectType @Nullable [] get(Event event) {
+	protected PotionEffectType @Nullable [] execute(VirtualFrame event) {
 		if (!(event instanceof BeaconEffectEvent effectEvent))
 			return null;
 		return new PotionEffectType[]{effectEvent.getEffect().getType()};
@@ -60,7 +60,7 @@ public class ExprAppliedEffect extends SimpleExpression<PotionEffectType> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "applied effect";
 	}
 

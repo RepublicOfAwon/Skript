@@ -3,8 +3,8 @@ package ch.njol.skript.test.runner;
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.*;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -79,7 +79,7 @@ public class CondMethodExists extends PropertyCondition<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "method " + signatures.toString(event, debug) + " exists";
 	}
 

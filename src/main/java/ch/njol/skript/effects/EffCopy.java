@@ -13,6 +13,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.variables.HintManager;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,10 +78,10 @@ public class EffCopy extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		if (!(source instanceof Variable) || source.isSingle()) {
 			ChangeMode mode = ChangeMode.SET;
-			Object[] clone = (Object[]) Classes.clone(source.getArray(event));
+			Object[] clone = (Object[]) Classes.clone(source.executeArray(event));
 			if (clone.length == 0)
 				mode = ChangeMode.DELETE;
             for (Variable<?> dest : destinations)
@@ -99,14 +100,14 @@ public class EffCopy extends Effect {
 			if (source == null)
 				continue;
 	
-			String target = destination.getName().getSingle(event);
+			String target = destination.getName().executeSingle(event);
 			target = target.substring(0, target.length() - (Variable.SEPARATOR + "*").length());
 			set(event, target, source, destination.isLocal());
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "copy " + source.toString(event, debug) + " into " + rawDestination.toString(event, debug);
 	}
 
@@ -127,7 +128,7 @@ public class EffCopy extends Effect {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static void set(Event event, String targetName, Map<String, Object> source, boolean local) {
+	private static void set(VirtualFrame event, String targetName, Map<String, Object> source, boolean local) {
 		source.forEach((key, value) -> {
 			String node = targetName + (key == null ? "" : Variable.SEPARATOR + key);
 			if (value instanceof Map) {

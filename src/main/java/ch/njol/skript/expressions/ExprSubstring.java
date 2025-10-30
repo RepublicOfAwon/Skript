@@ -10,7 +10,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 
@@ -57,22 +57,22 @@ public class ExprSubstring extends SimpleExpression<String> {
 	@Override
 	@Nullable
 	@SuppressWarnings("null")
-	protected String[] get(final Event e) {
+	protected String[] execute(final VirtualFrame e) {
 		final List<String> parts = new ArrayList<>();
-		final String[] strings = string.getArray(e);
+		final String[] strings = string.executeArray(e);
 		if (strings == null)
 			return new String[0];
 		for (String string : strings) {
 			if (start != null && !start.isSingle()) {
-				Number[] i = start.getArray(e);
+				Number[] i = start.executeArray(e);
 				if (i == null) return new String[0];
 				for (Number p : i) {
 					if (p.intValue() > string.length() || p.intValue() < 1) continue;
 					parts.add(string.substring(p.intValue() - 1, p.intValue()));
 				}
 			} else {
-				Number d1 = start != null ? start.getSingle(e) : 1;
-				Number d2 = end != null ? end.getSingle(e) : string.length();
+				Number d1 = start != null ? start.executeSingle(e) : 1;
+				Number d2 = end != null ? end.executeSingle(e) : string.length();
 				if (d1 == null || d2 == null) continue;
 				if (end == null) d1 = string.length() - d1.intValue() + 1;
 				int i1 = Math.max(d1.intValue() - 1, 0);
@@ -106,7 +106,7 @@ public class ExprSubstring extends SimpleExpression<String> {
 
 	@Override
 	@SuppressWarnings("null")
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		if (start == null) {
 			assert end != null;
 			return "the first " + end.toString(e, debug) + " characters of " + string.toString(e, debug);

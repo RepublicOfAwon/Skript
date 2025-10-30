@@ -15,11 +15,11 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -142,11 +142,11 @@ public class ExprEntitySound extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected String @Nullable [] get(Event event) {
-        int height = this.height == null ? -1 : this.height.getOptionalSingle(event).orElse(-1).intValue();
+	protected String @Nullable [] execute(VirtualFrame event) {
+        int height = this.height == null ? -1 : this.height.executeOptional(event).orElse(-1).intValue();
 
 		ItemStack defaultItem = new ItemStack(soundType == SoundType.EAT ? Material.COOKED_BEEF : Material.POTION);
-        ItemStack item = this.item == null ? defaultItem : this.item.getOptionalSingle(event).map(ItemType::getRandom).orElse(defaultItem);
+        ItemStack item = this.item == null ? defaultItem : this.item.executeOptional(event).map(ItemType::getRandom).orElse(defaultItem);
 
 		return entities.stream(event)
 			.map(entity -> soundType.getSound(entity, height, item, bigOrSpeedy))
@@ -167,7 +167,7 @@ public class ExprEntitySound extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String sound = "unknown";
 		switch (soundType) {
 			case DAMAGE, DEATH, SWIM, AMBIENT -> sound = soundType.name().toLowerCase();

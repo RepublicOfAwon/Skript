@@ -1,10 +1,9 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.HealthUtils;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -55,9 +54,9 @@ public class ExprMaxHealth extends SimplePropertyExpression<LivingEntity, Number
 	}
 	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
+	public void change(final VirtualFrame e, final @Nullable Object[] delta, final ChangeMode mode) {
 		double d = delta == null ? 0 : ((Number) delta[0]).doubleValue();
-		for (final LivingEntity en : getExpr().getArray(e)) {
+		for (final LivingEntity en : getExpr().executeArray(e)) {
 			assert en != null : getExpr();
 			switch (mode) {
 				case SET:

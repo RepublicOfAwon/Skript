@@ -12,9 +12,9 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Horse Domestication")
@@ -61,12 +61,12 @@ public class ExprDomestication extends SimplePropertyExpression<LivingEntity, In
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		assert mode != ChangeMode.REMOVE_ALL && mode != ChangeMode.DELETE;
 
 		int change = delta == null ? 0 : ((Number) delta[0]).intValue();
 
-		for (LivingEntity entity : getExpr().getArray(event)) {
+		for (LivingEntity entity : getExpr().executeArray(event)) {
 			if (entity instanceof AbstractHorse horse) {
 				int level = max ? horse.getMaxDomestication() : horse.getDomestication();
 				switch (mode) {

@@ -4,8 +4,8 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -58,8 +58,8 @@ public class ExprScoreboardTags extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	public String[] get(Event e) {
-		return Stream.of(entities.getArray(e))
+	public String[] execute(VirtualFrame e) {
+		return Stream.of(entities.executeArray(e))
 				.map(Entity::getScoreboardTags)
 				.flatMap(Set::stream)
 				.toArray(String[]::new);
@@ -81,8 +81,8 @@ public class ExprScoreboardTags extends SimpleExpression<String> {
 	}
 
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		for (Entity entity : entities.getArray(e)) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
+		for (Entity entity : entities.executeArray(e)) {
 			switch (mode) {
 				case SET:
 					assert delta != null;
@@ -118,7 +118,7 @@ public class ExprScoreboardTags extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the scoreboard tags of " + entities.toString(e, debug);
 	}
 

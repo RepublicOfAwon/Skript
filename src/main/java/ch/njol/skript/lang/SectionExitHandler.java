@@ -1,5 +1,6 @@
 package ch.njol.skript.lang;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 
 /**
@@ -13,6 +14,6 @@ public interface SectionExitHandler {
 	 * Exits the section
 	 * @param event The involved event
 	 */
-	void exit(Event event);
+	void exit(VirtualFrame event);
 
 }

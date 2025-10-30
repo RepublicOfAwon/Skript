@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
@@ -54,19 +54,19 @@ public class ExprPotionEffect extends SimpleExpression<PotionEffect> {
 	
 	@Override
 	@Nullable
-	protected PotionEffect[] get(final Event e) {
-		PotionEffectType potionEffectType = this.potionEffectType.getSingle(e);
+	protected PotionEffect[] execute(final VirtualFrame e) {
+		PotionEffectType potionEffectType = this.potionEffectType.executeSingle(e);
 		if (potionEffectType == null)
 			return null;
 		int tier = 0;
 		if (this.tier != null) {
-			Number n = this.tier.getSingle(e);
+			Number n = this.tier.executeSingle(e);
 			if (n != null)
 				tier = n.intValue() - 1;
 		}
 		int ticks = 15 * 20; // 15 second default potion length
 		if (this.timespan != null) {
-			Timespan timespan = this.timespan.getSingle(e);
+			Timespan timespan = this.timespan.executeSingle(e);
 			if (timespan != null) {
 				ticks = timespan.isInfinite() ? PotionEffect.INFINITE_DURATION : (int) timespan.getAs(Timespan.TimePeriod.TICK);
 			}
@@ -85,7 +85,7 @@ public class ExprPotionEffect extends SimpleExpression<PotionEffect> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		StringBuilder builder = new StringBuilder();
 		if (ambient)
 			builder.append("ambient ");

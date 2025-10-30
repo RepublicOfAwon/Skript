@@ -14,11 +14,13 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.log.LogEntry;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.Task;
 import com.google.common.collect.Iterables;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
@@ -80,7 +82,7 @@ public class StructParse extends Structure {
 	@Override
 	public boolean postLoad() {
 		Task.callSync(() -> {
-			resultsExpression.change(ContextlessEvent.get(), logs, ChangeMode.SET);
+			resultsExpression.change(ContextlessVirtualFrame.get(), logs, ChangeMode.SET);
 			return null;
 		});
 		return true;
@@ -108,7 +110,7 @@ public class StructParse extends Structure {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "parse";
 	}
 

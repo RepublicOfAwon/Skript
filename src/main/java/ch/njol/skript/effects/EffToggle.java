@@ -3,11 +3,11 @@ package ch.njol.skript.effects;
 import java.util.function.Function;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.Powerable;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -107,7 +107,7 @@ public class EffToggle extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		switch (type) {
 			case BOOLEANS -> toggleBooleans(event);
 			case BLOCKS -> toggleBlocks(event);
@@ -119,8 +119,8 @@ public class EffToggle extends Effect {
 	 * Toggles blocks by opening/closing or powering/unpowering them.
 	 * @param event the event used for evaluation
 	 */
-	private void toggleBlocks(Event event) {
-		for (Object obj : togglables.getArray(event)) {
+	private void toggleBlocks(VirtualFrame event) {
+		for (Object obj : togglables.executeArray(event)) {
 			if (obj instanceof Block block) {
 				toggleSingleBlock(block);
 			}
@@ -142,10 +142,10 @@ public class EffToggle extends Effect {
 	}
 
 	/**
-	 * Uses {@link Expression#changeInPlace(Event, Function)} to toggle booleans.
+	 * Uses {@link Expression#changeInPlace(VirtualFrame, Function)} to toggle booleans.
 	 * @param event the event used for evaluation
 	 */
-	private void toggleBooleans(Event event) {
+	private void toggleBooleans(VirtualFrame event) {
 		togglables.changeInPlace(event, (obj) -> {
 			if (!(obj instanceof Boolean bool)) {
 				return null;
@@ -155,10 +155,10 @@ public class EffToggle extends Effect {
 	}
 
 	/**
-	 * Uses {@link Expression#changeInPlace(Event, Function)} to toggle both blocks and booleans.
+	 * Uses {@link Expression#changeInPlace(VirtualFrame, Function)} to toggle both blocks and booleans.
 	 * @param event the event used for evaluation
 	 */
-	private void toggleMixed(Event event) {
+	private void toggleMixed(VirtualFrame event) {
 		togglables.changeInPlace(event, (obj) -> {
 			if (obj instanceof Block block) {
 				toggleSingleBlock(block);
@@ -171,7 +171,7 @@ public class EffToggle extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String actionText = switch (action) {
 			case ACTIVATE -> "activate";
 			case DEACTIVATE -> "deactivate";

@@ -14,9 +14,9 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Display.Brightness;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -61,24 +61,24 @@ public class ExprDisplayBrightness extends SimpleExpression<Integer> {
 	}
 
 	@Override
-	protected Integer @Nullable [] get(Event event) {
+	protected Integer @Nullable [] execute(VirtualFrame event) {
 		List<Integer> values = new ArrayList<>();
 		if (skyLight) {
-			for (Display display : displays.getArray(event)) {
+			for (Display display : displays.executeArray(event)) {
 				Brightness brightness = display.getBrightness();
 				if (brightness == null)
 					continue;
 				values.add(brightness.getSkyLight());
 			}
 		} else if (blockLight) {
-			for (Display display : displays.getArray(event)) {
+			for (Display display : displays.executeArray(event)) {
 				Brightness brightness = display.getBrightness();
 				if (brightness == null)
 					continue;
 				values.add(brightness.getBlockLight());
 			}
 		} else {
-			for (Display display : displays.getArray(event)) {
+			for (Display display : displays.executeArray(event)) {
 				Brightness brightness = display.getBrightness();
 				if (brightness == null)
 					continue;
@@ -104,7 +104,7 @@ public class ExprDisplayBrightness extends SimpleExpression<Integer> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (skyLight || blockLight) {
 			int level = delta == null ? 0 : ((Number) delta[0]).intValue();
 			switch (mode) {
@@ -112,7 +112,7 @@ public class ExprDisplayBrightness extends SimpleExpression<Integer> {
 					level = -level;
 					// $FALL-THROUGH$
 				case ADD:
-					for (Display display : displays.getArray(event)) {
+					for (Display display : displays.executeArray(event)) {
 						Brightness brightness = display.getBrightness();
 						if (brightness == null) {
 							int clamped = Math2.fit(0, level, 15);
@@ -127,7 +127,7 @@ public class ExprDisplayBrightness extends SimpleExpression<Integer> {
 					}
 					break;
 				case SET:
-					for (Display display : displays.getArray(event)) {
+					for (Display display : displays.executeArray(event)) {
 						Brightness brightness = display.getBrightness();
 						int clamped = Math2.fit(0, level, 15);
 						if (brightness == null) {
@@ -146,7 +146,7 @@ public class ExprDisplayBrightness extends SimpleExpression<Integer> {
 				int value = Math2.fit(0, ((Number) delta[0]).intValue(), 15);
 				change = new Brightness(value, value);
 			}
-			for (Display display : displays.getArray(event))
+			for (Display display : displays.executeArray(event))
 				display.setBrightness(change);
 		}
 	}
@@ -162,7 +162,7 @@ public class ExprDisplayBrightness extends SimpleExpression<Integer> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (skyLight) {
 			return "sky light override of " + displays.toString(event, debug);
 		} else if (blockLight) {

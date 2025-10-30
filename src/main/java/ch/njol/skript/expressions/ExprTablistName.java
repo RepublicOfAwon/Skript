@@ -7,8 +7,8 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Tab List Name")
@@ -38,9 +38,9 @@ public class ExprTablistName extends SimplePropertyExpression<Player, String> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		String name = delta != null ? (String) delta[0] : null;
-		for (Player player : getExpr().getArray(event)) {
+		for (Player player : getExpr().executeArray(event)) {
 			player.setPlayerListName(name);
 		}
 	}

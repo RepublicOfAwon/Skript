@@ -10,8 +10,8 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("No Damage Time")
@@ -44,11 +44,11 @@ public class ExprNoDamageTime extends SimplePropertyExpression<LivingEntity, Tim
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		int providedTicks = 0;
 		if (delta != null && delta[0] instanceof Timespan timespan)
 			providedTicks = (int) timespan.getAs(TimePeriod.TICK);
-		for (LivingEntity entity : getExpr().getArray(event)) {
+		for (LivingEntity entity : getExpr().executeArray(event)) {
 			switch (mode) {
 				case SET, DELETE, RESET -> entity.setNoDamageTicks(providedTicks);
 				case ADD -> {

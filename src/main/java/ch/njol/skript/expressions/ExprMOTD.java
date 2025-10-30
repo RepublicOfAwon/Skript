@@ -1,8 +1,8 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,7 +51,7 @@ public class ExprMOTD extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	public String[] get(Event e) {
+	public String[] execute(VirtualFrame e) {
 		if (!isDefault && !(e instanceof ServerListPingEvent))
 			return null;
 
@@ -81,7 +81,7 @@ public class ExprMOTD extends SimpleExpression<String> {
 
 	@SuppressWarnings("null")
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
 		if (!(e instanceof ServerListPingEvent))
 			return;
 
@@ -109,7 +109,7 @@ public class ExprMOTD extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the " + (isDefault ? "default MOTD" : "MOTD");
 	}
 

@@ -9,7 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -49,9 +49,9 @@ public class CondMatches extends Condition {
 	}
 	
 	@Override
-	public boolean check(Event e) {
-		String[] txt = strings.getAll(e);
-		String[] regexes = regex.getAll(e);
+	public boolean executeBoolean(VirtualFrame e) {
+		String[] txt = strings.executeAll(e);
+		String[] regexes = regex.executeAll(e);
 		if (txt.length < 1 || regexes.length < 1) return false;
 		boolean result;
 		boolean stringAnd = strings.getAnd();
@@ -82,7 +82,7 @@ public class CondMatches extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return strings.toString(e, debug) + " " + (isNegated() ? "doesn't match" : "matches") + " " + regex.toString(e, debug);
 	}
 	

@@ -15,7 +15,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.Lists;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.structure.Structure;
@@ -63,7 +63,7 @@ public class ExprSentCommands extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String[] get(Event event) {
+	protected String[] execute(VirtualFrame event) {
 		if (!(event instanceof PlayerCommandSendEvent))
 			return null;
 		return ((PlayerCommandSendEvent) event).getCommands().toArray(new String[0]);
@@ -85,7 +85,7 @@ public class ExprSentCommands extends SimpleExpression<String> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (!(event instanceof PlayerCommandSendEvent))
 			return;
 
@@ -131,7 +131,7 @@ public class ExprSentCommands extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the sent server command list";
 	}
 

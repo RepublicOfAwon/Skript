@@ -12,9 +12,9 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
 import com.destroystokyo.paper.profile.PlayerProfile;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class ExprHoverList extends SimpleExpression<String> {
 
 	@Override
 	@SuppressWarnings({"removal"})
-	public String @Nullable [] get(Event event) {
+	public String @Nullable [] execute(VirtualFrame event) {
 		if (!(event instanceof PaperServerListPingEvent))
 			return null;
 
@@ -98,7 +98,7 @@ public class ExprHoverList extends SimpleExpression<String> {
 
 	@Override
 	@SuppressWarnings({"null", "removal"})
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (!(event instanceof PaperServerListPingEvent))
 			return;
 
@@ -179,7 +179,7 @@ public class ExprHoverList extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the hover list";
 	}
 

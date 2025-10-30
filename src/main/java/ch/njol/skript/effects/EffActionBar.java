@@ -1,8 +1,8 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -43,17 +43,17 @@ public class EffActionBar extends Effect {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	protected void execute(Event event) {
-		String msg = message.getSingle(event);
+	protected void executeVoid(VirtualFrame event) {
+		String msg = message.executeSingle(event);
 		if (msg == null)
 			return;
 		BaseComponent[] components = BungeeConverter.convert(ChatMessages.parseToArray(msg));
-		for (Player player : recipients.getArray(event))
+		for (Player player : recipients.executeArray(event))
 			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, components);
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "send action bar " + message.toString(event, debug) + " to " + recipients.toString(event, debug);
 	}
 

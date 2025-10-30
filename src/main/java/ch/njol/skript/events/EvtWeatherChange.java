@@ -6,12 +6,10 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.WeatherType;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Predicate;
 
 /**
  * @author Peter Güttinger
@@ -36,7 +34,7 @@ public class EvtWeatherChange extends SkriptEvent {
 
 	@SuppressWarnings("null")
 	@Override
-	public boolean check(final Event e) {
+	public boolean check(final VirtualFrame e) {
 		if (types == null)
 			return true;
 		if (!(e instanceof WeatherChangeEvent || e instanceof ThunderChangeEvent))
@@ -47,7 +45,7 @@ public class EvtWeatherChange extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "weather change" + (types == null ? "" : " to " + types);
 	}
 

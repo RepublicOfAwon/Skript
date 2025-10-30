@@ -2,7 +2,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +50,7 @@ public class ExprHealAmount extends SimpleExpression<Double> {
 
 	@Nullable
 	@Override
-	protected Double[] get(Event event) {
+	protected Double[] execute(VirtualFrame event) {
 		if (!(event instanceof EntityRegainHealthEvent))
 			return null;
 		return new Double[]{((EntityRegainHealthEvent) event).getAmount()};
@@ -69,7 +69,7 @@ public class ExprHealAmount extends SimpleExpression<Double> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (!(event instanceof EntityRegainHealthEvent))
 			return;
 
@@ -107,7 +107,7 @@ public class ExprHealAmount extends SimpleExpression<Double> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "heal amount";
 	}
 

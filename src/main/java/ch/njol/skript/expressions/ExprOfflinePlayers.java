@@ -1,9 +1,9 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -44,12 +44,12 @@ public class ExprOfflinePlayers extends SimpleExpression<OfflinePlayer> {
 	
 	@Override
 	@Nullable
-	protected OfflinePlayer[] get(final Event event) {
+	protected OfflinePlayer[] execute(final VirtualFrame event) {
 		return Bukkit.getOfflinePlayers();
 	}
 	
 	@Override
-	public String toString(final @Nullable Event event, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame event, final boolean debug) {
 		return "offline players";
 	}
 	

@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.registrations.experiments.QueueExperimentSyntax;
 import org.skriptlang.skript.lang.util.SkriptQueue;
@@ -48,8 +48,8 @@ public class ExprDequeuedQueue extends SimpleExpression<Object> implements Queue
 	}
 
 	@Override
-	protected Object @Nullable [] get(Event event) {
-		SkriptQueue queue = this.queue.getSingle(event);
+	protected Object @Nullable [] execute(VirtualFrame event) {
+		SkriptQueue queue = this.queue.executeSingle(event);
 		if (queue == null)
 			return null;
 		return queue.toArray();
@@ -66,7 +66,7 @@ public class ExprDequeuedQueue extends SimpleExpression<Object> implements Queue
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "dequeued " + queue.toString(event, debug);
 	}
 

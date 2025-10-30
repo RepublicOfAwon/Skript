@@ -5,6 +5,7 @@ import java.lang.reflect.Array;
 import ch.njol.skript.lang.EventRestrictedSyntax;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -74,7 +75,7 @@ public class ExprAttacked extends SimpleExpression<Entity> implements EventRestr
 
 	@Override
 	@Nullable
-	protected Entity[] get(Event e) {
+	protected Entity[] execute(VirtualFrame e) {
 		Entity[] one = (Entity[]) Array.newInstance(type.getType(), 1);
 		Entity entity;
 		if (e instanceof EntityEvent)
@@ -104,10 +105,10 @@ public class ExprAttacked extends SimpleExpression<Entity> implements EventRestr
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		if (e == null)
 			return "the attacked " + type;
-		return Classes.getDebugMessage(getSingle(e));
+		return Classes.getDebugMessage("attacked");
 	}
 
 }

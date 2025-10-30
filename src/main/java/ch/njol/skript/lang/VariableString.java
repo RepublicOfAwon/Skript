@@ -22,6 +22,7 @@ import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.SingleItemIterator;
 import com.google.common.collect.Lists;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.ChatColor;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
 /**
  * Represents a string that may contain expressions, and is thus "variable".
  */
-public class VariableString implements Expression<String> {
+public class VariableString extends Expression<String> {
 
 	private final @Nullable Script script;
 	protected final String original;
@@ -361,7 +362,7 @@ public class VariableString implements Expression<String> {
 	 * @param event Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
-	public String toUnformattedString(Event event) {
+	public String toUnformattedString(VirtualFrame event) {
 		if (isSimple) {
 			assert simpleUnformatted != null;
 			return simpleUnformatted;
@@ -371,7 +372,7 @@ public class VariableString implements Expression<String> {
 		StringBuilder builder = new StringBuilder();
 		for (Object string : strings) {
 			if (string instanceof Expression<?>) {
-				builder.append(Classes.toString(((Expression<?>) string).getArray(event), true, mode));
+				builder.append(Classes.toString(((Expression<?>) string).executeArray(event), true, mode));
 			} else {
 				builder.append(string);
 			}
@@ -385,20 +386,20 @@ public class VariableString implements Expression<String> {
 	 * @param event Currently running event.
 	 * @return Message components.
 	 */
-	public List<MessageComponent> getMessageComponents(Event event) {
+	public List<MessageComponent> getMessageComponents(VirtualFrame event) {
 		return getMessageComponents(event, null);
 	}
 
 	/**
 	 * Gets message components from this string. Formatting is parsed only
 	 * in simple parts for security reasons. Providing a StringBuilder allows an unformatted output
-	 * identical to {@link #toUnformattedString(Event)} while only evaluating any expressions once.
+	 * identical to {@link #toUnformattedString(VirtualFrame)} while only evaluating any expressions once.
 	 *
 	 * @param event Currently running event.
 	 * @param unformattedBuilder Unformatted string to append to.
 	 * @return Message components.
 	 */
-	public List<MessageComponent> getMessageComponents(Event event, @Nullable StringBuilder unformattedBuilder) {
+	public List<MessageComponent> getMessageComponents(VirtualFrame event, @Nullable StringBuilder unformattedBuilder) {
 		if (isSimple) { // Trusted, constant string in a script
 			assert simpleUnformatted != null;
 			return ChatMessages.parse(simpleUnformatted);
@@ -423,7 +424,7 @@ public class VariableString implements Expression<String> {
 				// Convert it to plain text
 				String text = null;
 				if (string instanceof Expression<?> expression) {
-					text = Classes.toString(expression.getArray(event), true, mode);
+					text = Classes.toString(expression.executeArray(event), true, mode);
 					if (unformattedBuilder != null)
 						unformattedBuilder.append(text);
 					// Special case: user wants to process formatting
@@ -464,7 +465,7 @@ public class VariableString implements Expression<String> {
 	 * @param event Currently running event.
 	 * @return Message components.
 	 */
-	public List<MessageComponent> getMessageComponentsUnsafe(Event event) {
+	public List<MessageComponent> getMessageComponentsUnsafe(VirtualFrame event) {
 		if (isSimple) { // Trusted, constant string in a script
 			assert simpleUnformatted != null;
 			return ChatMessages.parse(simpleUnformatted);
@@ -479,7 +480,7 @@ public class VariableString implements Expression<String> {
 	 * @param event Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
-	public String toChatString(Event event) {
+	public String toChatString(VirtualFrame event) {
 		return ChatMessages.toJson(getMessageComponents(event));
 	}
 
@@ -506,7 +507,7 @@ public class VariableString implements Expression<String> {
 	 * @param event Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
-	public String toString(@Nullable Event event) {
+	public String toString(@Nullable VirtualFrame event) {
 		if (isSimple) {
 			assert simple != null;
 			return simple;
@@ -520,7 +521,7 @@ public class VariableString implements Expression<String> {
 		List<Class<?>> types = new ArrayList<>();
 		for (Object object : string) {
 			if (object instanceof Expression<?>) {
-				Object[] objects = ((Expression<?>) object).getArray(event);
+				Object[] objects = ((Expression<?>) object).executeArray(event);
 				if (objects != null && objects.length > 0)
 					types.add(objects[0].getClass());
 				builder.append(Classes.toString(objects, true, mode));
@@ -538,10 +539,10 @@ public class VariableString implements Expression<String> {
 	}
 
 	/**
-	 * Use {@link #toString(Event)} to get the actual string. This method is for debugging.
+	 * Use {@link #toString(VirtualFrame)} to get the actual string. This method is for debugging.
 	 */
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (isSimple) {
 			assert simple != null;
 			return '"' + simple + '"';
@@ -635,18 +636,18 @@ public class VariableString implements Expression<String> {
 	}
 
 	@Override
-	public String getSingle(Event event) {
-		return toString(event);
+	public String executeSingle(VirtualFrame frame) {
+		return toString(frame);
 	}
 
 	@Override
-	public String[] getArray(Event event) {
-		return new String[] {toString(event)};
+	public String[] executeArray(VirtualFrame frame) {
+		return new String[] {toString(frame)};
 	}
 
 	@Override
-	public String[] getAll(Event event) {
-		return new String[] {toString(event)};
+	public String[] executeAll(VirtualFrame frame) {
+		return new String[] {toString(frame)};
 	}
 
 	@Override
@@ -655,13 +656,13 @@ public class VariableString implements Expression<String> {
 	}
 
 	@Override
-	public boolean check(Event event, Predicate<? super String> checker, boolean negated) {
-		return SimpleExpression.check(getAll(event), checker, negated, false);
+	public boolean check(VirtualFrame event, Predicate<? super String> checker, boolean negated) {
+		return SimpleExpression.check(executeAll(event), checker, negated, false);
 	}
 
 	@Override
-	public boolean check(Event event, Predicate<? super String> checker) {
-		return SimpleExpression.check(getAll(event), checker, false, false);
+	public boolean check(VirtualFrame event, Predicate<? super String> checker) {
+		return SimpleExpression.check(executeAll(event), checker, false, false);
 	}
 
 	@Override
@@ -683,7 +684,7 @@ public class VariableString implements Expression<String> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) throws UnsupportedOperationException {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -708,7 +709,7 @@ public class VariableString implements Expression<String> {
 	}
 
 	@Override
-	public Iterator<? extends String> iterator(Event event) {
+	public Iterator<? extends String> iterator(VirtualFrame event) {
 		return new SingleItemIterator<>(toString(event));
 	}
 

@@ -10,8 +10,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.skriptlang.skript.lang.script.Script;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -23,7 +22,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.util.Kleenean;
@@ -83,10 +81,10 @@ public class EffLog extends Effect {
 
 	@SuppressWarnings("resource")
 	@Override
-	protected void execute(Event event) {
-		for (String message : messages.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (String message : messages.executeArray(event)) {
 			if (files != null) {
-				for (String logFile : files.getArray(event)) {
+				for (String logFile : files.executeArray(event)) {
 					logFile = logFile.toLowerCase(Locale.ENGLISH);
 					if (!logFile.endsWith(".log"))
 						logFile += ".log";
@@ -123,7 +121,7 @@ public class EffLog extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "log " + messages.toString(event, debug)
 			+ (files != null ? " to " + files.toString(event, debug) : "")
 			+ (logLevel != Level.INFO ? "with severity " + logLevel.toString().toLowerCase(Locale.ENGLISH) : "");

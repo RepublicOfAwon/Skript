@@ -14,8 +14,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -67,8 +67,8 @@ public class ExprNamed extends PropertyExpression<Object, Object> {
 	}
 	
 	@Override
-	protected Object[] get(Event event, Object[] source) {
-		String name = this.name.getSingle(event);
+	protected Object[] get(VirtualFrame event, Object[] source) {
+		String name = this.name.executeSingle(event);
 		if (name == null)
 			return get(source, obj -> obj); // No name provided, do nothing
 		return get(source, object -> {
@@ -108,7 +108,7 @@ public class ExprNamed extends PropertyExpression<Object, Object> {
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return getExpr().toString(e, debug) + " named " + name;
 	}
 	

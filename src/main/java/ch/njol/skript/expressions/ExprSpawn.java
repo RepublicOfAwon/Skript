@@ -14,6 +14,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
@@ -44,7 +45,8 @@ public class ExprSpawn extends PropertyExpression<World, Location> {
 	}
 
 	@Override
-	protected Location[] get(Event event, World[] source) {
+	protected Location[] get(VirtualFrame frame, World[] source) {
+		Event event = (Event) frame.getArguments()[0];
 		if (getTime() == -1 && event instanceof SpawnChangeEvent && !Delay.isDelayed(event))
 			return new Location[] {((SpawnChangeEvent) event).getPreviousLocation()};
 		return get(source, World::getSpawnLocation);
@@ -59,14 +61,14 @@ public class ExprSpawn extends PropertyExpression<World, Location> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		//noinspection ConstantConditions
 		if (delta == null)
 			return;
 
 		Location originalLocation = (Location) delta[0];
 		assert originalLocation != null;
-		for (World world : getExpr().getArray(event)) {
+		for (World world : getExpr().executeArray(event)) {
 			Location location = originalLocation.clone();
 			World locationWorld = location.getWorld();
 			if (locationWorld == null) {
@@ -90,7 +92,7 @@ public class ExprSpawn extends PropertyExpression<World, Location> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the spawn point of " + getExpr().toString(event, debug);
 	}
 

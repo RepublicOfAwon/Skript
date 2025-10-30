@@ -17,6 +17,7 @@ import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -97,7 +98,8 @@ public class ExprFurnaceSlot extends SimpleExpression<Slot> {
 	}
 
 	@Override
-	protected Slot @Nullable [] get(Event event) {
+	protected Slot @Nullable [] execute(VirtualFrame frame) {
+		Event event = (Event) frame.getArguments()[0];
 		Block[] blocks;
 		if (isEvent) {
 			blocks = new Block[1];
@@ -108,7 +110,7 @@ public class ExprFurnaceSlot extends SimpleExpression<Slot> {
 			}
 		} else {
 			assert this.blocks != null;
-			blocks = this.blocks.getArray(event);
+			blocks = this.blocks.executeArray(frame);
 		}
 
 		List<Slot> slots = new ArrayList<>();
@@ -140,8 +142,8 @@ public class ExprFurnaceSlot extends SimpleExpression<Slot> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
-		return selectedSlot.toString + " slot of " + (isEvent ? event.getEventName() : blocks.toString(event, debug));
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
+		return selectedSlot.toString + " slot of " + (isEvent ? (((Event)event.getArguments()[0]).getEventName()) : blocks.toString(event, debug));
 	}
 
 	@Override

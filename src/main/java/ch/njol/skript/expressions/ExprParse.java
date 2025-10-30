@@ -20,8 +20,8 @@ import ch.njol.skript.patterns.PatternCompiler;
 import ch.njol.skript.patterns.SkriptPattern;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.ChatColor;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
@@ -137,8 +137,8 @@ public class ExprParse extends SimpleExpression<Object> {
 	@Override
 	@Nullable
 	@SuppressWarnings("null")
-	protected Object[] get(Event event) {
-		String text = this.text.getSingle(event);
+	protected Object[] execute(VirtualFrame event) {
+		String text = this.text.executeSingle(event);
 		if (text == null)
 			return null;
 
@@ -172,10 +172,10 @@ public class ExprParse extends SimpleExpression<Object> {
 						for (int i = 0; i < exprs.length; i++) {
 							if (exprs[i] != null) {
 								if (patternExpressions[i].getSecond()) {
-									values.addAll(Arrays.asList(exprs[i].getArray(null)));
+									values.addAll(Arrays.asList(exprs[i].executeArray(null)));
 									continue;
 								}
-								values.add(exprs[i].getSingle(null));
+								values.add(exprs[i].executeSingle(null));
 							}
 						}
 						return values.toArray();
@@ -193,7 +193,7 @@ public class ExprParse extends SimpleExpression<Object> {
 					for (int i = 0; i < exprs.length; i++) {
 						if (exprs[i] != null) {
 							//noinspection DataFlowIssue
-							values[valueIndex] = patternExpressions[i].getSecond() ? exprs[i].getArray(null) : exprs[i].getSingle(null);
+							values[valueIndex] = patternExpressions[i].getSecond() ? exprs[i].executeArray(null) : exprs[i].executeSingle(null);
 							valueIndex++;
 						}
 					}
@@ -232,7 +232,7 @@ public class ExprParse extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return text.toString(event, debug) + " parsed as " + (classInfo != null ? classInfo.toString(Language.F_INDEFINITE_ARTICLE) : pattern);
 	}
 

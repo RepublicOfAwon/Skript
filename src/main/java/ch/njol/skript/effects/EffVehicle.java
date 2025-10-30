@@ -11,8 +11,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Vehicle")
@@ -43,25 +43,25 @@ public class EffVehicle extends Effect {
 	}
 	
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		// matchedPattern = 1
 		if (vehicles == null) {
 			assert passengers != null;
-			for (Entity passenger : passengers.getArray(event))
+			for (Entity passenger : passengers.executeArray(event))
 				passenger.leaveVehicle();
 			return;
 		}
 		// matchedPattern = 2
 		if (passengers == null) {
-			for (Object vehicle : vehicles.getArray(event))
+			for (Object vehicle : vehicles.executeArray(event))
 				((Entity) vehicle).eject();
 			return;
 		}
 		// matchedPattern = 0
-		Entity[] passengersArray = passengers.getArray(event);
+		Entity[] passengersArray = passengers.executeArray(event);
 		if (passengersArray.length == 0)
 			return;
-		Object vehicleObject = vehicles.getSingle(event);
+		Object vehicleObject = vehicles.executeSingle(event);
 		if (vehicleObject instanceof Entity vehicleEntity) {
 			for (Entity passenger : passengersArray) {
 				assert passenger != null;
@@ -83,7 +83,7 @@ public class EffVehicle extends Effect {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (vehicles == null) {
 			assert passengers != null;
 			return "make " + passengers.toString(event, debug) + " dismount";

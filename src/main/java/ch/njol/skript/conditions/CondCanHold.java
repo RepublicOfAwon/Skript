@@ -1,7 +1,7 @@
 package ch.njol.skript.conditions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -61,7 +61,7 @@ public class CondCanHold extends Condition {
 	}
 	
 	@Override
-	public boolean check(Event e) {
+	public boolean executeBoolean(VirtualFrame e) {
 		return invis.check(e,
 				invi -> {
 					if (!items.getAnd()) {
@@ -75,7 +75,7 @@ public class CondCanHold extends Condition {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return PropertyCondition.toString(this, PropertyType.CAN, e, debug, invis,
 				"hold " + items.toString(e, debug));
 	}

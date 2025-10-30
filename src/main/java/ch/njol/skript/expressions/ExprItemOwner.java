@@ -10,10 +10,10 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -50,9 +50,9 @@ public class ExprItemOwner extends SimplePropertyExpression<Item, UUID> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		UUID uuid = delta == null ? null : UUIDUtils.asUUID(delta[0]);
-		for (Item item : getExpr().getArray(event)) {
+		for (Item item : getExpr().executeArray(event)) {
 			item.setOwner(uuid);
 		}
 	}

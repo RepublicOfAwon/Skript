@@ -7,13 +7,13 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Beehive;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.EntityBlockStorage;
 import org.bukkit.entity.Bee;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -60,14 +60,14 @@ public class EffInsertEntityStorage extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		Block block = this.block.getSingle(event);
+	protected void executeVoid(VirtualFrame event) {
+		Block block = this.block.executeSingle(event);
 		if (block == null || !(block.getState() instanceof EntityBlockStorage<?> blockStorage))
 			return;
 		Class<? extends Entity> entityClass = getEntityClass(blockStorage);
 		if (entityClass == null)
 			return;
-		addEntities(entityClass, blockStorage, this.entities.getArray(event));
+		addEntities(entityClass, blockStorage, this.entities.executeArray(event));
 	}
 
 	private <T extends EntityBlockStorage<R>, R extends Entity> void addEntities(Class<R> entityClass, BlockState blockState, Entity[] entities) {
@@ -94,7 +94,7 @@ public class EffInsertEntityStorage extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "add " + entities.toString(event, debug) + " into the entity storage of " + block.toString(event, debug);
 	}
 

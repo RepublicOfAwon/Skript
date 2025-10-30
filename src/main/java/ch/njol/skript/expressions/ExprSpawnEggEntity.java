@@ -9,9 +9,9 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntitySnapshot;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.jetbrains.annotations.Nullable;
@@ -61,7 +61,7 @@ public class ExprSpawnEggEntity extends SimplePropertyExpression<Object, EntityS
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (delta == null)
 			return;
 		EntitySnapshot snapshot = null;
@@ -77,7 +77,7 @@ public class ExprSpawnEggEntity extends SimplePropertyExpression<Object, EntityS
 		if (snapshot == null)
 			return;
 
-		for (Object object : getExpr().getArray(event)) {
+		for (Object object : getExpr().executeArray(event)) {
 			ItemStack item = ItemUtils.asItemStack(object);
 			if (item == null || !(item.getItemMeta() instanceof SpawnEggMeta eggMeta))
 				continue;

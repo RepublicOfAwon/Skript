@@ -2,6 +2,7 @@ package ch.njol.skript.command;
 
 import java.util.WeakHashMap;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +39,7 @@ public class Argument<T> {
 	
 	private final boolean optional;
 	
-	private transient WeakHashMap<Event, T[]> current = new WeakHashMap<>();
+	private transient WeakHashMap<VirtualFrame, T[]> current = new WeakHashMap<>();
 	
 	private Argument(@Nullable final String name, final @Nullable Expression<? extends T> def, final ClassInfo<T> type, final boolean single, final int index, final boolean optional) {
 		this.name = name;
@@ -104,13 +105,13 @@ public class Argument<T> {
 		return optional;
 	}
 	
-	public void setToDefault(final ScriptCommandEvent event) {
+	public void setToDefault(final VirtualFrame event) {
 		if (def != null)
-			set(event, def.getArray(event));
+			set(event, def.executeArray(event));
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void set(final ScriptCommandEvent e, final Object[] o) {
+	public void set(final VirtualFrame e, final Object[] o) {
 		if (!(type.getC().isAssignableFrom(o.getClass().getComponentType())))
 			throw new IllegalArgumentException();
 		current.put(e, (T[]) o);
@@ -127,7 +128,7 @@ public class Argument<T> {
 	}
 	
 	@Nullable
-	public T[] getCurrent(final Event e) {
+	public T[] getCurrent(final VirtualFrame e) {
 		return current.get(e);
 	}
 

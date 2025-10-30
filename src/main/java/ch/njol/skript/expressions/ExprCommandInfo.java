@@ -10,6 +10,7 @@ import ch.njol.skript.command.ScriptCommand;
 import ch.njol.skript.command.ScriptCommandEvent;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Utils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
@@ -116,7 +117,7 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 
 	@Nullable
 	@Override
-	protected String[] get(Event event) {
+	protected String[] execute(VirtualFrame event) {
 		Command[] commands = getCommands(event);
 		if (commands == null)
 			return new String[0];
@@ -143,13 +144,15 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the " + type.name().toLowerCase(Locale.ENGLISH).replace("_", " ") +
 			(commandName == null ? "" : " of command " + commandName.toString(event, debug));
 	}
 
 	@Nullable
-	private Command[] getCommands(Event event) {
+	private Command[] getCommands(VirtualFrame frame) {
+
+		Event event = (Event) frame.getArguments()[0];
 		if (event instanceof ScriptCommandEvent && commandName == null)
 			return new Command[] {((ScriptCommandEvent) event).getScriptCommand().getBukkitCommand()};
 
@@ -158,7 +161,7 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 			return null;
 
 		if (commandName != null)
-			return commandName.stream(event).map(map::getCommand).filter(Objects::nonNull).toArray(Command[]::new);
+			return commandName.stream(frame).map(map::getCommand).filter(Objects::nonNull).toArray(Command[]::new);
 
 		String commandName;
 		if (event instanceof ServerCommandEvent) {

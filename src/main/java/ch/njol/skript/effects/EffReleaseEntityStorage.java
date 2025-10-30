@@ -10,11 +10,11 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.EntityBlockStorage;
 import org.bukkit.entity.Bee;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -61,14 +61,14 @@ public class EffReleaseEntityStorage extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		Integer ticks = null;
 		if (timespan != null) {
-			Timespan time = timespan.getSingle(event);
+			Timespan time = timespan.executeSingle(event);
 			if (time != null)
 				ticks = (int) time.getAs(TimePeriod.TICK);
 		}
-		for (Block block : blocks.getArray(event)) {
+		for (Block block : blocks.executeArray(event)) {
 			if (!(block.getState() instanceof EntityBlockStorage<?> blockStorage))
 				continue;
 			List<? extends Entity> released = blockStorage.releaseEntities();
@@ -83,7 +83,7 @@ public class EffReleaseEntityStorage extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append("release the stored entities of", blocks);
 		if (timespan != null)

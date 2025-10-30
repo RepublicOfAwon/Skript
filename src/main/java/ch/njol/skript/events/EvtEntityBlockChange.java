@@ -7,11 +7,11 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Silverfish;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -91,7 +91,7 @@ public class EvtEntityBlockChange extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		if (!(event instanceof EntityChangeBlockEvent))
 			return false;
 		if (datas != null && !datas.check(event, data -> data.isInstance(((EntityChangeBlockEvent) event).getEntity())))
@@ -102,7 +102,7 @@ public class EvtEntityBlockChange extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return this.event.name().toLowerCase(Locale.ENGLISH).replace('_', ' ');
 	}
 

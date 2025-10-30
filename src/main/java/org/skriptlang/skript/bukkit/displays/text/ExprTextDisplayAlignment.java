@@ -7,10 +7,10 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.entity.TextDisplay.TextAlignment;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Text Display Alignment")
@@ -39,10 +39,10 @@ public class ExprTextDisplayAlignment extends SimplePropertyExpression<Display, 
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		//noinspection ConstantConditions
 		TextAlignment alignment = mode == ChangeMode.RESET ? TextAlignment.CENTER : (TextAlignment) delta[0];
-		for (Display display : getExpr().getArray(event)) {
+		for (Display display : getExpr().executeArray(event)) {
 			if (display instanceof TextDisplay textDisplay)
 				textDisplay.setAlignment(alignment);
 		}

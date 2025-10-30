@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
@@ -58,7 +58,7 @@ public class ExprDamage extends SimpleExpression<Number> {
 	
 	@Override
 	@Nullable
-	protected Number[] get(Event event) {
+	protected Number[] execute(VirtualFrame event) {
 		if (!(event instanceof EntityDamageEvent || event instanceof VehicleDamageEvent || event instanceof PlayerItemDamageEvent))
 			return new Number[0];
 		
@@ -89,7 +89,7 @@ public class ExprDamage extends SimpleExpression<Number> {
 	}
 	
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) throws UnsupportedOperationException {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) throws UnsupportedOperationException {
 		if (!(event instanceof EntityDamageEvent || event instanceof VehicleDamageEvent || event instanceof PlayerItemDamageEvent))
 			return;
 
@@ -134,7 +134,7 @@ public class ExprDamage extends SimpleExpression<Number> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the damage";
 	}
 	

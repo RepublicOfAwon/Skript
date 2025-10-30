@@ -1,7 +1,7 @@
 package ch.njol.skript.lang.function;
 
 import ch.njol.skript.lang.*;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -27,13 +27,13 @@ public class EffFunctionCall extends Effect {
 	}
 	
 	@Override
-	protected void execute(final Event event) {
+	protected void executeVoid(final VirtualFrame event) {
 		function.execute(event);
 		function.resetReturnValue(); // Function might have return value that we're ignoring
 	}
 	
 	@Override
-	public String toString(@Nullable final Event event, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame event, final boolean debug) {
 		return function.toString(event, debug);
 	}
 	

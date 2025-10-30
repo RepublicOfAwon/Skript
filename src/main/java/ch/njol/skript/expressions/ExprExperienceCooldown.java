@@ -9,8 +9,8 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Experience Pickup Cooldown")
@@ -48,7 +48,7 @@ public class ExprExperienceCooldown extends SimplePropertyExpression<Player, Tim
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		int providedTime = 0;
 		if (delta[0] != null)
 			providedTime = (int) ((Timespan) delta[0]).get(Timespan.TimePeriod.TICK);
@@ -56,22 +56,22 @@ public class ExprExperienceCooldown extends SimplePropertyExpression<Player, Tim
 
 		switch (mode) {
 			case ADD -> {
-				for (Player player : getExpr().getArray(event)) {
+				for (Player player : getExpr().executeArray(event)) {
 					player.setExpCooldown(Math2.fit(-1, player.getExpCooldown() + providedTime, Integer.MAX_VALUE));
 				}
 			}
 			case REMOVE -> {
-				for (Player player : getExpr().getArray(event)) {
+				for (Player player : getExpr().executeArray(event)) {
 					player.setExpCooldown(Math2.fit(-1, player.getExpCooldown() - providedTime, Integer.MAX_VALUE));
 				}
 			}
 			case SET -> {
-				for (Player player : getExpr().getArray(event)) {
+				for (Player player : getExpr().executeArray(event)) {
 					player.setExpCooldown(Math2.fit(-1, providedTime, Integer.MAX_VALUE));
 				}
 			}
 			case RESET, DELETE -> {
-				for (Player player : getExpr().getArray(event)) {
+				for (Player player : getExpr().executeArray(event)) {
 					player.setExpCooldown(0);
 				}
 			}

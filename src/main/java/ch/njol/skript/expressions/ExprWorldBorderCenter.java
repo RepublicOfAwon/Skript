@@ -7,9 +7,9 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.WorldBorder;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Center of World Border")
@@ -36,13 +36,13 @@ public class ExprWorldBorderCenter extends SimplePropertyExpression<WorldBorder,
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		Location location = mode == ChangeMode.SET ? (Location) delta[0] : new Location(null, 0, 0, 0);
 		if (Double.isNaN(location.getX()) || Double.isNaN(location.getZ())) {
 			error("Your location can't have a NaN value as one of its components");
 			return;
 		}
-		for (WorldBorder worldBorder : getExpr().getArray(event)) {
+		for (WorldBorder worldBorder : getExpr().executeArray(event)) {
 			switch (mode) {
 				case SET:
 					if (Math.abs(location.getX()) > worldBorder.getMaxCenterCoordinate()) {

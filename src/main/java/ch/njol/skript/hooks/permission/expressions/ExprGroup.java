@@ -14,9 +14,9 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -58,8 +58,8 @@ public class ExprGroup extends SimpleExpression<String> {
 
 	@SuppressWarnings("null")
 	@Override
-	protected String[] get(Event event) {
-		OfflinePlayer[] players = this.players.getArray(event);
+	protected String[] execute(VirtualFrame event) {
+		OfflinePlayer[] players = this.players.executeArray(event);
 		return CompletableFuture.supplyAsync(() -> { // #5692: LuckPerms errors for vault requests on main thread
 			List<String> groups = new ArrayList<>();
 			for (OfflinePlayer player : players) {
@@ -88,9 +88,9 @@ public class ExprGroup extends SimpleExpression<String> {
 
 	@Override
 	@SuppressWarnings("null")
-	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		Permission api = VaultHook.permission;
-		for (OfflinePlayer player : players.getArray(e)) {
+		for (OfflinePlayer player : players.executeArray(e)) {
 			switch (mode) {
 				case ADD:
 					for (Object o : delta)
@@ -128,7 +128,7 @@ public class ExprGroup extends SimpleExpression<String> {
 
 	@SuppressWarnings("null")
 	@Override
-	public String toString(Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "group" + (primary ? "" : "s") + " of " + players.toString(event, debug);
 	}
 

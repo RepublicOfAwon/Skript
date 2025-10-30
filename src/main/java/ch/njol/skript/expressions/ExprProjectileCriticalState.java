@@ -1,9 +1,9 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Projectile;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -44,10 +44,10 @@ public class ExprProjectileCriticalState extends SimplePropertyExpression<Projec
 	}
 	
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null) return;
 		boolean state = (Boolean) delta[0];
-		for (Projectile entity : getExpr().getAll(e)) {
+		for (Projectile entity : getExpr().executeAll(e)) {
 			if (abstractArrowExists && entity instanceof AbstractArrow) {
 				((AbstractArrow) entity).setCritical(state);
 			} else if (entity instanceof Arrow) {

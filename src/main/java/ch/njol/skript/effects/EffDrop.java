@@ -15,11 +15,11 @@ import ch.njol.skript.sections.EffSecSpawn;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
@@ -55,9 +55,9 @@ public class EffDrop extends Effect {
 	}
 
 	@Override
-	public void execute(Event e) {
-		Object[] os = drops.getArray(e);
-		for (Location l : locations.getArray(e)) {
+	public void executeVoid(VirtualFrame e) {
+		Object[] os = drops.executeArray(e);
+		for (Location l : locations.executeArray(e)) {
 			Location itemDropLoc = l.clone().subtract(0.5, 0.5, 0.5); // dropItemNaturally adds 0.15 to 0.85 randomly to all coordinates
 			for (Object o : os) {
 				if (o instanceof Experience) {
@@ -85,7 +85,7 @@ public class EffDrop extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "drop " + drops.toString(e, debug) + " " + locations.toString(e, debug);
 	}
 

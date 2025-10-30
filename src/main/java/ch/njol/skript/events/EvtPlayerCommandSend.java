@@ -6,7 +6,7 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +39,7 @@ public class EvtPlayerCommandSend extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		originalCommands.clear();
 		originalCommands.addAll(((PlayerCommandSendEvent) event).getCommands());
 		return true;
@@ -50,7 +50,7 @@ public class EvtPlayerCommandSend extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "sending of the server command list";
 	}
 

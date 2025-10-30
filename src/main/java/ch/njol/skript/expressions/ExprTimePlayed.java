@@ -10,9 +10,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Time Played")
@@ -54,12 +54,12 @@ public class ExprTimePlayed extends SimplePropertyExpression<OfflinePlayer, Time
 	}
 	
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null)
 			return;
 
 		long ticks = ((Timespan) delta[0]).getAs(Timespan.TimePeriod.TICK);
-		for (OfflinePlayer offlinePlayer : getExpr().getArray(event)) {
+		for (OfflinePlayer offlinePlayer : getExpr().executeArray(event)) {
 			if (!IS_OFFLINE_SUPPORTED && !offlinePlayer.isOnline())
 				continue;
 

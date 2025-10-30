@@ -11,7 +11,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Version String")
@@ -49,7 +49,7 @@ public class ExprVersionString extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	public String[] get(Event event) {
+	public String[] execute(VirtualFrame event) {
 		if (!(event instanceof PaperServerListPingEvent))
 			return new String[0];
 		return CollectionUtils.array(((PaperServerListPingEvent) event).getVersion());
@@ -69,7 +69,7 @@ public class ExprVersionString extends SimpleExpression<String> {
 
 	@Override
 	@SuppressWarnings("null")
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (!(event instanceof PaperServerListPingEvent))
 			return;
 		((PaperServerListPingEvent) event).setVersion(((String) delta[0]));
@@ -86,7 +86,7 @@ public class ExprVersionString extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the version string";
 	}
 

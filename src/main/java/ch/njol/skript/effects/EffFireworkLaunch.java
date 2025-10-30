@@ -1,12 +1,12 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,11 +50,11 @@ public class EffFireworkLaunch extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		FireworkEffect[] effects = this.effects.getArray(event);
-		int power = lifetime.getOptionalSingle(event).orElse(1).intValue();
+	protected void executeVoid(VirtualFrame event) {
+		FireworkEffect[] effects = this.effects.executeArray(event);
+		int power = lifetime.executeOptional(event).orElse(1).intValue();
 		power = Math.min(127, Math.max(0, power));
-		for (Location location : locations.getArray(event)) {
+		for (Location location : locations.executeArray(event)) {
 			World world = location.getWorld();
 			if (world == null)
 				continue;
@@ -68,7 +68,7 @@ public class EffFireworkLaunch extends Effect {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "Launch firework(s) " + effects.toString(event, debug) +
 				" at location(s) " + locations.toString(event, debug) +
 				" timed " + lifetime.toString(event, debug);

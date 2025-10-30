@@ -10,9 +10,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Tameable;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Tame / Untame")
@@ -40,15 +40,15 @@ public class EffTame extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (Entity entity : entities.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (Entity entity : entities.executeArray(event)) {
 			if (entity instanceof Tameable)
 				((Tameable) entity).setTamed(tame);
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (tame ? "tame " : "untame ") + entities.toString(event, debug);
 	}
 

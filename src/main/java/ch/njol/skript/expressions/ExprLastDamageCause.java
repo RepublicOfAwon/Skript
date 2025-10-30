@@ -12,8 +12,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +40,7 @@ public class ExprLastDamageCause extends PropertyExpression<LivingEntity, Damage
 	}
 	
 	@Override
-	protected DamageCause[] get(Event e, LivingEntity[] source) {
+	protected DamageCause[] get(VirtualFrame e, LivingEntity[] source) {
 		return get(source, entity -> {
 			EntityDamageEvent dmgEvt = entity.getLastDamageCause();
 			if (dmgEvt == null) return DamageCause.CUSTOM;
@@ -49,7 +49,7 @@ public class ExprLastDamageCause extends PropertyExpression<LivingEntity, Damage
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the damage cause " + getExpr().toString(e, debug);
 	}
 	
@@ -62,19 +62,19 @@ public class ExprLastDamageCause extends PropertyExpression<LivingEntity, Damage
 	}
 	
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
 		DamageCause d = delta == null ? DamageCause.CUSTOM : (DamageCause) delta[0];
 		assert d != null;
 		switch (mode) {
 			case DELETE:
 			case RESET: // Reset damage cause? Umm, maybe it is custom.
-				for (LivingEntity entity : getExpr().getArray(e)) {
+				for (LivingEntity entity : getExpr().executeArray(e)) {
 					assert entity != null : getExpr();
 					HealthUtils.setDamageCause(entity, DamageCause.CUSTOM);
 				}
 				break;
 			case SET:
-				for (LivingEntity entity : getExpr().getArray(e)) {
+				for (LivingEntity entity : getExpr().executeArray(e)) {
 					assert entity != null : getExpr();
 					HealthUtils.setDamageCause(entity, d);
 				}

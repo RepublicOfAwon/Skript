@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
@@ -49,9 +49,9 @@ public class ExprWithItemFlags extends SimpleExpression<ItemType> {
 	}
 
 	@Override
-	protected ItemType[] get(Event event) {
-		ItemType[] types = itemTypes.getArray(event);
-		ItemFlag[] flags = allFlags ? ItemFlag.values() : itemFlags.getArray(event);
+	protected ItemType[] execute(VirtualFrame event) {
+		ItemType[] types = itemTypes.executeArray(event);
+		ItemFlag[] flags = allFlags ? ItemFlag.values() : itemFlags.executeArray(event);
 
 		ItemType[] result = new ItemType[types.length];
 		for (int i = 0; i < types.length; i++) {
@@ -78,7 +78,7 @@ public class ExprWithItemFlags extends SimpleExpression<ItemType> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (allFlags)
 			return itemTypes.toString(event, debug) + " with all item flags";
 		return itemTypes.toString(event, debug) + " with item flags " + itemFlags.toString(event, debug);

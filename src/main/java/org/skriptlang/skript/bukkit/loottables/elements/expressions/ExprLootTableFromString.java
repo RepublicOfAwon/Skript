@@ -11,9 +11,9 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.event.Event;
 import org.bukkit.loot.LootTable;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,9 +42,9 @@ public class ExprLootTableFromString extends SimpleExpression<LootTable> {
 	}
 
 	@Override
-	protected LootTable @Nullable [] get(Event event) {
+	protected LootTable @Nullable [] execute(VirtualFrame event) {
 		List<LootTable> lootTables = new ArrayList<>();
-		for (String key : keys.getArray(event)) {
+		for (String key : keys.executeArray(event)) {
 			NamespacedKey namespacedKey = NamespacedKey.fromString(key);
 			if (namespacedKey == null)
 				continue;
@@ -68,7 +68,7 @@ public class ExprLootTableFromString extends SimpleExpression<LootTable> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the loot table of " + keys.toString(event, debug);
 	}
 

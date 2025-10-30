@@ -11,9 +11,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Goat;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Goat Horns")
@@ -56,8 +56,8 @@ public class EffGoatHorns extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (LivingEntity entity : entities.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (LivingEntity entity : entities.executeArray(event)) {
 			if (entity instanceof Goat goat) {
 				if (goatHorn != GoatHorn.RIGHT)
 					goat.setLeftHorn(remove);
@@ -68,7 +68,7 @@ public class EffGoatHorns extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		if (remove) {
 			builder.append("remove");

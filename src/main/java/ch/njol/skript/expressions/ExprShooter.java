@@ -10,9 +10,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.sections.EffSecShoot;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +34,7 @@ public class ExprShooter extends PropertyExpression<Projectile, LivingEntity> {
 	}
 	
 	@Override
-	protected LivingEntity @Nullable [] get(Event event, Projectile[] source) {
+	protected LivingEntity @Nullable [] get(VirtualFrame event, Projectile[] source) {
 		if (event instanceof EffSecShoot.ShootEvent shootEvent && getExpr().isDefault() && !(shootEvent.getProjectile() instanceof Projectile)) {
 			return new LivingEntity[]{shootEvent.getShooter()};
 		} else if (event instanceof EntityShootBowEvent shootBowEvent && getExpr().isDefault()) {
@@ -57,11 +57,11 @@ public class ExprShooter extends PropertyExpression<Projectile, LivingEntity> {
 	}
 	
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (mode == ChangeMode.SET) {
 			assert delta != null;
 			ProjectileSource source = (ProjectileSource) delta[0];
-			for (Projectile projectile : getExpr().getArray(event)) {
+			for (Projectile projectile : getExpr().executeArray(event)) {
 				assert projectile != null : getExpr();
 				projectile.setShooter(source);
 			}
@@ -76,7 +76,7 @@ public class ExprShooter extends PropertyExpression<Projectile, LivingEntity> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the shooter" + (getExpr().isDefault() ? "" : " of " + getExpr().toString(event, debug));
 	}
 	

@@ -9,13 +9,13 @@ import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.ItemStack;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
 import org.bukkit.event.world.LootGenerateEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +49,7 @@ public class ExprLoot extends SimpleExpression<ItemStack> {
 
 	@Override
 	@Nullable
-	protected ItemStack @Nullable [] get(Event event) {
+	protected ItemStack @Nullable [] execute(VirtualFrame event) {
 		if (!(event instanceof LootGenerateEvent lootEvent))
 			return new ItemStack[0];
 		return lootEvent.getLoot().toArray(new ItemStack[0]);
@@ -65,7 +65,7 @@ public class ExprLoot extends SimpleExpression<ItemStack> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (!(event instanceof LootGenerateEvent lootEvent))
 			return;
 
@@ -95,7 +95,7 @@ public class ExprLoot extends SimpleExpression<ItemStack> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the loot";
 	}
 

@@ -7,7 +7,7 @@ import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.variables.HintManager;
 import ch.njol.skript.variables.Variables;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -80,7 +80,7 @@ public class ScriptFunction<T> extends Function<T> implements ReturnHandler<T> {
 	}
 
 	/**
-	 * @deprecated Use {@link ScriptFunction#returnValues(Event, Expression)} instead.
+	 * @deprecated Use {@link ReturnHandler#returnValues(VirtualFrame, Expression)} instead.
 	 */
 	@Deprecated(since = "2.9.0", forRemoval = true)
 	@ApiStatus.Internal
@@ -99,10 +99,10 @@ public class ScriptFunction<T> extends Function<T> implements ReturnHandler<T> {
 	}
 
 	@Override
-	public final void returnValues(Event event, Expression<? extends T> value) {
+	public final void returnValues(VirtualFrame event, Expression<? extends T> value) {
 		assert !returnValueSet;
 		returnValueSet = true;
-		this.returnValues = value.getArray(event);
+		this.returnValues = value.executeArray(event);
 		if (KeyProviderExpression.canReturnKeys(value))
 			this.returnKeys = ((KeyProviderExpression<?>) value).getArrayKeys(event);
 	}

@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -49,7 +50,7 @@ public class ExprConsumedItem extends SimpleExpression<ItemStack> implements Eve
 	}
 
 	@Override
-	protected ItemStack @Nullable [] get(Event event) {
+	protected ItemStack @Nullable [] execute(VirtualFrame event) {
 		if (event instanceof EntityShootBowEvent shootBowEvent) {
 			return new ItemStack[]{shootBowEvent.getConsumable()};
 		} else if (event instanceof PlayerItemConsumeEvent consumeEvent) {
@@ -72,7 +73,7 @@ public class ExprConsumedItem extends SimpleExpression<ItemStack> implements Eve
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, Changer.ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, Changer.ChangeMode mode) {
 		if (!(event instanceof PlayerItemConsumeEvent consumeEvent) || !allowsSettingConsumedItem)
 			return;
 		consumeEvent.setItem(delta == null ? null : (ItemStack) delta[0]);
@@ -94,7 +95,7 @@ public class ExprConsumedItem extends SimpleExpression<ItemStack> implements Eve
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the consumed item";
 	}
 

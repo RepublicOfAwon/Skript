@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,14 +44,14 @@ public class EffKnockback extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		Direction direction = this.direction.getSingle(event);
+	protected void executeVoid(VirtualFrame event) {
+		Direction direction = this.direction.executeSingle(event);
 		if (direction == null)
 			return;
 
-		double strength = this.strength != null ? this.strength.getOptionalSingle(event).orElse(1).doubleValue() : 1.0;
+		double strength = this.strength != null ? this.strength.executeOptional(event).orElse(1).doubleValue() : 1.0;
 
-		for (LivingEntity livingEntity : entities.getArray(event)) {
+		for (LivingEntity livingEntity : entities.executeArray(event)) {
 			Vector directionVector = direction.getDirection(livingEntity);
 			// Flip the direction, because LivingEntity#knockback() takes the direction of the source of the knockback,
 			// not the direction of the actual knockback.
@@ -63,7 +63,7 @@ public class EffKnockback extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "knockback " + entities.toString(event, debug) + " " + direction.toString(event, debug) + " with strength " + (strength != null ? strength.toString(event, debug) : "1");
 	}
 

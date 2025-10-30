@@ -1,11 +1,11 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -113,8 +113,8 @@ public class ExprDirection extends SimpleExpression<Direction> {
 	
 	@Override
 	@Nullable
-	protected Direction[] get(final Event e) {
-		final Number n = amount != null ? amount.getSingle(e) : 1;
+	protected Direction[] execute(final VirtualFrame e) {
+		final Number n = amount != null ? amount.executeSingle(e) : 1;
 		if (n == null)
 			return new Direction[0];
 		final double ln = n.doubleValue();
@@ -122,7 +122,7 @@ public class ExprDirection extends SimpleExpression<Direction> {
 			final Vector v = direction.clone().multiply(ln);
 			ExprDirection d = next;
 			while (d != null) {
-				final Number n2 = d.amount != null ? d.amount.getSingle(e) : 1;
+				final Number n2 = d.amount != null ? d.amount.executeSingle(e) : 1;
 				if (n2 == null)
 					return new Direction[0];
 				assert d.direction != null; // checked in init()
@@ -132,7 +132,7 @@ public class ExprDirection extends SimpleExpression<Direction> {
 			assert v != null;
 			return new Direction[] {new Direction(v)};
 		} else if (relativeTo != null) {
-			final Object o = relativeTo.getSingle(e);
+			final Object o = relativeTo.executeSingle(e);
 			if (o == null)
 				return new Direction[0];
 			if (o instanceof Block) {
@@ -185,7 +185,7 @@ public class ExprDirection extends SimpleExpression<Direction> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		final Expression<?> relativeTo = this.relativeTo;
 		return (amount != null ? amount.toString(e, debug) + " meter(s) " : "") + (direction != null ? Direction.toString(direction) :
 				relativeTo != null ? " in " + (horizontal ? "horizontal " : "") + (facing ? "facing" : "direction") + " of " + relativeTo.toString(e, debug) :

@@ -1,6 +1,7 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -53,17 +54,18 @@ public class EffIgnite extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame frame) {
+		Event event = (Event) frame.getArguments()[0];
 		int duration;
 		if (this.duration == null) {
 			duration = ignite ? DEFAULT_DURATION : 0;
 		} else {
-			Timespan timespan = this.duration.getSingle(event);
+			Timespan timespan = this.duration.executeSingle(frame);
 			if (timespan == null)
 				return;
 			duration = (int) timespan.getAs(Timespan.TimePeriod.TICK);
 		}
-		for (Entity entity : entities.getArray(event)) {
+		for (Entity entity : entities.executeArray(frame)) {
 			if (event instanceof EntityDamageEvent && ((EntityDamageEvent) event).getEntity() == entity && !Delay.isDelayed(event)) {
 				Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
 					@Override
@@ -80,7 +82,7 @@ public class EffIgnite extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (ignite)
 			return "set " + entities.toString(event, debug) + " on fire for " + (duration != null ? duration.toString(event, debug) : new Timespan(Timespan.TimePeriod.TICK, DEFAULT_DURATION).toString());
 		else

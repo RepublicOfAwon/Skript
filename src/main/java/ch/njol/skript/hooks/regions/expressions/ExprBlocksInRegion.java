@@ -15,8 +15,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.iterator.ArrayIterator;
 import ch.njol.util.coll.iterator.EmptyIterator;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +56,7 @@ public class ExprBlocksInRegion extends SimpleExpression<Block> {
 	
 	@SuppressWarnings("null")
 	@Override
-	protected Block[] get(final Event e) {
+	protected Block[] execute(final VirtualFrame e) {
 		final Iterator<Block> iter = iterator(e);
 		final ArrayList<Block> r = new ArrayList<>();
 		while (iter.hasNext())
@@ -66,8 +66,8 @@ public class ExprBlocksInRegion extends SimpleExpression<Block> {
 	
 	@Override
 	@NotNull
-	public Iterator<Block> iterator(final Event e) {
-		final Region[] rs = regions.getArray(e);
+	public Iterator<Block> iterator(final VirtualFrame e) {
+		final Region[] rs = regions.executeArray(e);
 		if (rs.length == 0)
 			return EmptyIterator.get();
 		return new Iterator<Block>() {
@@ -110,7 +110,7 @@ public class ExprBlocksInRegion extends SimpleExpression<Block> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "all blocks in " + regions.toString(e, debug);
 	}
 	

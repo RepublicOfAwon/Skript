@@ -13,6 +13,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerHarvestBlockEvent;
@@ -57,7 +58,7 @@ public class ExprDrops extends SimpleExpression<ItemType> implements EventRestri
 	}
 
 	@Override
-	protected ItemType @Nullable [] get(Event event) {
+	protected ItemType @Nullable [] execute(VirtualFrame event) {
 		if (event instanceof EntityDeathEvent entityDeathEvent) {
 			return entityDeathEvent.getDrops()
 				.stream()
@@ -90,7 +91,7 @@ public class ExprDrops extends SimpleExpression<ItemType> implements EventRestri
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		List<ItemStack> drops = null;
 		int originalExperience = 0;
 		if (event instanceof EntityDeathEvent entityDeathEvent) {
@@ -199,7 +200,7 @@ public class ExprDrops extends SimpleExpression<ItemType> implements EventRestri
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the drops";
 	}
 

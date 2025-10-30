@@ -13,12 +13,12 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.block.banner.PatternType;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
@@ -90,7 +90,7 @@ public class ExprBannerItem extends SimpleExpression<ItemType> {
 	}
 
 	@Override
-	protected ItemType @Nullable [] get(Event event) {
+	protected ItemType @Nullable [] execute(VirtualFrame event) {
 		List<ItemType> itemTypes = new ArrayList<>();
 		for (PatternType type : patternTypes) {
 			Material material = bannerMaterials.get(type);
@@ -111,7 +111,7 @@ public class ExprBannerItem extends SimpleExpression<ItemType> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return literalPattern.toString(event, debug) + " items";
 	}
 

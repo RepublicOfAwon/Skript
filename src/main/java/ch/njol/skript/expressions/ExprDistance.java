@@ -13,8 +13,8 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 
@@ -42,9 +42,9 @@ public class ExprDistance extends SimpleExpression<Number> {
 	
 	@Override
 	@Nullable
-	protected Number[] get(Event event) {
-		Location l1 = loc1.getSingle(event);
-		Location l2 = loc2.getSingle(event);
+	protected Number[] execute(VirtualFrame event) {
+		Location l1 = loc1.executeSingle(event);
+		Location l2 = loc2.executeSingle(event);
 		if (l1 == null || l2 == null)
 			return new Number[0];
 		if (l1.getWorld() != l2.getWorld()) {
@@ -72,7 +72,7 @@ public class ExprDistance extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "distance between " + loc1.toString(event, debug) + " and " + loc2.toString(event, debug);
 	}
 

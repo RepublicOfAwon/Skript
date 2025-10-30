@@ -8,10 +8,10 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -66,19 +66,19 @@ public class EffEntityVisibility extends Effect {
 	}
 
     @Override
-    protected void execute(Event event) {
-		Player[] updated = viewers != null ? viewers.getArray(event) : Bukkit.getOnlinePlayers().toArray(new Player[0]);
+    protected void executeVoid(VirtualFrame event) {
+		Player[] updated = viewers != null ? viewers.executeArray(event) : Bukkit.getOnlinePlayers().toArray(new Player[0]);
 
 		Skript instance = Skript.getInstance();
 		if (reveal) {
 			for (Player player : updated) {
-				for (Entity entity : hidden.getArray(event)) {
+				for (Entity entity : hidden.executeArray(event)) {
 					player.showEntity(instance, entity);
 				}
 			}
 		} else {
 			for (Player player : updated) {
-				for (Entity entity : hidden.getArray(event)) {
+				for (Entity entity : hidden.executeArray(event)) {
 					player.hideEntity(instance, entity);
 				}
 			}
@@ -86,7 +86,7 @@ public class EffEntityVisibility extends Effect {
     }
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (reveal ? "reveal " : "hide ") + "entities " +
 				hidden.toString(event, debug) +
 				(reveal ? " to " : " from ") +

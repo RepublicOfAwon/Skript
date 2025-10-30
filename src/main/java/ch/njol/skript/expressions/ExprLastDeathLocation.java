@@ -7,10 +7,10 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Last Death Location")
@@ -45,9 +45,9 @@ public class ExprLastDeathLocation extends SimplePropertyExpression<OfflinePlaye
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		Location loc = (delta != null && delta[0] instanceof Location location) ? location : null;
-		for (OfflinePlayer offlinePlayer : getExpr().getArray(event)) {
+		for (OfflinePlayer offlinePlayer : getExpr().executeArray(event)) {
 			if (offlinePlayer instanceof Player player)
 				player.setLastDeathLocation(loc);
 		}

@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,9 +43,9 @@ public class ExprVelocity extends SimplePropertyExpression<Entity, Vector> {
 
 	@Override
 	@SuppressWarnings("null")
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
 		assert mode == ChangeMode.DELETE || mode == ChangeMode.RESET || delta != null;
-		for (final Entity entity : getExpr().getArray(e)) {
+		for (final Entity entity : getExpr().executeArray(e)) {
 			if (entity == null)
 				return;
 			switch (mode) {

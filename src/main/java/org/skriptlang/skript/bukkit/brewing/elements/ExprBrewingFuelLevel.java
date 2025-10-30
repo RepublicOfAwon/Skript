@@ -8,9 +8,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
@@ -54,11 +54,11 @@ public class ExprBrewingFuelLevel extends SimplePropertyExpression<Block, Intege
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		int providedValue = delta != null ? ((Number) delta[0]).intValue() : 0;
 		if (mode == ChangeMode.SET)
 			providedValue = Math2.fit(0, providedValue, Integer.MAX_VALUE);
-		for (Block block : getExpr().getArray(event)) {
+		for (Block block : getExpr().executeArray(event)) {
 			if (!(block.getState() instanceof BrewingStand brewingStand))
 				continue;
 			int newValue = providedValue;

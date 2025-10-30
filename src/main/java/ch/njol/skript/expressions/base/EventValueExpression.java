@@ -23,6 +23,7 @@ import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -261,8 +262,8 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 	@Override
 	@Nullable
 	@SuppressWarnings("unchecked")
-	protected T[] get(Event event) {
-		T value = getValue(event);
+	protected T[] execute(VirtualFrame event) {
+		T value = getValue((Event) event.getArguments()[0]);
 		if (value == null)
 			return (T[]) Array.newInstance(componentType, 0);
 		if (single) {
@@ -313,20 +314,20 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (mode == ChangeMode.SET) {
 			EventConverter<Event, T> converter = eventConverters.get(event.getClass());
 			if (converter != null) {
 				if (!type.isArray() && delta != null) {
-					converter.set(event, (T)delta[0]);
+					converter.set((Event) event.getArguments()[0], (T)delta[0]);
 				} else {
-					converter.set(event, (T)delta);
+					converter.set((Event) event.getArguments()[0], (T)delta);
 				}
 				return;
 			}
 		}
 		if (changer != null) {
-			ChangerUtils.change(changer, getArray(event), delta, mode);
+			ChangerUtils.change(changer, executeArray(event), delta, mode);
 		}
 	}
 
@@ -377,7 +378,7 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (!debug || event == null)
 			return "event-" + Classes.getSuperClassInfo(componentType).getName().toString(!single);
 		return Classes.getDebugMessage(getValue(event));

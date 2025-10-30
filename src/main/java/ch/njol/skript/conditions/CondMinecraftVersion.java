@@ -1,7 +1,7 @@
 package ch.njol.skript.conditions;
 
 import ch.njol.skript.lang.*;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -35,8 +35,8 @@ public class CondMinecraftVersion extends Condition {
 	}
 	
 	@Override
-	public boolean check(Event e) {
-		String ver = version.getSingle(e);
+	public boolean executeBoolean(VirtualFrame e) {
+		String ver = version.executeSingle(e);
 		return ver != null ? Skript.isRunningMinecraft(new Version(ver)) ^ isNegated() : false;
 	}
 
@@ -48,7 +48,7 @@ public class CondMinecraftVersion extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "is running minecraft " + version.toString(e, debug);
 	}
 	

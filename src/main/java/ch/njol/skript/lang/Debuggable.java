@@ -1,6 +1,6 @@
 package ch.njol.skript.lang;
 
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -13,10 +13,10 @@ public interface Debuggable {
 	 * @param debug If true this should print more information, if false this should print what is shown to the end user
 	 * @return String representation of this object
 	 */
-	String toString(@Nullable Event event, boolean debug);
+	String toString(@Nullable VirtualFrame event, boolean debug);
 
 	/**
-	 * Should return <tt>{@link #toString(Event, boolean) toString}(null, false)</tt>
+	 * Should return <tt>{@link #toString(VirtualFrame, boolean) toString}(null, false)</tt>
 	 */
 	@Override
 	String toString();

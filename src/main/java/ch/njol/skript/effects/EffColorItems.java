@@ -1,7 +1,7 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.MapMeta;
@@ -69,10 +69,10 @@ public class EffColorItems extends Effect {
 				
 				@Nullable
 				@Override
-				protected Color[] get(Event e) {
-					Number r = red.getSingle(e),
-						g = green.getSingle(e),
-						b = blue.getSingle(e);
+				protected Color[] execute(VirtualFrame e) {
+					Number r = red.executeSingle(e),
+						g = green.executeSingle(e),
+						b = blue.executeSingle(e);
 					
 					if (r == null || g == null || b == null)
 						return null;
@@ -91,7 +91,7 @@ public class EffColorItems extends Effect {
 				}
 				
 				@Override
-				public String toString(@Nullable Event e, boolean debug) {
+				public String toString(@Nullable VirtualFrame e, boolean debug) {
 					return "RED: " + red.toString(e, debug) + ", GREEN: " + green.toString(e, debug) + "BLUE: " + blue.toString(e, debug);
 				}
 			};
@@ -101,9 +101,9 @@ public class EffColorItems extends Effect {
 	}
 	
 	@Override
-	protected void execute(Event e) {
-		Color color = this.color.getSingle(e);
-		ItemType[] items = this.items.getArray(e);
+	protected void executeVoid(VirtualFrame e) {
+		Color color = this.color.executeSingle(e);
+		ItemType[] items = this.items.executeArray(e);
 		org.bukkit.Color c;
 		
 		if (color == null) {
@@ -135,7 +135,7 @@ public class EffColorItems extends Effect {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "dye " + items.toString(e, debug) + " " + color.toString(e, debug);
 	}
 }

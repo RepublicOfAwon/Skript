@@ -10,8 +10,8 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Time Lived of Entity")
@@ -45,13 +45,13 @@ public class ExprTimeLived extends SimplePropertyExpression<Entity, Timespan> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		long newTicks = 1;
 		if (delta != null && delta[0] instanceof Timespan timespan) {
 			newTicks = (int) timespan.get(Timespan.TimePeriod.TICK);
 		}
 
-		for (Entity entity : getExpr().getArray(event)) {
+		for (Entity entity : getExpr().executeArray(event)) {
 			int currentTicks = entity.getTicksLived();
 			long valueToSet = switch (mode) {
 				case ADD -> currentTicks + newTicks;

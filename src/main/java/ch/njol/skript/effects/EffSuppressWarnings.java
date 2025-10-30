@@ -10,7 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import org.skriptlang.skript.lang.script.ScriptWarning;
@@ -54,10 +54,10 @@ public class EffSuppressWarnings extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) { }
+	protected void executeVoid(VirtualFrame event) { }
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "suppress " + warning.getWarningName() + " warnings";
 	}
 

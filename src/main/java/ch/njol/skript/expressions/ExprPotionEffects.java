@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
@@ -55,9 +55,9 @@ public class ExprPotionEffects extends SimpleExpression<PotionEffect> {
 	
 	@Nullable
 	@Override
-	protected PotionEffect[] get(Event e) {
+	protected PotionEffect[] execute(VirtualFrame e) {
 		List<PotionEffect> effects = new ArrayList<>();
-		for (Object object : this.objects.getArray(e)) {
+		for (Object object : this.objects.executeArray(e)) {
 			if (object instanceof LivingEntity)
 				effects.addAll(((LivingEntity) object).getActivePotionEffects());
 			else if (object instanceof ItemType)
@@ -80,8 +80,8 @@ public class ExprPotionEffects extends SimpleExpression<PotionEffect> {
 	}
 	
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		for (Object object : this.objects.getArray(e)) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
+		for (Object object : this.objects.executeArray(e)) {
 			switch (mode) {
 				case DELETE:
 					if (object instanceof LivingEntity)
@@ -120,7 +120,7 @@ public class ExprPotionEffects extends SimpleExpression<PotionEffect> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean d) {
+	public String toString(@Nullable VirtualFrame e, boolean d) {
 		return "active potion effects of " + objects.toString(e, d);
 	}
 	

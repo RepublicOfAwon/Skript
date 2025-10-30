@@ -4,10 +4,10 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.*;
 import ch.njol.skript.registrations.EventValues;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @NoDoc
@@ -43,7 +43,7 @@ public class EvtTestCase extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		String n = name.getSingle();
 		if (n == null)
 			return false;
@@ -54,7 +54,7 @@ public class EvtTestCase extends SkriptEvent {
 
 	@Override
 	public boolean shouldLoadEvent() {
-		return condition != null ? condition.check(new SkriptTestEvent()) : true;
+		return condition != null ? condition.executeBoolean(new SkriptTestEvent()) : true;
 	}
 
 	public String getTestName() {
@@ -62,7 +62,7 @@ public class EvtTestCase extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "test " + name.getSingle();
 	}
 

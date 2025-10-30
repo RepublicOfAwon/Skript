@@ -24,9 +24,9 @@ public class StaticParseTest {
 		computeParseResults("1 test 2 test 3", "%number% test %number% test %number%").forEach(result -> {
 			Assert.assertNotNull("parse method returned null", result);
 			Assert.assertEquals("parse method returned wrong number of expressions", 3, result.exprs.length);
-			Assert.assertEquals("parse method returned wrong first expression", 1L, result.exprs[0].getSingle(null));
-			Assert.assertEquals("parse method returned wrong second expression", 2L, result.exprs[1].getSingle(null));
-			Assert.assertEquals("parse method returned wrong first expression", 3L, result.exprs[2].getSingle(null));
+			Assert.assertEquals("parse method returned wrong first expression", 1L, result.exprs[0].executeSingle(null));
+			Assert.assertEquals("parse method returned wrong second expression", 2L, result.exprs[1].executeSingle(null));
+			Assert.assertEquals("parse method returned wrong first expression", 3L, result.exprs[2].executeSingle(null));
 		});
 	}
 
@@ -35,8 +35,8 @@ public class StaticParseTest {
 		computeParseResults("1, 2 and 3 test 4, 5 and 6", "%numbers% test %numbers%").forEach(result -> {
 			Assert.assertNotNull("parse method returned null", result);
 			Assert.assertEquals("parse method returned wrong number of expressions", 2, result.exprs.length);
-			Assert.assertArrayEquals("parse method returned wrong first expression", new Long[]{1L,2L,3L}, result.exprs[0].getArray(null));
-			Assert.assertArrayEquals("parse method returned wrong second expression", new Long[]{4L,5L,6L}, result.exprs[1].getArray(null));
+			Assert.assertArrayEquals("parse method returned wrong first expression", new Long[]{1L,2L,3L}, result.exprs[0].executeArray(null));
+			Assert.assertArrayEquals("parse method returned wrong second expression", new Long[]{4L,5L,6L}, result.exprs[1].executeArray(null));
 		});
 	}
 
@@ -45,8 +45,8 @@ public class StaticParseTest {
 		computeParseResults("1 test 2, 3 and 4", "%number% test %numbers%").forEach(result -> {
 			Assert.assertNotNull("parse method returned null", result);
 			Assert.assertEquals("parse method returned wrong number of expressions", 2, result.exprs.length);
-			Assert.assertEquals("parse method returned wrong first expression", 1L, result.exprs[0].getSingle(null));
-			Assert.assertArrayEquals("parse method returned wrong second expression", new Long[]{2L,3L,4L}, result.exprs[1].getArray(null));
+			Assert.assertEquals("parse method returned wrong first expression", 1L, result.exprs[0].executeSingle(null));
+			Assert.assertArrayEquals("parse method returned wrong second expression", new Long[]{2L,3L,4L}, result.exprs[1].executeArray(null));
 		});
 	}
 
@@ -55,7 +55,7 @@ public class StaticParseTest {
 		computeParseResults("1, 2 and 3", "%numbers%").forEach(result -> {
 			Assert.assertNotNull("parse method returned null", result);
 			Assert.assertEquals("parse method returned wrong number of expressions", 1, result.exprs.length);
-			Assert.assertArrayEquals("parse method returned wrong first expression", new Long[]{1L,2L,3L}, result.exprs[0].getArray(null));
+			Assert.assertArrayEquals("parse method returned wrong first expression", new Long[]{1L,2L,3L}, result.exprs[0].executeArray(null));
 		});
 
 	}
@@ -65,7 +65,7 @@ public class StaticParseTest {
 		computeParseResults("1", "%number%").forEach(result -> {
 			Assert.assertNotNull("parse method returned null", result);
 			Assert.assertEquals("parse method returned wrong number of expressions", 1, result.exprs.length);
-			Assert.assertEquals("parse method returned wrong first expression", 1L, result.exprs[0].getSingle(null));
+			Assert.assertEquals("parse method returned wrong first expression", 1L, result.exprs[0].executeSingle(null));
 		});
 	}
 

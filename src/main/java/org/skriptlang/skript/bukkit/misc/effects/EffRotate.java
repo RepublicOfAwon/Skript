@@ -10,8 +10,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
-import org.bukkit.event.Event;
 import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
@@ -96,11 +96,11 @@ public class EffRotate extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		if (matchedPattern == 3) {
-			Number x = this.x.getSingle(event);
-			Number y = this.y.getSingle(event);
-			Number z = this.z.getSingle(event);
+			Number x = this.x.executeSingle(event);
+			Number y = this.y.executeSingle(event);
+			Number z = this.z.executeSingle(event);
 			if (x == null || y == null || z == null)
 				return;
 
@@ -108,7 +108,7 @@ public class EffRotate extends Effect {
 			float radY = (float) (y.floatValue() * Math.PI / 180);
 			float radZ = (float) (z.floatValue() * Math.PI / 180);
 
-			for (Object object : toRotate.getArray(event)) {
+			for (Object object : toRotate.executeArray(event)) {
 				if (object instanceof Quaternionf quaternion) {
 					quaternion.rotateZYX(radZ, radY, radX);
 				} else if (object instanceof Display display) {
@@ -128,7 +128,7 @@ public class EffRotate extends Effect {
 		}
 
 		// rotate around axis
-		Number angle = this.angle.getSingle(event);
+		Number angle = this.angle.executeSingle(event);
 		if (angle == null)
 			return;
 		double radAngle = (angle.doubleValue() * Math.PI / 180);
@@ -141,7 +141,7 @@ public class EffRotate extends Effect {
 
 		if (axis == Axis.ARBITRARY) {
 			// rotate around arbitrary axis
-			Vector axis = vector.getSingle(event);
+			Vector axis = vector.executeSingle(event);
 			if (axis == null || axis.isZero())
 				return;
 			axis.normalize();
@@ -155,7 +155,7 @@ public class EffRotate extends Effect {
 			displayRotator = new DisplayRotator(axis, (float) radAngle);
 		}
 
-		for (Object object : toRotate.getArray(event)) {
+		for (Object object : toRotate.executeArray(event)) {
 			if (object instanceof Vector vectorToRotate) {
 				vectorRotator.rotate(vectorToRotate);
 			} else if (object instanceof Quaternionf quaternion) {
@@ -167,7 +167,7 @@ public class EffRotate extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return switch (matchedPattern) {
 			case 0, 1 -> "rotate " + toRotate.toString(event, debug) +
 					" around the " + axis + "-axis " +

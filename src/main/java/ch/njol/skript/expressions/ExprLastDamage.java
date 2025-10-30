@@ -7,8 +7,8 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Last Damage")
@@ -43,19 +43,19 @@ public class ExprLastDamage extends SimplePropertyExpression<LivingEntity, Numbe
 
 	@SuppressWarnings("ConstantValue")
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta != null && delta[0] instanceof Number) {
 			double damage = ((Number) delta[0]).doubleValue() * 2;
 
 			switch (mode) {
 				case SET:
-					for (LivingEntity entity : getExpr().getArray(e))
+					for (LivingEntity entity : getExpr().executeArray(e))
 						entity.setLastDamage(damage);
 					break;
 				case REMOVE:
 					damage = damage * -1;
 				case ADD:
-					for (LivingEntity entity : getExpr().getArray(e))
+					for (LivingEntity entity : getExpr().executeArray(e))
 						entity.setLastDamage(damage + entity.getLastDamage());
 					break;
 				default:

@@ -9,10 +9,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
@@ -63,10 +63,10 @@ public class EffForceAttack extends Effect implements SyntaxRuntimeErrorProducer
 	}
 	
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		Double amount = null;
 		if (this.amount != null) {
-			Number number = this.amount.getSingle(event);
+			Number number = this.amount.executeSingle(event);
 			if (number == null)
 				return;
 			Double preAmount = number.doubleValue();
@@ -79,8 +79,8 @@ public class EffForceAttack extends Effect implements SyntaxRuntimeErrorProducer
 			amount = preAmount * 2; // hearts
 		}
 
-		LivingEntity[] attackers = this.attackers.getArray(event);
-		Entity[] victims = this.victims.getArray(event);
+		LivingEntity[] attackers = this.attackers.executeArray(event);
+		Entity[] victims = this.victims.executeArray(event);
 		if (amount == null) {
 			for (Entity victim : victims) {
 				for (LivingEntity attacker : attackers) {
@@ -104,7 +104,7 @@ public class EffForceAttack extends Effect implements SyntaxRuntimeErrorProducer
 	}
 
 	@Override
-	public String toString(Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append("make", attackers);
 		if (amount == null) {

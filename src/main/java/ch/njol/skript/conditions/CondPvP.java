@@ -10,9 +10,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.GameRule;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("PvP")
@@ -41,14 +41,14 @@ public class CondPvP extends Condition {
 	}
 	
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		if (PVP_GAME_RULE_EXISTS)
 			return worlds.check(event, world -> world.getGameRuleValue(GameRule.PVP) == enabled, isNegated());
 		return worlds.check(event, world -> world.getPVP() == enabled, isNegated());
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "PvP is " + (enabled ? "enabled" : "disabled") + " in " + worlds.toString(event, debug);
 	}
 

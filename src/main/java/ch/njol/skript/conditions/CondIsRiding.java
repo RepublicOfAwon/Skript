@@ -3,8 +3,8 @@ package ch.njol.skript.conditions;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.conditions.base.PropertyCondition;
@@ -46,11 +46,11 @@ public class CondIsRiding extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		// Entities are riding in general
 		if (riding == null)
 			return riders.check(event, rider -> rider.getVehicle() != null, isNegated());
-		Object[] riding = this.riding.getArray(event);
+		Object[] riding = this.riding.executeArray(event);
 		// Entities are riding a specific type of entity or specific entity
 		return riders.check(event, rider -> {
 			Entity vehicle = rider.getVehicle();
@@ -70,7 +70,7 @@ public class CondIsRiding extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String property = "riding";
 		if (riding != null)
 			property += " " + riding.toString(event, debug);

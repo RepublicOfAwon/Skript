@@ -12,7 +12,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
@@ -54,8 +54,8 @@ public class EffTooltip extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (ItemType item : items.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (ItemType item : items.executeArray(event)) {
 			ItemMeta meta = item.getItemMeta();
 			if (entire) {
 				meta.setHideTooltip(hide);
@@ -71,7 +71,7 @@ public class EffTooltip extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (hide ? "hide" : "show") + " the " + (entire ? "entire" : "additional") + " tooltip of " + items.toString(event, debug);
 	}
 

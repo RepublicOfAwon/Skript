@@ -13,6 +13,7 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.Furnace;
 import org.bukkit.event.Event;
@@ -97,7 +98,7 @@ public class ExprFurnaceTime extends PropertyExpression<Block, Timespan> {
 	}
 
 	@Override
-	protected Timespan @Nullable [] get(Event event, Block[] source) {
+	protected Timespan @Nullable [] get(VirtualFrame event, Block[] source) {
 		return get(source, block -> {
 			if (block == null || !(block.getState() instanceof Furnace furnace))
 				return null;
@@ -133,7 +134,7 @@ public class ExprFurnaceTime extends PropertyExpression<Block, Timespan> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame frame, Object @Nullable [] delta, ChangeMode mode) {
 		int providedTime = 0;
 		if (delta != null && delta[0] instanceof Timespan span)
 			providedTime = (int) span.get(Timespan.TimePeriod.TICK);
@@ -154,20 +155,22 @@ public class ExprFurnaceTime extends PropertyExpression<Block, Timespan> {
 			default -> throw new IllegalStateException("Unexpected value: " + mode);
 		};
 
+		Event event = (Event) frame.getArguments()[0];
+
 		switch (type) {
-			case COOKTIME -> changeFurnaces(event, furnace -> change(furnace::setCookTime, furnace::getCookTime, calculateTimeShort));
+			case COOKTIME -> changeFurnaces(frame, furnace -> change(furnace::setCookTime, furnace::getCookTime, calculateTimeShort));
 			case TOTALCOOKTIME -> {
 				if (!explicitlyBlock && event instanceof FurnaceStartSmeltEvent smeltEvent) {
 					change(smeltEvent::setTotalCookTime, smeltEvent::getTotalCookTime, calculateTime);
 				} else {
-					changeFurnaces(event, furnace -> change(furnace::setCookTimeTotal, furnace::getCookTimeTotal, calculateTime));
+					changeFurnaces(frame, furnace -> change(furnace::setCookTimeTotal, furnace::getCookTimeTotal, calculateTime));
 				}
 			}
 			case BURNTIME -> {
 				if (!explicitlyBlock && event instanceof FurnaceBurnEvent burnEvent) {
 					change(burnEvent::setBurnTime, burnEvent::getBurnTime, calculateTime);
 				} else {
-					changeFurnaces(event, furnace -> change(furnace::setBurnTime, furnace::getBurnTime, calculateTimeShort));
+					changeFurnaces(frame, furnace -> change(furnace::setBurnTime, furnace::getBurnTime, calculateTimeShort));
 				}
 			}
 		}
@@ -175,11 +178,11 @@ public class ExprFurnaceTime extends PropertyExpression<Block, Timespan> {
 
 	/**
 	 * Handler for setting data of furnace blocks
-	 * @param event Event
+	 * @param frame Event
 	 * @param changer The consumer used to apply to the furnace blocks
 	 */
-	private void changeFurnaces(Event event, Consumer<Furnace> changer) {
-		for (Block block : getExpr().getArray(event)) {
+	private void changeFurnaces(VirtualFrame frame, Consumer<Furnace> changer) {
+		for (Block block : getExpr().executeArray(frame)) {
 			Furnace furnace = (Furnace) block.getState();
 			changer.accept(furnace);
 			furnace.update(true);
@@ -201,7 +204,7 @@ public class ExprFurnaceTime extends PropertyExpression<Block, Timespan> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return type.toString + " of "  + getExpr().toString(event, debug);
 	}
 	

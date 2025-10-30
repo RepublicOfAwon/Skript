@@ -1,7 +1,7 @@
 package ch.njol.skript.conditions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent.Status;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +48,7 @@ public class CondResourcePack extends Condition {
 	}
 	
 	@Override
-	public boolean check(Event e) {
+	public boolean executeBoolean(VirtualFrame e) {
 		if (!(e instanceof PlayerResourcePackStatusEvent))
 			return isNegated();
 
@@ -57,7 +57,7 @@ public class CondResourcePack extends Condition {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "resource pack was " + (isNegated() ? "not " : "") + states.toString(e, debug);
 	}
 	

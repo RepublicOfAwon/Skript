@@ -7,16 +7,16 @@ import org.jetbrains.annotations.Nullable;
  * 
  * @author Peter Güttinger
  */
-public interface Literal<T> extends Expression<T> {
+public abstract class Literal<T> extends Expression<T> {
 
-	T[] getArray();
+	public abstract T[] getArray();
 
-	T getSingle();
+	public abstract T getSingle();
 
 	@Override
 	@SuppressWarnings("unchecked")
-	<R> @Nullable Literal<? extends R> getConvertedExpression(Class<R>... to);
+	public abstract <R> @Nullable Literal<? extends R> getConvertedExpression(Class<R>... to);
 
-	T[] getAll();
+	public abstract T[] getAll();
 
 }

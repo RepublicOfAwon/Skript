@@ -7,10 +7,10 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Total Experience")
@@ -66,7 +66,7 @@ public class ExprTotalExperience extends SimplePropertyExpression<Entity, Intege
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		int change = delta == null ? 0 : ((Number) delta[0]).intValue();
 		switch (mode) {
 			case RESET:
@@ -75,7 +75,7 @@ public class ExprTotalExperience extends SimplePropertyExpression<Entity, Intege
 			case SET:
 				if (change < 0)
 					change = 0;
-				for (Entity entity : getExpr().getArray(event)) {
+				for (Entity entity : getExpr().executeArray(event)) {
 					if (entity instanceof ExperienceOrb) {
 						((ExperienceOrb) entity).setExperience(change);
 					} else if (entity instanceof Player) {
@@ -88,7 +88,7 @@ public class ExprTotalExperience extends SimplePropertyExpression<Entity, Intege
 				// fall through to ADD
 			case ADD:
 				int xp;
-				for (Entity entity : getExpr().getArray(event)) {
+				for (Entity entity : getExpr().executeArray(event)) {
 					if (entity instanceof ExperienceOrb) {
 						//ensure we don't go below 0
 						xp = ((ExperienceOrb) entity).getExperience() + change;

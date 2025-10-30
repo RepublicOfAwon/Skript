@@ -8,9 +8,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.tags.TagModule;
 import org.skriptlang.skript.bukkit.tags.TagType;
@@ -66,7 +66,7 @@ public class ExprTag extends SimpleExpression<Tag> {
 	}
 
 	@Override
-	protected Tag<?> @Nullable [] get(Event event) {
+	protected Tag<?> @Nullable [] execute(VirtualFrame event) {
 		List<Tag<?>> tags = new ArrayList<>();
 
 		String[] namespaces = switch (origin) {
@@ -76,7 +76,7 @@ public class ExprTag extends SimpleExpression<Tag> {
 			case SKRIPT -> new String[]{"skript"};
 		};
 
-		nextName: for (String name : this.names.getArray(event)) {
+		nextName: for (String name : this.names.executeArray(event)) {
 			boolean invalidKey = false;
 			try {
 				if (name.contains(":")) {
@@ -130,7 +130,7 @@ public class ExprTag extends SimpleExpression<Tag> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String registry = types.length > 1 ? "" : " " + types[0].toString();
 		return origin.toString(datapackOnly) + registry + " tag " + names.toString(event, debug);
 	}

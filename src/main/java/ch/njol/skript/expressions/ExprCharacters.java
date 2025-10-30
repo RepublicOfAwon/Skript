@@ -12,8 +12,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.apache.commons.lang.ArrayUtils;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 
@@ -56,9 +56,9 @@ public class ExprCharacters extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String[] get(Event event) {
-		String start = this.start.getSingle(event);
-		String end = this.end.getSingle(event);
+	protected String[] execute(VirtualFrame event) {
+		String start = this.start.executeSingle(event);
+		String end = this.end.executeSingle(event);
 		if (start == null || end == null)
 			return new String[0];
 
@@ -106,7 +106,7 @@ public class ExprCharacters extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "all the " + (isAlphanumeric ? "alphanumeric " : "") + "characters between " + start.toString(event, debug) + " and " + end.toString(event, debug);
 	}
 }

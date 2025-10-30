@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.BrewingStandFuelEvent;
 import org.jetbrains.annotations.Nullable;
@@ -59,14 +60,14 @@ public class CondBrewingConsume extends Condition implements EventRestrictedSynt
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		if (!(event instanceof BrewingStandFuelEvent brewingStandFuelEvent))
 			return false;
 		return brewingStandFuelEvent.isConsuming() == willConsume;
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the brewing stand will" + (willConsume ? "" : " not") + " consume the fuel";
 	}
 

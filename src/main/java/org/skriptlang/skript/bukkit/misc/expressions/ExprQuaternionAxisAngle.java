@@ -14,7 +14,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 import org.joml.AxisAngle4f;
@@ -73,9 +73,9 @@ public class ExprQuaternionAxisAngle extends SimplePropertyExpression<Quaternion
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		assert delta != null; // reset/delete not supported
-		Quaternionf[] quaternions = getExpr().getArray(event);
+		Quaternionf[] quaternions = getExpr().executeArray(event);
 		AxisAngle4f axisAngle = new AxisAngle4f();
 		if (isAxis && delta[0] instanceof Vector vector) {
 			for (Quaternionf quaternion : quaternions) {

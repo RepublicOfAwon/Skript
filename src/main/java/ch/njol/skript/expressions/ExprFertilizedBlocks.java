@@ -4,7 +4,7 @@ package ch.njol.skript.expressions;
 import java.util.Iterator;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.block.BlockFertilizeEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +46,7 @@ public class ExprFertilizedBlocks extends SimpleExpression<BlockStateBlock> {
 	
 	@Nullable
 	@Override
-	protected BlockStateBlock[] get(Event e) {
+	protected BlockStateBlock[] execute(VirtualFrame e) {
 		if (!(e instanceof BlockFertilizeEvent))
 			return null;
 
@@ -57,7 +57,7 @@ public class ExprFertilizedBlocks extends SimpleExpression<BlockStateBlock> {
 	
 	@Nullable
 	@Override
-	public Iterator<? extends BlockStateBlock> iterator(Event e) {
+	public Iterator<? extends BlockStateBlock> iterator(VirtualFrame e) {
 		if (!(e instanceof BlockFertilizeEvent))
 			return null;
 
@@ -77,7 +77,7 @@ public class ExprFertilizedBlocks extends SimpleExpression<BlockStateBlock> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the fertilized blocks";
 	}
 	

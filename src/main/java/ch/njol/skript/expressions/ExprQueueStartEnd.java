@@ -10,7 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.registrations.experiments.QueueExperimentSyntax;
 import org.skriptlang.skript.lang.util.SkriptQueue;
@@ -62,8 +62,8 @@ public class ExprQueueStartEnd extends SimplePropertyExpression<SkriptQueue, Obj
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, Changer.ChangeMode mode) {
-		SkriptQueue queue = this.getExpr().getSingle(event);
+	public void change(VirtualFrame event, Object @Nullable [] delta, Changer.ChangeMode mode) {
+		SkriptQueue queue = this.getExpr().executeSingle(event);
 		if (queue == null)
 			return;
 		if (start) {

@@ -1,7 +1,7 @@
 package ch.njol.skript.lang;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ControlFlowException;
-import org.bukkit.event.Event;
 
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -14,14 +14,14 @@ import java.util.WeakHashMap;
  */
 public abstract class LoopSection extends Section implements SyntaxElement, Debuggable, SectionExitHandler {
 
-	protected final transient Map<Event, Long> currentLoopCounter = new WeakHashMap<>();
+	protected final transient Map<VirtualFrame, Long> currentLoopCounter = new WeakHashMap<>();
 
 	/**
-	 * @param event The event where the loop is used to return its loop iterations
+	 * @param frame The event where the loop is used to return its loop iterations
 	 * @return The loop iteration number
 	 */
-	public long getLoopCounter(Event event) {
-		return currentLoopCounter.getOrDefault(event, 1L);
+	public long getLoopCounter(VirtualFrame frame) {
+		return currentLoopCounter.getOrDefault(frame, 1L);
 	}
 
 	/**
@@ -29,7 +29,7 @@ public abstract class LoopSection extends Section implements SyntaxElement, Debu
 	 * @param event The event where the loop is used to reset its relevant properties
 	 */
 	@Override
-	public void exit(Event event) {
+	public void exit(VirtualFrame event) {
 		currentLoopCounter.remove(event);
 	}
 

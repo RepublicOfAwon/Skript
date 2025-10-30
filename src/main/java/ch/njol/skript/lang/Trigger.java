@@ -19,13 +19,15 @@ public class Trigger extends RootNode {
 	private final @Nullable Script script;
 	private int line = -1; // -1 is default: it means there is no line number available
 	private String debugLabel;
-	protected final TriggerSection body;
+
+	@Child
+	protected TriggerSection body;
 
 	public Trigger(@Nullable Script script, String name, SkriptEvent event, List<TriggerItem> items) {
 		super(null);
 		this.body = new TriggerSection(items) {
 			@Override
-			public String toString(@Nullable Event event, boolean debug) {
+			public String toString(@Nullable VirtualFrame event, boolean debug) {
 				return "trigger_body";
 			}
 		};
@@ -44,7 +46,7 @@ public class Trigger extends RootNode {
 		boolean success = TriggerItem.walk(this, event);
 
 		// Clear local variables
-		Variables.removeLocals(event);
+		//Variables.removeLocals(event);
 		/*
 		 * Local variables can be used in delayed effects by backing reference
 		 * of VariablesMap up. Basically:
@@ -73,8 +75,7 @@ public class Trigger extends RootNode {
 
 	}
 
-	//@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return name + " (" + this.event.toString(event, debug) + ")";
 	}
 
@@ -87,14 +88,15 @@ public class Trigger extends RootNode {
 
 	@Override
 	public Object execute(VirtualFrame frame) {
-		Event event = (Event) frame.getArguments()[0];
 		try {
-			this.body.walk(event);
+			this.body.execute(frame);
 		} catch (ReturnException e) {
 
 		} catch (DelayException e) {
 			e.future.thenAccept(v -> execute(frame));
+			return null;
 		}
+		Variables.removeLocals(frame);
 		return null;
 	}
 

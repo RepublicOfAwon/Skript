@@ -14,8 +14,8 @@ import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Display Interpolation Delay/Duration")
@@ -57,8 +57,8 @@ public class ExprDisplayInterpolation extends SimplePropertyExpression<Display, 
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		Display[] displays = getExpr().getArray(event);
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
+		Display[] displays = getExpr().executeArray(event);
 		long ticks = 0;
 		if (delta != null)
 			ticks = Math2.fit(Integer.MIN_VALUE, ((Timespan) delta[0]).getAs(TimePeriod.TICK), Integer.MAX_VALUE);

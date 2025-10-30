@@ -1,5 +1,6 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -33,10 +34,11 @@ public class ExprLevel extends SimplePropertyExpression<Player, Long> {
 	}
 	
 	@Override
-	protected Long[] get(final Event e, final Player[] source) {
+	protected Long[] get(final VirtualFrame frame, final Player[] source) {
 		return super.get(source, p -> {
-			if (e instanceof PlayerLevelChangeEvent && ((PlayerLevelChangeEvent) e).getPlayer() == p && !Delay.isDelayed(e)) {
-				return (long) (getTime() < 0 ? ((PlayerLevelChangeEvent) e).getOldLevel() : ((PlayerLevelChangeEvent) e).getNewLevel());
+			Event event = (Event) frame.getArguments()[0];
+			if (event instanceof PlayerLevelChangeEvent && ((PlayerLevelChangeEvent) event).getPlayer() == p && !Delay.isDelayed(event)) {
+				return (long) (getTime() < 0 ? ((PlayerLevelChangeEvent) event).getOldLevel() : ((PlayerLevelChangeEvent) event).getNewLevel());
 			}
 			return (long) p.getLevel();
 		});
@@ -73,12 +75,13 @@ public class ExprLevel extends SimplePropertyExpression<Player, Long> {
 	}
 	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
+	public void change(final VirtualFrame frame, final @Nullable Object[] delta, final ChangeMode mode) {
+		Event e = (Event) frame.getArguments()[0];
 		assert mode != ChangeMode.REMOVE_ALL;
 		
 		final int l = delta == null ? 0 : ((Number) delta[0]).intValue();
 		
-		for (final Player p : getExpr().getArray(e)) {
+		for (final Player p : getExpr().executeArray(frame)) {
 			int level;
 			if (getTime() > 0 && e instanceof PlayerDeathEvent && ((PlayerDeathEvent) e).getEntity() == p && !Delay.isDelayed(e)) {
 				level = ((PlayerDeathEvent) e).getNewLevel();

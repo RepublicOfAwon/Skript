@@ -9,8 +9,8 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Remaining Air")
@@ -52,12 +52,12 @@ public class ExprRemainingAir extends SimplePropertyExpression<LivingEntity, Tim
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		// default is 15 seconds of air
 		long changeValue = delta != null ? ((Timespan) delta[0]).getAs(TimePeriod.TICK) : 20 * 15;
 		if (mode == ChangeMode.REMOVE) // subtract the change value
 			changeValue *= -1;
-		for (LivingEntity entity : getExpr().getArray(event)) {
+		for (LivingEntity entity : getExpr().executeArray(event)) {
 			long newRemainingAir = 0;
 			if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE)
 				newRemainingAir = entity.getRemainingAir();

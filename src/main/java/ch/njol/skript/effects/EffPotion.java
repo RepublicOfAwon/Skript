@@ -1,8 +1,8 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
@@ -90,21 +90,21 @@ public class EffPotion extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		if (potionEffect) {
-			for (LivingEntity livingEntity : entities.getArray(event))
-				PotionEffectUtils.addEffects(livingEntity, effects.getArray(event));
+			for (LivingEntity livingEntity : entities.executeArray(event))
+				PotionEffectUtils.addEffects(livingEntity, effects.executeArray(event));
 		} else {
-			PotionEffectType[] potionEffectTypes = potions.getArray(event);
+			PotionEffectType[] potionEffectTypes = potions.executeArray(event);
 			if (potionEffectTypes.length == 0)
 				return;
 			int tier = 0;
 			if (this.tier != null)
-				tier = this.tier.getOptionalSingle(event).orElse(1).intValue() - 1;
+				tier = this.tier.executeOptional(event).orElse(1).intValue() - 1;
 
 			int duration = infinite ? (COMPATIBLE ? -1 : Integer.MAX_VALUE) : DEFAULT_DURATION;
 			if (this.duration != null && !infinite) {
-				Timespan timespan = this.duration.getSingle(event);
+				Timespan timespan = this.duration.executeSingle(event);
 				if (timespan == null)
 					return;
 				if (timespan.isInfinite()) {
@@ -113,7 +113,7 @@ public class EffPotion extends Effect {
 					duration = (int) Math.min(timespan.getAs(Timespan.TimePeriod.TICK), Integer.MAX_VALUE);
 				}
 			}
-			for (LivingEntity entity : entities.getArray(event)) {
+			for (LivingEntity entity : entities.executeArray(event)) {
 				for (PotionEffectType potionEffectType : potionEffectTypes) {
 					int finalDuration = duration;
 					if (!replaceExisting && !infinite) {
@@ -133,7 +133,7 @@ public class EffPotion extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (potionEffect) {
 			// Uses PotionEffectUtils#toString
 			return "apply " + effects.toString(event, debug) + " to " + entities.toString(event, debug);

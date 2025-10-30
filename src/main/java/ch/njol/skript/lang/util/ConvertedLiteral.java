@@ -5,7 +5,7 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.ArrayIterator;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.ConverterInfo;
 import org.skriptlang.skript.lang.converter.Converters;
@@ -36,7 +36,7 @@ public class ConvertedLiteral<F, T> extends ConvertedExpression<F, T> implements
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return Classes.toString(data, getAnd());
 	}
 
@@ -51,7 +51,7 @@ public class ConvertedLiteral<F, T> extends ConvertedExpression<F, T> implements
 	}
 
 	@Override
-	public T[] getArray(Event event) {
+	public T[] executeArray(VirtualFrame frame) {
 		return getArray();
 	}
 
@@ -63,22 +63,22 @@ public class ConvertedLiteral<F, T> extends ConvertedExpression<F, T> implements
 	}
 
 	@Override
-	public T getSingle(Event event) {
+	public T executeSingle(VirtualFrame frame) {
 		return getSingle();
 	}
 
 	@Override
-	public @Nullable Iterator<T> iterator(Event event) {
+	public @Nullable Iterator<T> iterator(VirtualFrame event) {
 		return new ArrayIterator<>(data);
 	}
 
 	@Override
-	public boolean check(Event event, Predicate<? super T> checker) {
+	public boolean check(VirtualFrame event, Predicate<? super T> checker) {
 		return SimpleExpression.check(data, checker, false, getAnd());
 	}
 
 	@Override
-	public boolean check(Event event, Predicate<? super T> checker, boolean negated) {
+	public boolean check(VirtualFrame event, Predicate<? super T> checker, boolean negated) {
 		return SimpleExpression.check(data, checker, negated, getAnd());
 	}
 

@@ -1,10 +1,10 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -68,13 +68,13 @@ public class EffCommand extends Effect {
 	}
 
 	@Override
-	public void execute(Event event) {
-		for (String command : commands.getArray(event)) {
+	public void executeVoid(VirtualFrame event) {
+		for (String command : commands.executeArray(event)) {
 			assert command != null;
 			if (command.startsWith("/"))
 				command = "" + command.substring(1);
 			if (senders != null) {
-				for (CommandSender sender : senders.getArray(event)) {
+				for (CommandSender sender : senders.executeArray(event)) {
 					if (bungeecord) {
 						if (!(sender instanceof Player))
 							continue;
@@ -91,7 +91,7 @@ public class EffCommand extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "make " + (senders != null ? senders.toString(event, debug) : "the console") + " execute " + (bungeecord ? "bungeecord " : "") + "command " + commands.toString(event, debug);
 	}
 

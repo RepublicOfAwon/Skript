@@ -11,10 +11,10 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.WeatherType;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.event.weather.WeatherEvent;
@@ -51,7 +51,7 @@ public class ExprWeather extends PropertyExpression<Object, WeatherType> {
 	}
 
 	@Override
-	protected WeatherType @Nullable [] get(Event event, Object[] source) {
+	protected WeatherType @Nullable [] get(VirtualFrame event, Object[] source) {
 		World eventWorld = event instanceof WeatherEvent weatherEvent ? weatherEvent.getWorld() : null;
         return get(source, object -> {
 			if (object instanceof Player player) {
@@ -75,12 +75,12 @@ public class ExprWeather extends PropertyExpression<Object, WeatherType> {
 	}
 	
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		WeatherType playerWeather = delta != null ? (WeatherType) delta[0] : null;
 		WeatherType worldWeather = playerWeather != null ? playerWeather : WeatherType.CLEAR;
 
 		World eventWorld = event instanceof WeatherEvent weatherEvent ? weatherEvent.getWorld() : null;
-		for (Object object : getExpr().getArray(event)) {
+		for (Object object : getExpr().executeArray(event)) {
 			if (object instanceof Player player) {
 				if (playerWeather != null) {
 					playerWeather.setWeather(player);
@@ -119,7 +119,7 @@ public class ExprWeather extends PropertyExpression<Object, WeatherType> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "weather of " + getExpr().toString(event, debug);
 	}
 

@@ -12,9 +12,9 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("TPS (ticks per second)")
@@ -48,7 +48,7 @@ public class ExprTPS extends SimpleExpression<Number> {
 	}
 
 	@Override
-	protected Number[] get(Event e) {
+	protected Number[] execute(VirtualFrame e) {
 		double[] tps = Bukkit.getServer().getTPS();
 		if (index != 3) {
 			return new Number[] { tps[index] };
@@ -67,7 +67,7 @@ public class ExprTPS extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return expr;
 	}
 

@@ -16,7 +16,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.registrations.experiments.ReflectionExperimentSyntax;
 
@@ -81,11 +81,11 @@ public class ExprNode extends PropertyExpression<Node, Node> implements Reflecti
 	}
 
 	@Override
-	protected Node[] get(Event event, Node[] source) {
+	protected Node[] get(VirtualFrame event, Node[] source) {
 		if (source.length == 0)
 			return CollectionUtils.array();
 		if (isPath) {
-			String path = pathExpression.getSingle(event);
+			String path = pathExpression.executeSingle(event);
 			Node node = source[0];
 			if (node != null && (path == null || path.isBlank()))
 				return CollectionUtils.array(node);
@@ -106,10 +106,10 @@ public class ExprNode extends PropertyExpression<Node, Node> implements Reflecti
 	}
 
 	@Override
-	public @Nullable Iterator<? extends Node> iterator(Event event) {
+	public @Nullable Iterator<? extends Node> iterator(VirtualFrame event) {
 		if (isPath)
 			return super.iterator(event);
-		if (this.getExpr().getSingle(event) instanceof SectionNode node)
+		if (this.getExpr().executeSingle(event) instanceof SectionNode node)
 			return node.iterator();
 		return null;
 	}
@@ -131,7 +131,7 @@ public class ExprNode extends PropertyExpression<Node, Node> implements Reflecti
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (isPath)
 			return "the node " + pathExpression.toString(event, debug) + " of " + this.getExpr().toString(event, debug);
 		return "the nodes of " + this.getExpr().toString(event, debug);

@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.BrewingStandFuelEvent;
 import org.jetbrains.annotations.Nullable;
@@ -58,14 +59,14 @@ public class EffBrewingConsume extends Effect implements EventRestrictedSyntax {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		if (!(event instanceof BrewingStandFuelEvent brewingStandFuelEvent))
 			return;
 		brewingStandFuelEvent.setConsuming(consume);
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (consume)
 			return "make the brewing stand consume the fuel";
 		return "prevent the brewing stand from consuming the fuel";

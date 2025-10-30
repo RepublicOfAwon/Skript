@@ -13,7 +13,7 @@ import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -96,19 +96,19 @@ public class EffReturn extends Effect {
 	}
 
 	@Override
-	public Object walk(Event event) {
+	public Object execute(VirtualFrame frame) {
 		//noinspection rawtypes,unchecked
-		((ReturnHandler) handler).returnValues(event, value);
+		((ReturnHandler) handler).returnValues(frame, value);
 
 		for (SectionExitHandler section : sectionsToExit)
-			section.exit(event);
+			section.exit(frame);
 
 
 		throw new Trigger.ReturnException();
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		assert false;
 	}
 
@@ -120,7 +120,7 @@ public class EffReturn extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "return " + value.toString(event, debug);
 	}
 

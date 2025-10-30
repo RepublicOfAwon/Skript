@@ -11,9 +11,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Explode Creeper")
@@ -64,8 +64,8 @@ public class EffExplodeCreeper extends Effect {
 	}
 
 	@Override
-	protected void execute(final Event e) {
-		for (final LivingEntity le : entities.getArray(e)) {
+	protected void executeVoid(final VirtualFrame e) {
+		for (final LivingEntity le : entities.executeArray(e)) {
 			if (le instanceof Creeper) {
 				if (instant) {
 					((Creeper) le).explode();
@@ -83,7 +83,7 @@ public class EffExplodeCreeper extends Effect {
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return (instant == true ? "instantly explode " : "start the explosion process of ") + entities.toString(e, debug);
 	}
 

@@ -1,7 +1,7 @@
 package ch.njol.skript.conditions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,14 +43,14 @@ public class CondLeashWillDrop extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		if (!(event instanceof EntityUnleashEvent unleashEvent))
 			return false;
 		return unleashEvent.isDropLeash() ^ isNegated();
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the leash will" + (isNegated() ? " not" : "") + " be dropped";
 	}
 

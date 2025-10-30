@@ -12,10 +12,10 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,9 +64,9 @@ public class ExprItemCooldown extends SimpleExpression<Timespan> {
 	}
 	
 	@Override
-	protected Timespan[] get(Event event) {
-		Player[] players = this.players.getArray(event);
-		List<ItemStack> itemStacks = convertToItemList(this.itemtypes.getArray(event));
+	protected Timespan[] execute(VirtualFrame event) {
+		Player[] players = this.players.executeArray(event);
+		List<ItemStack> itemStacks = convertToItemList(this.itemtypes.executeArray(event));
 		List<Timespan> timespans = new ArrayList<>();
 		for (Player player : players) {
 			for (ItemStack item : itemStacks) {
@@ -87,15 +87,15 @@ public class ExprItemCooldown extends SimpleExpression<Timespan> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (mode != ChangeMode.RESET && mode != ChangeMode.DELETE && delta == null)
 			return;
 		
 		int ticks = delta != null ? (int) ((Timespan) delta[0]).getAs(Timespan.TimePeriod.TICK) : 0; // 0 for DELETE/RESET
 		if (mode == ChangeMode.REMOVE && ticks != 0)
 			ticks = -ticks;
-		Player[] players = this.players.getArray(event);
-		List<ItemStack> itemStacks = convertToItemList(itemtypes.getArray(event));
+		Player[] players = this.players.executeArray(event);
+		List<ItemStack> itemStacks = convertToItemList(itemtypes.executeArray(event));
 
 		for (Player player : players) {
 			for (ItemStack itemStack : itemStacks) {
@@ -144,7 +144,7 @@ public class ExprItemCooldown extends SimpleExpression<Timespan> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "cooldown of " + itemtypes.toString(event, debug) + " for " + players.toString(event, debug);
 	}
 

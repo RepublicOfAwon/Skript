@@ -14,8 +14,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.*;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -54,8 +54,8 @@ public class CondIsWearing extends Condition {
 	}
 	
 	@Override
-	public boolean check(Event event) {
-		ItemType[] cachedTypes = types.getAll(event);
+	public boolean executeBoolean(VirtualFrame event) {
+		ItemType[] cachedTypes = types.executeAll(event);
 
 		return entities.check(event, entity -> {
 			EntityEquipment equipment = entity.getEquipment();
@@ -92,7 +92,7 @@ public class CondIsWearing extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return PropertyCondition.toString(this, PropertyType.BE, event, debug, entities,
 				"wearing " + types.toString(event, debug));
 	}

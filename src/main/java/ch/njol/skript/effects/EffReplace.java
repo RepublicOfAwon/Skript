@@ -13,7 +13,7 @@ import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -84,8 +84,8 @@ public class EffReplace extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		Object[] needles = this.needles.getAll(event);
+	protected void executeVoid(VirtualFrame event) {
+		Object[] needles = this.needles.executeAll(event);
 		if (haystack instanceof ExpressionList<?> list) {
 			for (Expression<?> haystackExpr : list.getExpressions()) {
 				replace(event, needles, haystackExpr);
@@ -95,9 +95,9 @@ public class EffReplace extends Effect {
 		}
 	}
 
-	private void replace(Event event, Object[] needles, Expression<?> haystackExpr) {
-		Object[] haystack = haystackExpr.getAll(event);
-		Object replacement = this.replacement.getSingle(event);
+	private void replace(VirtualFrame event, Object[] needles, Expression<?> haystackExpr) {
+		Object[] haystack = haystackExpr.executeAll(event);
+		Object replacement = this.replacement.executeSingle(event);
 
 		if (replacement == null || haystack == null || haystack.length == 0 || needles == null || needles.length == 0)
 			return;
@@ -168,7 +168,7 @@ public class EffReplace extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 
 		builder.append("replace");

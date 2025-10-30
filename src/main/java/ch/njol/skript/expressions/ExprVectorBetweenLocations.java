@@ -2,8 +2,8 @@ package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
-import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,9 +44,9 @@ public class ExprVectorBetweenLocations extends SimpleExpression<Vector> {
 
 	@Override
 	@SuppressWarnings("null")
-	protected Vector[] get(Event event) {
-		Location from = this.from.getSingle(event);
-		Location to = this.to.getSingle(event);
+	protected Vector[] execute(VirtualFrame event) {
+		Location from = this.from.executeSingle(event);
+		Location to = this.to.executeSingle(event);
 		if (from == null || to == null)
 			return null;
 		return CollectionUtils.array(new Vector(to.getX() - from.getX(), to.getY() - from.getY(), to.getZ() - from.getZ()));
@@ -69,7 +69,7 @@ public class ExprVectorBetweenLocations extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "vector from " + from.toString(event, debug) + " to " + to.toString(event, debug);
 	}
 

@@ -5,11 +5,10 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.potion.PotionEffectType;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class EvtEntityPotion extends SkriptEvent {
 
@@ -37,7 +36,7 @@ public class EvtEntityPotion extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		EntityPotionEffectEvent potionEvent = (EntityPotionEffectEvent) event;
 		boolean effectMatches = potionEffects == null ||
 			(potionEvent.getOldEffect() != null && potionEffects.check(event, effectType -> effectType.equals(potionEvent.getOldEffect().getType()))) ||
@@ -50,7 +49,7 @@ public class EvtEntityPotion extends SkriptEvent {
 
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "on entity potion effect modification";
 	}
 }

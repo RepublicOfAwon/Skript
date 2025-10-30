@@ -5,7 +5,7 @@ import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,17 +39,17 @@ public class ExprKeyValueSet extends SimpleExpression<Object> implements KeyProv
 	}
 
 	@Override
-	public @NotNull String @NotNull [] getArrayKeys(Event event) throws IllegalStateException {
+	public @NotNull String @NotNull [] getArrayKeys(VirtualFrame event) throws IllegalStateException {
 		if (variable == null)
 			return testSet.keySet().toArray(new String[0]);
 		return variable.getArrayKeys(event);
 	}
 
 	@Override
-	protected Object @Nullable [] get(Event event) {
+	protected Object @Nullable [] execute(VirtualFrame event) {
 		if (variable == null)
 			return testSet.values().toArray();
-		return variable.getArray(event);
+		return variable.executeArray(event);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class ExprKeyValueSet extends SimpleExpression<Object> implements KeyProv
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (variable != null)
 			return "test key values of " + variable.toString(event, debug);
 		return "test key values";

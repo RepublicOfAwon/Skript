@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +42,7 @@ public class ExprFinalDamage extends SimpleExpression<Number> {
 	
 	@Override
 	@Nullable
-	protected Number[] get(final Event e) {
+	protected Number[] execute(final VirtualFrame e) {
 		if (!(e instanceof EntityDamageEvent))
 			return new Number[0];
 		return new Number[] {HealthUtils.getFinalDamage((EntityDamageEvent) e)};
@@ -66,7 +66,7 @@ public class ExprFinalDamage extends SimpleExpression<Number> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "the final damage";
 	}
 	

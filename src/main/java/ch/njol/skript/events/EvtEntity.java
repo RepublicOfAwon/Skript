@@ -1,9 +1,9 @@
 package ch.njol.skript.events;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.jetbrains.annotations.Nullable;
@@ -71,7 +71,7 @@ public final class EvtEntity extends SkriptEvent {
 	
 	@SuppressWarnings("null")
 	@Override
-	public boolean check(final Event e) {
+	public boolean check(final VirtualFrame e) {
 		if (types == null)
 			return true;
 		final Entity en = e instanceof EntityDeathEvent ? ((EntityDeathEvent) e).getEntity() : ((EntitySpawnEvent) e).getEntity();
@@ -83,7 +83,7 @@ public final class EvtEntity extends SkriptEvent {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return (spawn ? "spawn" : "death") + (types != null ? " of " + Classes.toString(types, false) : "");
 	}
 	

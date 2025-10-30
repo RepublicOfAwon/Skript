@@ -3,9 +3,9 @@ package ch.njol.skript.expressions;
 import java.lang.reflect.Array;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
@@ -157,7 +157,7 @@ public class ExprClicked extends SimpleExpression<Object> {
 	
 	@Override
 	@Nullable
-	protected Object[] get(Event e) {
+	protected Object[] execute(VirtualFrame e) {
 		if (!(e instanceof InventoryClickEvent) && clickable != ClickableType.BLOCK_AND_ITEMS && clickable != ClickableType.ENCHANT_BUTTON)
 			return null;
 
@@ -212,7 +212,7 @@ public class ExprClicked extends SimpleExpression<Object> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the " + (clickable != ClickableType.BLOCK_AND_ITEMS ? clickable.getName() : "clicked " + (entityType != null ? entityType : itemType != null ? itemType : "block"));
 	}
 	

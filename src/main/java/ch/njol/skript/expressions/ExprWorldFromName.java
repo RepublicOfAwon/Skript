@@ -11,9 +11,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("World from Name")
@@ -39,8 +39,8 @@ public class ExprWorldFromName extends SimpleExpression<World> {
 
 	@Override
 	@Nullable
-	protected World[] get(Event e) {
-		String worldName = this.worldName.getSingle(e);
+	protected World[] execute(VirtualFrame e) {
+		String worldName = this.worldName.executeSingle(e);
 		if (worldName == null)
 			return null;
 		World world = Bukkit.getWorld(worldName);
@@ -61,7 +61,7 @@ public class ExprWorldFromName extends SimpleExpression<World> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the world with name " + worldName.toString(e, debug);
 	}
 

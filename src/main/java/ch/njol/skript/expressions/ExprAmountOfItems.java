@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -41,10 +41,10 @@ public class ExprAmountOfItems extends SimpleExpression<Long> {
 	}
 	
 	@Override
-	protected Long[] get(Event e) {
-		ItemType[] itemTypes = items.getArray(e);
+	protected Long[] execute(VirtualFrame e) {
+		ItemType[] itemTypes = items.executeArray(e);
 		long amount = 0;
-		for (Inventory inventory : inventories.getArray(e)) {
+		for (Inventory inventory : inventories.executeArray(e)) {
 			itemsLoop: for (ItemStack itemStack : inventory.getContents()) {
 				if (itemStack != null) {
 					for (ItemType itemType : itemTypes) {
@@ -70,7 +70,7 @@ public class ExprAmountOfItems extends SimpleExpression<Long> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the number of " + items.toString(e, debug) + " in " + inventories.toString(e, debug);
 	}
 

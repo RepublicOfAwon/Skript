@@ -17,12 +17,12 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.DyeColor;
 import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.jetbrains.annotations.Nullable;
@@ -78,10 +78,10 @@ public class ExprBannerPatterns extends PropertyExpression<Object, Pattern> {
 	}
 
 	@Override
-	protected Pattern @Nullable [] get(Event event, Object[] source) {
+	protected Pattern @Nullable [] get(VirtualFrame event, Object[] source) {
 		List<Pattern> patterns = new ArrayList<>();
-		Integer placement = patternNumber != null ? patternNumber.getSingle(event) : null;
-		for (Object object : objects.getArray(event)) {
+		Integer placement = patternNumber != null ? patternNumber.executeSingle(event) : null;
+		for (Object object : objects.executeArray(event)) {
 			if (object instanceof Block block) {
 				if (!(block.getState() instanceof Banner banner))
 					continue;
@@ -105,11 +105,11 @@ public class ExprBannerPatterns extends PropertyExpression<Object, Pattern> {
 	}
 
 	/**
-	 * Gets the appropriate {@link Consumer<BannerMeta>} to be used within {@link #change(Event, Object[], ChangeMode)}.
+	 * Gets the appropriate {@link Consumer<BannerMeta>} to be used within {@link Expression#change(VirtualFrame, Object[], ChangeMode)}.
 	 * @param mode The {@link ChangeMode} to get the consumer matching the behavior
 	 * @param placement The specific pattern to set {@code pattern}
 	 * @param pattern The pattern to be applied
-	 * @return {@link Consumer<BannerMeta>} to be applied to objects within {@link #change(Event, Object[], ChangeMode)}
+	 * @return {@link Consumer<BannerMeta>} to be applied to objects within {@link Expression#change(VirtualFrame, Object[], ChangeMode)}
 	 */
 	private Consumer<BannerMeta> getPlacementMetaChanger(ChangeMode mode, int placement, @Nullable Pattern pattern) {
 		return switch (mode) {
@@ -131,11 +131,11 @@ public class ExprBannerPatterns extends PropertyExpression<Object, Pattern> {
 	}
 
 	/**
-	 * Gets the appropriate {@link Consumer<Banner>} to be used within {@link #change(Event, Object[], ChangeMode)}.
+	 * Gets the appropriate {@link Consumer<Banner>} to be used within {@link Expression#change(VirtualFrame, Object[], ChangeMode)}.
 	 * @param mode The {@link ChangeMode} to get the consumer matching the behavior
 	 * @param placement The specific pattern to set {@code pattern}
 	 * @param pattern The pattern to be applied
-	 * @return {@link Consumer<Banner>} to be applied to objects within {@link #change(Event, Object[], ChangeMode)}
+	 * @return {@link Consumer<Banner>} to be applied to objects within {@link Expression#change(VirtualFrame, Object[], ChangeMode)}
 	 */
 	private Consumer<Banner> getPlacementBlockChanger(ChangeMode mode, int placement, @Nullable Pattern pattern) {
 		return switch (mode) {
@@ -157,10 +157,10 @@ public class ExprBannerPatterns extends PropertyExpression<Object, Pattern> {
 	}
 
 	/**
-	 * Gets the appropriate {@link Consumer<BannerMeta>} to be used within {@link #change(Event, Object[], ChangeMode)}.
+	 * Gets the appropriate {@link Consumer<BannerMeta>} to be used within {@link Expression#change(VirtualFrame, Object[], ChangeMode)}.
 	 * @param mode The {@link ChangeMode} to get the consumer matching the behavior
 	 * @param patterns Patterns to be added, removed, or set to corresponding with the {@code mode}
-	 * @return {@link Consumer<BannerMeta>} to be applied to objects within {@link #change(Event, Object[], ChangeMode)}
+	 * @return {@link Consumer<BannerMeta>} to be applied to objects within {@link Expression#change(VirtualFrame, Object[], ChangeMode)}
 	 */
 	private Consumer<BannerMeta> getAllMetaChanger(ChangeMode mode, List<Pattern> patterns) {
 		return switch (mode) {
@@ -183,10 +183,10 @@ public class ExprBannerPatterns extends PropertyExpression<Object, Pattern> {
 	}
 
 	/**
-	 * Gets the appropriate {@link Consumer<Banner>} to be used within {@link #change(Event, Object[], ChangeMode)}.
+	 * Gets the appropriate {@link Consumer<Banner>} to be used within {@link Expression#change(VirtualFrame, Object[], ChangeMode)}.
 	 * @param mode The {@link ChangeMode} to get the consumer matching the behavior
 	 * @param patterns Patterns to be added, removed, or set to corresponding with the {@code mode}
-	 * @return {@link Consumer<Banner>} to be applied to objects within {@link #change(Event, Object[], ChangeMode)}
+	 * @return {@link Consumer<Banner>} to be applied to objects within {@link Expression#change(VirtualFrame, Object[], ChangeMode)}
 	 */
 	private Consumer<Banner> getAllBlockChanger(ChangeMode mode, List<Pattern> patterns) {
 		return switch (mode) {
@@ -218,10 +218,10 @@ public class ExprBannerPatterns extends PropertyExpression<Object, Pattern> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		int placement = 0;
 		if (patternNumber != null) {
-			Integer patternNum = patternNumber.getSingle(event);
+			Integer patternNum = patternNumber.executeSingle(event);
 			if (patternNum != null) {
 				placement = patternNum;
 			}
@@ -239,7 +239,7 @@ public class ExprBannerPatterns extends PropertyExpression<Object, Pattern> {
 			blockChanger = getAllBlockChanger(mode, patterns);
 		}
 
-		for (Object object : objects.getArray(event)) {
+		for (Object object : objects.executeArray(event)) {
 			if (object instanceof Block block && block.getState() instanceof Banner banner) {
 				blockChanger.accept(banner);
 				banner.update(true, false);
@@ -272,7 +272,7 @@ public class ExprBannerPatterns extends PropertyExpression<Object, Pattern> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		if (patternNumber != null) {
 			builder.append("banner pattern", patternNumber);

@@ -13,10 +13,10 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class ExprOps extends SimpleExpression<OfflinePlayer> {
 	}
 
 	@Override
-	protected OfflinePlayer[] get(Event event) {
+	protected OfflinePlayer[] execute(VirtualFrame event) {
 		if (nonOps) {
 			List<Player> nonOpsList = new ArrayList<>();
 			for (Player player : Bukkit.getOnlinePlayers()) {
@@ -70,7 +70,7 @@ public class ExprOps extends SimpleExpression<OfflinePlayer> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null && mode != ChangeMode.RESET && mode != ChangeMode.DELETE)
 			return;
 		switch (mode) {
@@ -106,7 +106,7 @@ public class ExprOps extends SimpleExpression<OfflinePlayer> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (nonOps)
 				return "all non-operators";
 		return "all operators";

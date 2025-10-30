@@ -12,8 +12,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +35,7 @@ public class ExprSeed extends PropertyExpression<World, Long> {
 	}
 	
 	@Override
-	protected Long[] get(final Event event, final World[] source) {
+	protected Long[] get(final VirtualFrame event, final World[] source) {
 		return get(source, WorldInfo::getSeed);
 	}
 	
@@ -45,10 +45,10 @@ public class ExprSeed extends PropertyExpression<World, Long> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event event, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame event, final boolean debug) {
 		if (event == null)
 			return "the seed of " + getExpr().toString(event, debug);
-		return Classes.getDebugMessage(getAll(event));
+		return Classes.getDebugMessage(executeAll(event));
 	}
 	
 }

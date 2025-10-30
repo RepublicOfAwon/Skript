@@ -14,8 +14,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.itemcomponents.equippable.EquippableExperimentSyntax;
 import org.skriptlang.skript.bukkit.itemcomponents.equippable.EquippableWrapper;
@@ -56,7 +56,7 @@ public class ExprEquipCompEntities extends PropertyExpression<EquippableWrapper,
 	}
 
 	@Override
-	protected EntityData @Nullable [] get(Event event, EquippableWrapper[] source) {
+	protected EntityData @Nullable [] get(VirtualFrame event, EquippableWrapper[] source) {
 		List<EntityData> types = new ArrayList<>();
 		for (EquippableWrapper wrapper : source) {
 			Collection<EntityType> allowed = wrapper.getAllowedEntities();
@@ -74,7 +74,7 @@ public class ExprEquipCompEntities extends PropertyExpression<EquippableWrapper,
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		List<EntityType> converted = new ArrayList<>();
 		if (delta != null) {
 			for (Object object : delta) {
@@ -109,7 +109,7 @@ public class ExprEquipCompEntities extends PropertyExpression<EquippableWrapper,
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the allowed entities of " + getExpr().toString(event, debug);
 	}
 

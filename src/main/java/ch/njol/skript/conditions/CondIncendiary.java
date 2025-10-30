@@ -1,9 +1,9 @@
 package ch.njol.skript.conditions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Explosive;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +54,7 @@ public class CondIncendiary extends Condition {
 	}
 
 	@Override
-	public boolean check(Event e) {
+	public boolean executeBoolean(VirtualFrame e) {
 		if (isEvent) {
 			if (!(e instanceof ExplosionPrimeEvent))
 				return isNegated();
@@ -65,7 +65,7 @@ public class CondIncendiary extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		if (isEvent)
 			return "the event-explosion " + (isNegated() == false ? "is" : "is not") + " incendiary";
 		if (entities.isSingle())

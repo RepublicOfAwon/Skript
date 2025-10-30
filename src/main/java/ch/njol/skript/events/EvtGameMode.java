@@ -1,10 +1,9 @@
 package ch.njol.skript.events;
 
 import java.util.Locale;
-import java.util.function.Predicate;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.GameMode;
-import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +34,7 @@ public final class EvtGameMode extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(final Event e) {
+	public boolean check(final VirtualFrame e) {
 		if (mode != null) {
 			return mode.check(e, m -> ((PlayerGameModeChangeEvent) e).getNewGameMode().equals(m));
 		}
@@ -43,7 +42,7 @@ public final class EvtGameMode extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "gamemode change" + (mode != null ? " to " + mode.toString().toLowerCase(Locale.ENGLISH) : "");
 	}
 

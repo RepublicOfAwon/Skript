@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Item;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Item Despawn")
@@ -43,14 +43,14 @@ public class EffItemDespawn extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (Item item : entities.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (Item item : entities.executeArray(event)) {
 			item.setUnlimitedLifetime(prevent);
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		if (prevent) {
 			builder.append("prevent", entities, "from naturally despawning");

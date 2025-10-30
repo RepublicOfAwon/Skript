@@ -1,8 +1,8 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -42,14 +42,14 @@ public class EffOp extends Effect {
 	}
 	
 	@Override
-	protected void execute(final Event e) {
-		for (final OfflinePlayer p : players.getArray(e)) {
+	protected void executeVoid(final VirtualFrame e) {
+		for (final OfflinePlayer p : players.executeArray(e)) {
 			p.setOp(op);
 		}
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return (op ? "" : "de") + "op " + players.toString(e, debug);
 	}
 	

@@ -20,7 +20,7 @@ import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.variables.HintManager;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.ScriptWarning;
 
@@ -296,10 +296,10 @@ public class EffChange extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		Object[] delta = null;
 		if (changer != null) {
-			delta = changer.getArray(event);
+			delta = changer.executeArray(event);
 			delta = changer.beforeChange(changed, delta);
 
 			// Avoid calling methods that expect a delta if we do not have one with elements
@@ -324,7 +324,7 @@ public class EffChange extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		switch (mode) {
 			case ADD -> {

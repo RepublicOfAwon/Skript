@@ -3,9 +3,9 @@ package ch.njol.skript.expressions;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 
 import ch.njol.skript.doc.Description;
@@ -65,16 +65,16 @@ public class ExprLocationFromVector extends SimpleExpression<Location> {
 
 	@SuppressWarnings("null")
 	@Override
-	protected Location[] get(Event event) {
-		Vector vector = this.vector.getSingle(event);
-		World world = this.world.getSingle(event);
+	protected Location[] execute(VirtualFrame event) {
+		Vector vector = this.vector.executeSingle(event);
+		World world = this.world.executeSingle(event);
 		if (vector == null || world == null)
 			return null;
 		direction:
 		if (hasDirection) {
 			assert yaw != null && pitch != null;
-			Number yaw = this.yaw.getSingle(event);
-			Number pitch = this.pitch.getSingle(event);
+			Number yaw = this.yaw.executeSingle(event);
+			Number pitch = this.pitch.executeSingle(event);
 			if (yaw == null && pitch == null)
 				break direction;
 			return CollectionUtils.array(vector.toLocation(world, yaw == null ? 0 : yaw.floatValue(), pitch == null ? 0 : pitch.floatValue()));
@@ -93,7 +93,7 @@ public class ExprLocationFromVector extends SimpleExpression<Location> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (hasDirection)
 			return "location of " + vector.toString(event, debug) + " in " + world.toString(event, debug) + " with yaw " + yaw.toString(event, debug) + " and pitch " + pitch.toString(event, debug);
 		return "location of " + vector.toString(event, debug) + " in " + world.toString(event, debug);

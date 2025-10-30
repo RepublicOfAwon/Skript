@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
@@ -52,13 +52,13 @@ public class ExprRandomCharacter extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String[] get(Event event) {
-		Integer amount = this.amount == null ? Integer.valueOf(1) : this.amount.getSingle(event);
+	protected String[] execute(VirtualFrame event) {
+		Integer amount = this.amount == null ? Integer.valueOf(1) : this.amount.executeSingle(event);
 		if (amount == null || amount <= 0)
 			return new String[0];
 
-		String from = this.from.getSingle(event);
-		String to = this.to.getSingle(event);
+		String from = this.from.executeSingle(event);
+		String to = this.to.executeSingle(event);
 		if (from == null || to == null)
 			return new String[0];
 
@@ -113,7 +113,7 @@ public class ExprRandomCharacter extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (amount != null ? amount.toString(event, debug) : "a") + " random character between " + from.toString(event, debug) + " and " + to.toString(event, debug);
 	}
 }

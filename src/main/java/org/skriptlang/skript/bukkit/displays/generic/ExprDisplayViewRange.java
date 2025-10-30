@@ -7,8 +7,8 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Display View Range")
@@ -39,8 +39,8 @@ public class ExprDisplayViewRange extends SimplePropertyExpression<Display, Floa
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		Display[] displays = getExpr().getArray(event);
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
+		Display[] displays = getExpr().executeArray(event);
 		float change = delta == null ? 1F : ((Number) delta[0]).floatValue();
 		if (Float.isNaN(change) || Float.isInfinite(change))
 			return;

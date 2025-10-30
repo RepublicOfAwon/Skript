@@ -14,7 +14,7 @@ import ch.njol.skript.lang.util.common.AnyContains;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -82,10 +82,10 @@ public class CondContains extends Condition implements VerboseAssert {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		CheckType checkType = this.checkType;
 
-		Object[] containerValues = containers.getAll(event);
+		Object[] containerValues = containers.executeAll(event);
 
 		if (containerValues.length == 0)
 			return isNegated();
@@ -164,7 +164,7 @@ public class CondContains extends Condition implements VerboseAssert {
 	}
 
 	@Override
-	public String getExpectedMessage(Event event) {
+	public String getExpectedMessage(VirtualFrame event) {
 		StringJoiner joiner = new StringJoiner(" ");
 		joiner.add("to");
 		if (isNegated()) {
@@ -175,7 +175,7 @@ public class CondContains extends Condition implements VerboseAssert {
 	}
 
 	@Override
-	public String getReceivedMessage(Event event) {
+	public String getReceivedMessage(VirtualFrame event) {
 		StringJoiner joiner = new StringJoiner(" ");
 		if (!isNegated()) {
 			joiner.add("no");
@@ -194,7 +194,7 @@ public class CondContains extends Condition implements VerboseAssert {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return containers.toString(e, debug) + (isNegated() ? " doesn't contain " : " contains ") + items.toString(e, debug);
 	}
 

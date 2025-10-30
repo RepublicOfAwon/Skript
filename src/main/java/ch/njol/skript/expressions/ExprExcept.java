@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.comparator.Comparators;
 import org.skriptlang.skript.lang.comparator.Relation;
@@ -53,10 +53,10 @@ public class ExprExcept extends WrapperExpression<Object> {
 	}
 
 	@Override
-	protected Object @Nullable [] get(Event event) {
-		Object[] exclude = this.exclude.getArray(event);
+	protected Object @Nullable [] execute(VirtualFrame event) {
+		Object[] exclude = this.exclude.executeArray(event);
 		if (exclude.length == 0)
-			return getExpr().getArray(event);
+			return getExpr().executeArray(event);
 
 		return getExpr().streamAll(event)
 			.filter(sourceObject -> {
@@ -77,7 +77,7 @@ public class ExprExcept extends WrapperExpression<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (new SyntaxStringBuilder(event, debug))
 			.append(getExpr(), "except", exclude)
 			.toString();

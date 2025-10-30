@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.ClassInfoReference;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,7 +74,7 @@ public class ExprValueWithin extends WrapperExpression<Object> implements KeyPro
 	}
 
 	@Override
-	public @NotNull String @NotNull [] getArrayKeys(Event event) throws IllegalStateException {
+	public @NotNull String @NotNull [] getArrayKeys(VirtualFrame event) throws IllegalStateException {
 		if (!returnsKeys)
 			throw new IllegalStateException();
 		return ((KeyProviderExpression<?>) getExpr()).getArrayKeys(event);
@@ -100,10 +100,10 @@ public class ExprValueWithin extends WrapperExpression<Object> implements KeyPro
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (changer == null)
 			throw new UnsupportedOperationException();
-		changer.change(getArray(event), delta, mode);
+		changer.change(executeArray(event), delta, mode);
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class ExprValueWithin extends WrapperExpression<Object> implements KeyPro
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (classInfo == null ? "value" : classInfo.toString(event, debug)) + " within " + getExpr();
 	}
 

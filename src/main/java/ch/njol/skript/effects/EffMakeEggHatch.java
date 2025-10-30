@@ -11,7 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,7 +45,7 @@ public class EffMakeEggHatch extends Effect {
 	}
 
 	@Override
-	protected void execute(Event e) {
+	protected void executeVoid(VirtualFrame e) {
 		if (e instanceof PlayerEggThrowEvent) {
 			PlayerEggThrowEvent event = (PlayerEggThrowEvent) e;
 			event.setHatching(!not);
@@ -55,7 +55,7 @@ public class EffMakeEggHatch extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "make the egg " + (not ? "not " : "") + "hatch";
 	}
 

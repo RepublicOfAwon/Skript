@@ -1,7 +1,7 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -51,15 +51,15 @@ public class EffCancelCooldown extends Effect {
 	}
 
 	@Override
-	protected void execute(Event e) {
+	protected void executeVoid(VirtualFrame e) {
 		if (!(e instanceof ScriptCommandEvent))
 			return;
 
-		((ScriptCommandEvent) e).setCooldownCancelled(cancel);
+		((ScriptCommandEvent) e).setCooldownCancelled(e, cancel);
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return (cancel ? "" : "un") + "cancel the command cooldown";
 	}
 

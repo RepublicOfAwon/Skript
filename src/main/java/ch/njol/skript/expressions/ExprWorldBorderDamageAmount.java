@@ -7,8 +7,8 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.WorldBorder;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Damage Amount of World Border")
@@ -38,7 +38,7 @@ public class ExprWorldBorderDamageAmount extends SimplePropertyExpression<WorldB
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		double input = mode == ChangeMode.RESET ? 0.2 : ((Number) delta[0]).doubleValue();
 		if (Double.isNaN(input)) {
 			error("NaN is not a valid world border damage amount");
@@ -48,7 +48,7 @@ public class ExprWorldBorderDamageAmount extends SimplePropertyExpression<WorldB
 			error("World border damage amount cannot be infinite");
 			return;
 		}
-		for (WorldBorder worldBorder : getExpr().getArray(event)) {
+		for (WorldBorder worldBorder : getExpr().executeArray(event)) {
 			switch (mode) {
 				case SET, RESET -> worldBorder.setDamageAmount(Math.max(input, 0));
 				case ADD -> worldBorder.setDamageAmount(Math.max(worldBorder.getDamageAmount() + input, 0));

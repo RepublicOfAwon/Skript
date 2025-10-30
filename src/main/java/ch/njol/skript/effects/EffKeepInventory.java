@@ -1,7 +1,7 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +52,7 @@ public class EffKeepInventory extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		if (event instanceof PlayerDeathEvent) {
 			PlayerDeathEvent deathEvent = (PlayerDeathEvent) event;
 			if (keepItems)
@@ -63,7 +63,7 @@ public class EffKeepInventory extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (keepItems && !keepExp)
 			return "keep the inventory";
 		else

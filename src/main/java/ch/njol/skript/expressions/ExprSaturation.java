@@ -8,8 +8,8 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Saturation")
@@ -36,25 +36,25 @@ public class ExprSaturation extends SimplePropertyExpression<Player, Number> {
 
 	@SuppressWarnings("null")
 	@Override
-	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
 		Float value = delta != null ? ((Number)delta[0]).floatValue() : null;
 		switch (mode) {
 			case ADD:
-				for (Player player : getExpr().getArray(e))
+				for (Player player : getExpr().executeArray(e))
 					player.setSaturation(player.getSaturation() + value);
 				break;
 			case REMOVE:
-				for (Player player : getExpr().getArray(e))
+				for (Player player : getExpr().executeArray(e))
 					player.setSaturation(player.getSaturation() - value);
 				break;
 			case SET:
-				for (Player player : getExpr().getArray(e))
+				for (Player player : getExpr().executeArray(e))
 					player.setSaturation(value);
 				break;
 			case DELETE:
 			case REMOVE_ALL:
 			case RESET:
-				for (Player player : getExpr().getArray(e))
+				for (Player player : getExpr().executeArray(e))
 					player.setSaturation(0);
 				break;
 		}

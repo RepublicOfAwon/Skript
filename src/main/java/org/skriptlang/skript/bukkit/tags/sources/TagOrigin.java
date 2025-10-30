@@ -1,6 +1,5 @@
 package org.skriptlang.skript.bukkit.tags.sources;
 
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.bukkit.tags.TagModule;
@@ -77,7 +76,7 @@ public enum TagOrigin {
 	}
 
 	/**
-	 * Returns a string for use in {@link ch.njol.skript.lang.Debuggable#toString(Event, boolean)} methods.
+	 * Returns a string for use in {@link ch.njol.skript.lang.Debuggable#toString(com.oracle.truffle.api.frame.VirtualFrame, boolean)} methods.
 	 * @param datapackOnly Whether to output "datapack " or "minecraft " for {@link #BUKKIT}.
 	 * @return a string representing the origin, with a trailing space.
 	 */

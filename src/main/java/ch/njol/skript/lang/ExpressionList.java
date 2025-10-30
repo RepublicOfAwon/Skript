@@ -7,7 +7,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.google.common.collect.ImmutableSet;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 /**
  * A list of expressions.
  */
-public class ExpressionList<T> implements Expression<T> {
+public class ExpressionList<T> extends Expression<T> {
 
 	protected final Expression<? extends T>[] expressions;
 	private final Class<T> returnType;
@@ -68,33 +68,33 @@ public class ExpressionList<T> implements Expression<T> {
 	}
 
 	@Override
-	public @Nullable T getSingle(Event event) {
+	public @Nullable T executeSingle(VirtualFrame frame) {
 		if (!single)
 			throw new UnsupportedOperationException();
 		Expression<? extends T> expression = CollectionUtils.getRandom(expressions);
-		return expression != null ? expression.getSingle(event) : null;
+		return expression != null ? expression.executeSingle(frame) : null;
 	}
 
 	@Override
-	public T[] getArray(Event event) {
+	public T[] executeArray(VirtualFrame frame) {
 		if (and)
-			return getAll(event);
+			return executeAll(frame);
 		Expression<? extends T> expression = CollectionUtils.getRandom(expressions);
 		//noinspection unchecked
-		return expression != null ? expression.getArray(event) : (T[]) Array.newInstance(returnType, 0);
+		return expression != null ? expression.executeArray(frame) : (T[]) Array.newInstance(returnType, 0);
 	}
 
 	@Override
-	public T[] getAll(Event event) {
+	public T[] executeAll(VirtualFrame frame) {
 		List<T> values = new ArrayList<>();
 		for (Expression<? extends T> expr : expressions)
-			values.addAll(Arrays.asList(expr.getAll(event)));
+			values.addAll(Arrays.asList(expr.executeAll(frame)));
 		//noinspection unchecked
 		return values.toArray((T[]) Array.newInstance(returnType, values.size()));
 	}
 
 	@Override
-	public @Nullable Iterator<? extends T> iterator(Event event) {
+	public @Nullable Iterator<? extends T> iterator(VirtualFrame event) {
 		if (!and) {
 			Expression<? extends T> expression = CollectionUtils.getRandom(expressions);
 			return expression != null ? expression.iterator(event) : null;
@@ -137,12 +137,12 @@ public class ExpressionList<T> implements Expression<T> {
 	}
 
 	@Override
-	public boolean check(Event event, Predicate<? super T> checker, boolean negated) {
+	public boolean check(VirtualFrame event, Predicate<? super T> checker, boolean negated) {
 		return CollectionUtils.check(expressions, expr -> expr.check(event, checker) ^ negated, and);
 	}
 
 	@Override
-	public boolean check(Event event, Predicate<? super T> checker) {
+	public boolean check(VirtualFrame event, Predicate<? super T> checker) {
 		return check(event, checker, false);
 	}
 
@@ -232,7 +232,7 @@ public class ExpressionList<T> implements Expression<T> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) throws UnsupportedOperationException {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) throws UnsupportedOperationException {
 		if (and) {
 			for (Expression<?> expr : expressions) {
 				expr.change(event, delta, mode);
@@ -244,7 +244,7 @@ public class ExpressionList<T> implements Expression<T> {
 	}
 
 	@Override
-	public <R> void changeInPlace(Event event, Function<T, R> changeFunction, boolean getAll) {
+	public <R> void changeInPlace(VirtualFrame event, Function<T, R> changeFunction, boolean getAll) {
 		if (and || getAll) {
 			for (Expression<?> expr : expressions) {
 				//noinspection unchecked,rawtypes
@@ -295,7 +295,7 @@ public class ExpressionList<T> implements Expression<T> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		StringBuilder result = new StringBuilder("(");
 		for (int i = 0; i < expressions.length; i++) {
 			if (i != 0) {

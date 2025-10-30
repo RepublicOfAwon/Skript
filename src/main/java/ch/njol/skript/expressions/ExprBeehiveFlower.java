@@ -7,10 +7,10 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.block.Beehive;
 import org.bukkit.block.Block;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Beehive Target Flower")
@@ -41,7 +41,7 @@ public class ExprBeehiveFlower extends SimplePropertyExpression<Block, Location>
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		Location location = null;
 		if (delta != null) {
 			if (delta[0] instanceof Location loc) {
@@ -50,7 +50,7 @@ public class ExprBeehiveFlower extends SimplePropertyExpression<Block, Location>
 				location = block.getLocation();
 			}
 		}
-		for (Block block : getExpr().getArray(event)) {
+		for (Block block : getExpr().executeArray(event)) {
 			if (!(block.getState() instanceof Beehive beehive))
 				continue;
 			beehive.setFlower(location);

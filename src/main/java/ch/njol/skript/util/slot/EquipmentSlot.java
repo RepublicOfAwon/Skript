@@ -5,10 +5,10 @@ import ch.njol.skript.bukkitutil.PlayerUtils;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.registrations.Classes;
 import com.google.common.base.Preconditions;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -244,7 +244,7 @@ public class EquipmentSlot extends SlotWithIndex {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (slotToString) {
 			SyntaxStringBuilder syntaxBuilder = new SyntaxStringBuilder(event, debug);
 			syntaxBuilder.append("the ");

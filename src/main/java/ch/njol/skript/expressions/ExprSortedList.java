@@ -14,7 +14,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.comparator.Comparator;
 import org.skriptlang.skript.lang.comparator.Comparators;
@@ -52,7 +52,7 @@ public class ExprSortedList extends SimpleExpression<Object> {
 
 	@Override
 	@Nullable
-	protected Object[] get(Event event) {
+	protected Object[] execute(VirtualFrame event) {
 		try {
 			return list.stream(event)
 					.sorted(ExprSortedList::compare)
@@ -116,7 +116,7 @@ public class ExprSortedList extends SimpleExpression<Object> {
   }
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "sorted " + list.toString(e, debug);
 	}
 

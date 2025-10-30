@@ -6,7 +6,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,9 +64,9 @@ public final class ClassInfoReference {
 
 			@Override
 			@Nullable
-			protected ClassInfoReference[] get(Event event) {
+			protected ClassInfoReference[] execute(VirtualFrame event) {
 				if (classInfoExpression.isSingle()) {
-					ClassInfo<?> classInfo = classInfoExpression.getSingle(event);
+					ClassInfo<?> classInfo = classInfoExpression.executeSingle(event);
 					if (classInfo == null) {
 						return new ClassInfoReference[0];
 					}
@@ -88,7 +88,7 @@ public final class ClassInfoReference {
 			}
 
 			@Override
-			public String toString(@Nullable Event event, boolean debug) {
+			public String toString(@Nullable VirtualFrame event, boolean debug) {
 				if (debug) {
 					return classInfoExpression.toString(event, true) + "(wrapped by " + getClass().getSimpleName() + ")";
 				}

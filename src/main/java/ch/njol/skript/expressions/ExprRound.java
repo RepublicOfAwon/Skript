@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 
@@ -53,7 +53,7 @@ public class ExprRound extends PropertyExpression<Number, Long> {
 	}
 	
 	@Override
-	protected Long @Nullable [] get(Event event, Number[] source) {
+	protected Long @Nullable [] get(VirtualFrame event, Number[] source) {
 		return get(source, number -> {
 			if (number instanceof Integer integer) {
 				return integer.longValue();
@@ -82,7 +82,7 @@ public class ExprRound extends PropertyExpression<Number, Long> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append(switch (roundType) {
 			case FLOOR -> "floored";

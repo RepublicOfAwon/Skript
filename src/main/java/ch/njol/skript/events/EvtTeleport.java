@@ -9,9 +9,9 @@ import ch.njol.skript.registrations.EventConverter;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.util.coll.CollectionUtils;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.jetbrains.annotations.Nullable;
@@ -96,7 +96,7 @@ public class EvtTeleport extends SkriptEvent {
 
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		if (event instanceof EntityTeleportEvent) {
 			Entity entity = ((EntityTeleportEvent) event).getEntity();
 			return checkEntity(entity);
@@ -119,7 +119,7 @@ public class EvtTeleport extends SkriptEvent {
 		return true;
 	}
 
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (entitiesLiteral != null)
 			return "on " + entitiesLiteral.toString(event, debug) + " teleport";
 		return "on teleport";

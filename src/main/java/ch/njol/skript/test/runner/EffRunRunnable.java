@@ -8,8 +8,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
+import org.jetbrains.annotations.Nullable;
 
 @NoDoc
 public class EffRunRunnable extends Effect {
@@ -28,8 +29,8 @@ public class EffRunRunnable extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		Object single = this.task.getSingle(event);
+	protected void executeVoid(VirtualFrame event) {
+		Object single = this.task.executeSingle(event);
 		if (single instanceof Runnable runnable) {
 			runnable.run();
 		} else {
@@ -38,7 +39,7 @@ public class EffRunRunnable extends Effect {
 	}
 
 	@Override
-	public String toString(Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "run runnable " + task.toString(event, debug);
 	}
 

@@ -14,10 +14,10 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import ch.njol.skript.lang.util.SimpleExpression;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
@@ -61,8 +61,8 @@ public class ExprNearestEntity extends SimpleExpression<Entity> {
 	}
 
 	@Override
-	protected Entity[] get(Event event) {
-		Object relativeTo = this.relativeTo.getSingle(event);
+	protected Entity[] execute(VirtualFrame event) {
+		Object relativeTo = this.relativeTo.executeSingle(event);
 		if (relativeTo == null || (relativeTo instanceof Location && ((Location) relativeTo).getWorld() == null))
 			return (Entity[]) Array.newInstance(this.getReturnType(), 0);;
 		Entity[] nearestEntities = (Entity[]) Array.newInstance(this.getReturnType(), entityDatas.length);
@@ -95,7 +95,7 @@ public class ExprNearestEntity extends SimpleExpression<Entity> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "nearest " + StringUtils.join(entityDatas) + " relative to " + relativeTo.toString(event, debug);
 	}
 

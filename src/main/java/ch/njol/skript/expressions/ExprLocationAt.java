@@ -1,9 +1,9 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -50,9 +50,9 @@ public class ExprLocationAt extends SimpleExpression<Location> {
 	
 	@Override
 	@Nullable
-	protected Location[] get(final Event e) {
-		final World w = world.getSingle(e);
-		final Number x = this.x.getSingle(e), y = this.y.getSingle(e), z = this.z.getSingle(e);
+	protected Location[] execute(final VirtualFrame e) {
+		final World w = world.executeSingle(e);
+		final Number x = this.x.executeSingle(e), y = this.y.executeSingle(e), z = this.z.executeSingle(e);
 		if (w == null || x == null || y == null || z == null)
 			return new Location[0];
 		return new Location[] {new Location(w, x.doubleValue(), y.doubleValue(), z.doubleValue())};
@@ -69,7 +69,7 @@ public class ExprLocationAt extends SimpleExpression<Location> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "the location at (" + x.toString(e, debug) + ", " + y.toString(e, debug) + ", " + z.toString(e, debug) + ") in " + world.toString(e, debug);
 	}
 	

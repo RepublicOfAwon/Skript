@@ -1,8 +1,8 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -66,8 +66,8 @@ public class EffConnect extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		String server = this.server.getSingle(event);
+	protected void executeVoid(VirtualFrame event) {
+		String server = this.server.executeSingle(event);
 		Player[] players = this.players.stream(event)
 			.filter(Player::isOnline)
 			.toArray(Player[]::new);
@@ -77,7 +77,7 @@ public class EffConnect extends Effect {
 
 		if (transfer) {
 			if (this.port != null) {
-				Number portNum = this.port.getSingle(event);
+				Number portNum = this.port.executeSingle(event);
 				if (portNum == null) {
 					return;
 				}
@@ -108,7 +108,7 @@ public class EffConnect extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (transfer) {
 			String portString = port != null ? " on port " + port.toString(event, debug) : "";
 			return "transfer " + players.toString(event, debug) + " to server " + server.toString(event, debug) + portString;

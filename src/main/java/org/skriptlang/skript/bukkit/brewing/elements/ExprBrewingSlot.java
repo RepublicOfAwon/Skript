@@ -13,6 +13,7 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.event.Event;
@@ -82,8 +83,9 @@ public class ExprBrewingSlot extends PropertyExpression<Block, Slot> {
 	}
 
 	@Override
-	protected Slot @Nullable [] get(Event event, Block[] source) {
-		List<Block> blocks = new ArrayList<>(getExpr().stream(event).toList());
+	protected Slot @Nullable [] get(VirtualFrame frame, Block[] source) {
+		Event event = (Event) frame.getArguments()[0];
+		List<Block> blocks = new ArrayList<>(getExpr().stream(frame).toList());
 
 		List<Slot> slots = new ArrayList<>();
 		if (isEvent) {
@@ -120,7 +122,7 @@ public class ExprBrewingSlot extends PropertyExpression<Block, Slot> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return selectedSlot.toString + " slot of " + getExpr().toString(event, debug);
 	}
 

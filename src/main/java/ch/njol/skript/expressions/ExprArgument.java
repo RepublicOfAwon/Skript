@@ -18,6 +18,7 @@ import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
@@ -199,7 +200,7 @@ public class ExprArgument extends SimpleExpression<Object> implements EventRestr
 
 	@Override
 	@Nullable
-	protected Object[] get(final Event e) {
+	protected Object[] execute(final VirtualFrame e) {
 		if (argument != null) {
 			return argument.getCurrent(e);
 		}
@@ -265,7 +266,7 @@ public class ExprArgument extends SimpleExpression<Object> implements EventRestr
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		switch (what) {
 			case LAST:
 				return "the last argument";

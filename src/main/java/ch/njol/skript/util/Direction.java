@@ -12,12 +12,12 @@ import ch.njol.skript.localization.Noun;
 import ch.njol.util.Kleenean;
 import ch.njol.yggdrasil.Fields.FieldContext;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilRobustSerializable;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -373,9 +373,9 @@ public class Direction implements YggdrasilRobustSerializable {
 		return new SimpleExpression<Location>() {
 			@SuppressWarnings("null")
 			@Override
-			protected Location[] get(final Event e) {
-				final Direction[] ds = dirs.getArray(e);
-				final Location[] ls = locs.getArray(e);
+			protected Location[] execute(final VirtualFrame e) {
+				final Direction[] ds = dirs.executeArray(e);
+				final Location[] ls = locs.executeArray(e);
 				final Location[] r = ls; //ds.length == 1 ? ls : new Location[ds.length * ls.length];
 				for (int i = 0; i < ds.length; i++) {
 					for (int j = 0; j < ls.length; j++) {
@@ -388,9 +388,9 @@ public class Direction implements YggdrasilRobustSerializable {
 			
 			@SuppressWarnings("null")
 			@Override
-			public Location[] getAll(final Event e) {
-				final Direction[] ds = dirs.getAll(e);
-				final Location[] ls = locs.getAll(e);
+			public Location[] executeAll(final VirtualFrame e) {
+				final Direction[] ds = dirs.executeAll(e);
+				final Location[] ls = locs.executeAll(e);
 				final Location[] r = ls; //ds.length == 1 ? ls : new Location[ds.length * ls.length];
 				for (int i = 0; i < ds.length; i++) {
 					for (int j = 0; j < ls.length; j++) {
@@ -424,7 +424,7 @@ public class Direction implements YggdrasilRobustSerializable {
 			}
 			
 			@Override
-			public String toString(final @Nullable Event e, final boolean debug) {
+			public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 				return dirs.toString(e, debug) + " " + locs.toString(e, debug);
 			}
 			
@@ -438,8 +438,8 @@ public class Direction implements YggdrasilRobustSerializable {
 						}
 
 						@Override
-						protected Location @Nullable [] get(Event event) {
-							return locs.getAll(event);
+						protected Location @Nullable [] execute(VirtualFrame event) {
+							return locs.executeAll(event);
 						}
 
 						@Override
@@ -458,7 +458,7 @@ public class Direction implements YggdrasilRobustSerializable {
 						}
 
 						@Override
-						public String toString(@Nullable Event event, boolean debug) {
+						public String toString(@Nullable VirtualFrame event, boolean debug) {
 							return "at " + locs.toString(event, debug);
 						}
 					};

@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 
@@ -52,8 +52,8 @@ public class ExprAngle extends SimpleExpression<Number> {
 	}
 
 	@Override
-	protected Number @Nullable [] get(Event event) {
-		Number[] numbers = angle.getArray(event);
+	protected Number @Nullable [] execute(VirtualFrame event) {
+		Number[] numbers = angle.executeArray(event);
 
 		if (isRadians) {
 			Double[] degrees = new Double[numbers.length];
@@ -83,7 +83,7 @@ public class ExprAngle extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return angle.toString(event, debug) + " in " + (isRadians ? "degrees" : "radians");
 	}
 

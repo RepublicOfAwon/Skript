@@ -4,6 +4,7 @@ import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.EventRestrictedSyntax;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Item;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -68,7 +69,7 @@ public class EffCancelDrops extends Effect implements EventRestrictedSyntax {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		if (event instanceof EntityDeathEvent deathEvent) {
 			if (cancelItems)
 				deathEvent.getDrops().clear();
@@ -87,7 +88,7 @@ public class EffCancelDrops extends Effect implements EventRestrictedSyntax {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (cancelItems && !cancelExps)
 			return "cancel the drops of items";
 		else if (cancelExps && !cancelItems)

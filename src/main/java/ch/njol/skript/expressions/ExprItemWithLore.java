@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +46,7 @@ public class ExprItemWithLore extends PropertyExpression<ItemType, ItemType> {
 	}
 
 	@Override
-	protected ItemType[] get(Event e, ItemType[] source) {
+	protected ItemType[] get(VirtualFrame e, ItemType[] source) {
 		List<String> lore = this.lore.stream(e)
 			.flatMap(l -> Arrays.stream(l.split("\n")))
 			.collect(Collectors.toList());
@@ -67,7 +67,7 @@ public class ExprItemWithLore extends PropertyExpression<ItemType, ItemType> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return getExpr().toString(e, debug) + " with lore " + lore.toString(e, debug);
 	}
 }

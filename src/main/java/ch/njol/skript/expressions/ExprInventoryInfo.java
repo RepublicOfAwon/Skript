@@ -11,9 +11,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.Nullable;
@@ -52,8 +52,8 @@ public class ExprInventoryInfo extends SimpleExpression<Object> {
 	}
 
 	@Override
-	protected Object[] get(Event event) {
-		Inventory[] inventories = this.inventories.getArray(event);
+	protected Object[] execute(VirtualFrame event) {
+		Inventory[] inventories = this.inventories.executeArray(event);
 		switch (type) {
 			case HOLDER:
 				List<InventoryHolder> holders = new ArrayList<>();
@@ -101,7 +101,7 @@ public class ExprInventoryInfo extends SimpleExpression<Object> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return (type == HOLDER ? "holder of " : type == ROWS ? "rows of " : type == SLOTS ? "slots of " : "viewers of ") + inventories.toString(e, debug);
 	}
 

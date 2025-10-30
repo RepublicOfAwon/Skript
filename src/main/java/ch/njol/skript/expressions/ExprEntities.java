@@ -17,11 +17,11 @@ import ch.njol.skript.log.LogHandler;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.bukkit.util.BoundingBox;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -120,7 +120,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 
 	@Override
 	@SuppressWarnings("null")
-	protected Entity @Nullable [] get(Event event) {
+	protected Entity @Nullable [] execute(VirtualFrame event) {
 		if (isUsingRadius || isUsingCuboid) {
 			Iterator<? extends Entity> iter = iterator(event);
 			if (iter == null || !iter.hasNext())
@@ -131,13 +131,13 @@ public class ExprEntities extends SimpleExpression<Entity> {
 				list.add(iter.next());
 			return list.toArray((Entity[]) Array.newInstance(returnType, list.size()));
 		} else {
-			EntityData<?>[] types = this.types.getAll(event);
+			EntityData<?>[] types = this.types.executeAll(event);
 			if (worldsOrChunks == null) {
 				return EntityData.getAll(types, returnType, (World[]) null);
 			}
 			List<Chunk> chunks = new ArrayList<>();
 			List<World> worlds = new ArrayList<>();
-			for (Object obj : worldsOrChunks.getArray(event)) {
+			for (Object obj : worldsOrChunks.executeArray(event)) {
 				if (obj instanceof Chunk chunk) {
 					chunks.add(chunk);
 				} else if (obj instanceof World world) {
@@ -158,12 +158,12 @@ public class ExprEntities extends SimpleExpression<Entity> {
 	@Override
 	@Nullable
 	@SuppressWarnings("null")
-	public Iterator<? extends Entity> iterator(Event event) {
+	public Iterator<? extends Entity> iterator(VirtualFrame event) {
 		if (isUsingRadius) {
-			Location location = center.getSingle(event);
+			Location location = center.executeSingle(event);
 			if (location == null)
 				return null;
-			Number number = radius.getSingle(event);
+			Number number = radius.executeSingle(event);
 			if (number == null)
 				return null;
 			double rad = number.doubleValue();
@@ -173,7 +173,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 
 			Collection<Entity> nearbyEntities = location.getWorld().getNearbyEntities(location, rad, rad, rad);
 			double radiusSquared = rad * rad * Skript.EPSILON_MULT;
-			EntityData<?>[] entityTypes = types.getAll(event);
+			EntityData<?>[] entityTypes = types.executeAll(event);
 			return new CheckedIterator<>(nearbyEntities.iterator(), entity -> {
 					if (entity == null || entity.getLocation().distanceSquared(location) > radiusSquared)
 						return false;
@@ -184,13 +184,13 @@ public class ExprEntities extends SimpleExpression<Entity> {
 					return false;
 				});
 		} else if (isUsingCuboid) {
-			Location corner1 = from.getSingle(event);
+			Location corner1 = from.executeSingle(event);
 			if (corner1 == null)
 				return null;
-			Location corner2 = to.getSingle(event);
+			Location corner2 = to.executeSingle(event);
 			if (corner2 == null)
 				return null;
-			EntityData<?>[] entityTypes = types.getAll(event);
+			EntityData<?>[] entityTypes = types.executeAll(event);
 			World world = corner1.getWorld();
 			if (world == null)
 				world = corner2.getWorld();
@@ -223,7 +223,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 
 	@Override
 	@SuppressWarnings("null")
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String message = "all entities of type " + types.toString(event, debug);
 		if (worldsOrChunks != null)
 			message += " in " + worldsOrChunks.toString(event, debug);

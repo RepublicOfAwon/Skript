@@ -10,13 +10,13 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.AABB;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
@@ -81,18 +81,18 @@ public class CondIsWithin extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		// within two locations
 		if (withinLocations) {
-			Location one = loc1.getSingle(event);
-			Location two = loc2.getSingle(event);
+			Location one = loc1.executeSingle(event);
+			Location two = loc2.executeSingle(event);
 			if (one == null || two == null || one.getWorld() != two.getWorld())
 				return isNegated();
 			AABB box = new AABB(one, two);
 			return locsToCheck.check(event, box::contains, isNegated());
 		}
 
-		Object[] areas = area.getAll(event);
+		Object[] areas = area.executeAll(event);
 		return locsToCheck.check(event, location ->
 				SimpleExpression.check(areas, object -> {
 					if (object instanceof Entity entity) {
@@ -121,7 +121,7 @@ public class CondIsWithin extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append(locsToCheck, "is within");
 		if (withinLocations) {

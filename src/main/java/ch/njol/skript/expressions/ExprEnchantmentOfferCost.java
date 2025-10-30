@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.enchantments.EnchantmentOffer;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -46,8 +46,8 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		EnchantmentOffer[] offers = getExpr().getArray(event);
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
+		EnchantmentOffer[] offers = getExpr().executeArray(event);
 		if (offers.length == 0 || delta == null)
 			return;
 		Object c = delta[0];

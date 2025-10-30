@@ -1,7 +1,7 @@
 package ch.njol.skript.events;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
@@ -47,7 +47,7 @@ public class EvtSpectate extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		boolean swap = false;
 		Entity entity;
 		// Start or swap event, and must be PlayerStartSpectatingEntityEvent.
@@ -69,7 +69,7 @@ public class EvtSpectate extends SkriptEvent {
 			return false;
 		if (datas == null)
 			return true;
-		for (EntityData<?> data : this.datas.getAll(event)) {
+		for (EntityData<?> data : this.datas.executeAll(event)) {
 			if (data.isInstance(entity))
 				return true;
 		}
@@ -77,7 +77,7 @@ public class EvtSpectate extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (pattern == START ? "start" : pattern == SWAP ? "swap" : "stop") + " spectating" +
 					(datas != null ? "of " + datas.toString(event, debug) : "");
 	}

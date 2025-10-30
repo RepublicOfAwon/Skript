@@ -1,8 +1,8 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.event.Event;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,13 +57,13 @@ public class ExprChatFormat extends SimpleExpression<String>{
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "chat format";
 	}
 	
 	@Override
 	@Nullable
-	protected String[] get(Event e) {
+	protected String[] execute(VirtualFrame e) {
 		if (!(e instanceof AsyncPlayerChatEvent))
 			return null;
 
@@ -72,7 +72,7 @@ public class ExprChatFormat extends SimpleExpression<String>{
 	
 	//delta[0] has to be a String unless Skript has horribly gone wrong
 	@Override
-	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		if (delta == null || !(e instanceof AsyncPlayerChatEvent)){
 			return;
 		}

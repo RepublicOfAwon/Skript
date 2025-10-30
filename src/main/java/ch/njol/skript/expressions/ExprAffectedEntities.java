@@ -5,8 +5,8 @@ import java.util.Iterator;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,14 +44,14 @@ public class ExprAffectedEntities extends SimpleExpression<LivingEntity> {
 	}
 
 	@Override
-	protected LivingEntity @Nullable [] get(Event event) {
+	protected LivingEntity @Nullable [] execute(VirtualFrame event) {
 		if (event instanceof AreaEffectCloudApplyEvent areaEvent)
 			return areaEvent.getAffectedEntities().toArray(new LivingEntity[0]);
 		return null;
 	}
 
 	@Override
-	public @Nullable Iterator<? extends LivingEntity> iterator(Event event) {
+	public @Nullable Iterator<? extends LivingEntity> iterator(VirtualFrame event) {
 		if (event instanceof AreaEffectCloudApplyEvent areaEvent)
 			return areaEvent.getAffectedEntities().iterator();
 		return super.iterator(event);
@@ -66,7 +66,7 @@ public class ExprAffectedEntities extends SimpleExpression<LivingEntity> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		if (!(event instanceof AreaEffectCloudApplyEvent areaEvent))
 			return;
 
@@ -107,7 +107,7 @@ public class ExprAffectedEntities extends SimpleExpression<LivingEntity> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the affected entities";
 	}
 

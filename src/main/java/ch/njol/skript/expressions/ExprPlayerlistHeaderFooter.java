@@ -1,8 +1,8 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -67,9 +67,9 @@ public class ExprPlayerlistHeaderFooter extends SimplePropertyExpression<Player,
 	}
 	
 	@Override
-	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		final String text = delta == null ? "" : (String) delta[0];
-		for (Player player : getExpr().getArray(e)) {
+		for (Player player : getExpr().executeArray(e)) {
 			if (mark == HEADER) {
 				player.setPlayerListHeader(text);
 			} else if (mark == FOOTER) {

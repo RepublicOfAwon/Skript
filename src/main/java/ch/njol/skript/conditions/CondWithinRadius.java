@@ -11,8 +11,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Is Within Radius")
@@ -46,8 +46,8 @@ public class CondWithinRadius extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
-		double radius = this.radius.getOptionalSingle(event).orElse(0).doubleValue();
+	public boolean executeBoolean(VirtualFrame event) {
+		double radius = this.radius.executeOptional(event).orElse(0).doubleValue();
 		double radiusSquared = radius * radius * Skript.EPSILON_MULT;
 		return locations.check(event, location -> points.check(event, center -> {
 			if (!location.getWorld().equals(center.getWorld()))
@@ -57,7 +57,7 @@ public class CondWithinRadius extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return locations.toString(event, debug) + (locations.isSingle() ? " is " : " are ") + (isNegated() ? " not " : "")
 			+ "within " + radius.toString(event, debug) + " blocks around " + points.toString(event, debug);
 	}

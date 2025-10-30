@@ -1,6 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -53,13 +54,14 @@ public class ExprWorld extends PropertyExpression<Object, World> {
 	}
 	
 	@Override
-	protected World[] get(final Event e, final Object[] source) {
+	protected World[] get(final VirtualFrame frame, final Object[] source) {
+		Event event = (Event) frame.getArguments()[0];
 		if (source instanceof World[]) // event value (see init)
 			return (World[]) source;
 		return get(source, obj -> {
 			if (obj instanceof Entity) {
-				if (getTime() > 0 && e instanceof PlayerTeleportEvent && obj.equals(((PlayerTeleportEvent) e).getPlayer()) && !Delay.isDelayed(e))
-					return ((PlayerTeleportEvent) e).getTo().getWorld();
+				if (getTime() > 0 && event instanceof PlayerTeleportEvent && obj.equals(((PlayerTeleportEvent) event).getPlayer()) && !Delay.isDelayed(event))
+					return ((PlayerTeleportEvent) event).getTo().getWorld();
 				else
 					return ((Entity) obj).getWorld();
 			} else if (obj instanceof Location) {
@@ -81,11 +83,11 @@ public class ExprWorld extends PropertyExpression<Object, World> {
 	}
 
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null)
 			return;
 
-		for (Object o : getExpr().getArray(e)) {
+		for (Object o : getExpr().executeArray(e)) {
 			if (o instanceof Location) {
 				((Location) o).setWorld((World) delta[0]);
 			}
@@ -104,7 +106,7 @@ public class ExprWorld extends PropertyExpression<Object, World> {
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return "the world" + (getExpr().isDefault() ? "" : " of " + getExpr().toString(e, debug));
 	}
 

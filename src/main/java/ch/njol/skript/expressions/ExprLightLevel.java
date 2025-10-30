@@ -12,9 +12,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -52,7 +52,7 @@ public class ExprLightLevel extends PropertyExpression<Location, Byte> {
 	}
 	
 	@Override
-	protected Byte[] get(final Event e, final Location[] source) {
+	protected Byte[] get(final VirtualFrame e, final Location[] source) {
 		return get(source, location -> {
 			Block block = location.getBlock();
 			return whatLight == ANY ? block.getLightLevel()
@@ -61,7 +61,7 @@ public class ExprLightLevel extends PropertyExpression<Location, Byte> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return (whatLight == BLOCK ? "block " : whatLight == SKY ? "sky " : "") + "light level " + getExpr().toString(e, debug);
 	}
 	

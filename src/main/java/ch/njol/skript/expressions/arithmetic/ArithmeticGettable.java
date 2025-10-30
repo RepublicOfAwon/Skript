@@ -1,6 +1,7 @@
 package ch.njol.skript.expressions.arithmetic;
 
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.Node;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -9,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
  * @param <T> the return type of the gettable
  * @see ArithmeticExpressionInfo
  */
-public interface ArithmeticGettable<T> {
+public abstract class ArithmeticGettable<T> extends Node {
 
 	/**
 	 * Retrieves the value based on the given event context.
@@ -17,13 +18,13 @@ public interface ArithmeticGettable<T> {
 	 * @param event event context
 	 * @return the computed value
 	 */
-	@Nullable T get(Event event);
+	public abstract @Nullable T execute(VirtualFrame event);
 
 	/**
 	 * Return type of this gettable
 	 *
 	 * @return the return type of this gettable
 	 */
-	Class<? extends T> getReturnType();
+	public abstract Class<? extends T> getReturnType();
 
 }

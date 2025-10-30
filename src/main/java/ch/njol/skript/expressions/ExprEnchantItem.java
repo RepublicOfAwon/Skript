@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +48,7 @@ public class ExprEnchantItem extends SimpleExpression<ItemType> {
 
 	@Override
 	@Nullable
-	protected ItemType[] get(Event e) {
+	protected ItemType[] execute(VirtualFrame e) {
 		if (e instanceof PrepareItemEnchantEvent)
 			return new ItemType[]{new ItemType(((PrepareItemEnchantEvent) e).getItem())};
 		else if (e instanceof EnchantItemEvent)
@@ -66,7 +66,7 @@ public class ExprEnchantItem extends SimpleExpression<ItemType> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null)
 			return;
 		ItemType item = ((ItemType) delta[0]);
@@ -104,7 +104,7 @@ public class ExprEnchantItem extends SimpleExpression<ItemType> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "enchanted item";
 	}
 

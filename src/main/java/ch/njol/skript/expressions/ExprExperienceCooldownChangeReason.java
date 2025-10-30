@@ -5,7 +5,7 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.EventValueExpression;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.player.PlayerExpCooldownChangeEvent.ChangeReason;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +33,7 @@ public class ExprExperienceCooldownChangeReason extends EventValueExpression<Cha
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "experience cooldown change reason";
 	}
 

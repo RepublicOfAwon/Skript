@@ -11,12 +11,12 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Bell;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Ring Bell")
@@ -57,11 +57,11 @@ public class EffRing extends Effect {
 	}
 
 	@Nullable
-	private BlockFace getBlockFace(Event event) {
+	private BlockFace getBlockFace(VirtualFrame event) {
 		if (this.direction == null)
 			return null;
 
-		Direction direction = this.direction.getSingle(event);
+		Direction direction = this.direction.executeSingle(event);
 		if (direction == null)
 			return null;
 
@@ -69,11 +69,11 @@ public class EffRing extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		BlockFace blockFace = getBlockFace(event);
-		Entity actualEntity = entity == null ? null : entity.getSingle(event);
+		Entity actualEntity = entity == null ? null : entity.executeSingle(event);
 
-		for (Block block : blocks.getArray(event)) {
+		for (Block block : blocks.executeArray(event)) {
 			BlockState state = block.getState(false);
 			if (state instanceof Bell) {
 				Bell bell = (Bell) state;
@@ -83,7 +83,7 @@ public class EffRing extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (entity != null ? "make " + entity.toString(event, debug) + " " : "") +
 				"ring " + blocks.toString(event, debug) + " from " + (direction != null ? direction.toString(event, debug) : "");
 	}

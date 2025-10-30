@@ -16,7 +16,7 @@ import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.ImmutableSet;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.arithmetic.Arithmetics;
 import org.skriptlang.skript.lang.arithmetic.OperationInfo;
@@ -313,8 +313,8 @@ public class ExprArithmetic<L, R, T> extends SimpleExpression<T> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected T[] get(Event event) {
-		T result = arithmeticGettable.get(event);
+	protected T[] execute(VirtualFrame event) {
+		T result = arithmeticGettable.execute(event);
 		T[] one = (T[]) Array.newInstance(result == null ? returnType : result.getClass(), 1);
 		one[0] = result;
 		return one;
@@ -356,7 +356,7 @@ public class ExprArithmetic<L, R, T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String one = first.toString(event, debug);
 		String two = second.toString(event, debug);
 		if (leftGrouped)

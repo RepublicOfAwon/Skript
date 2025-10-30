@@ -12,8 +12,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Is Spawnable")
@@ -50,8 +50,8 @@ public class CondIsSpawnable extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
-		World world = this.world.getSingle(event);
+	public boolean executeBoolean(VirtualFrame event) {
+		World world = this.world.executeSingle(event);
 		if (world == null)
 			return false;
 
@@ -59,7 +59,7 @@ public class CondIsSpawnable extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append(datas, "is");
 		if (isNegated())

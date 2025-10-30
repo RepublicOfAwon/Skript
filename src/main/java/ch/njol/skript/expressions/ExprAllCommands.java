@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -38,7 +38,7 @@ public class ExprAllCommands extends SimpleExpression<String> {
 	@Nullable
 	@Override
 	@SuppressWarnings("null")
-	protected String[] get(Event e) {
+	protected String[] execute(VirtualFrame e) {
 		if (scriptCommandsOnly) {
 			return Commands.getScriptCommands().toArray(new String[0]);
 		} else {
@@ -63,7 +63,7 @@ public class ExprAllCommands extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "all " + (scriptCommandsOnly ? "script " : " ") + "commands";
 	}
 	

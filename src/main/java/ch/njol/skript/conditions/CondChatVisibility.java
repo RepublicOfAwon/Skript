@@ -8,8 +8,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.ClientOption;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Can See Messages")
@@ -50,8 +50,8 @@ public class CondChatVisibility extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
-		Player player = this.player.getSingle(event);
+	public boolean executeBoolean(VirtualFrame event) {
+		Player player = this.player.executeSingle(event);
 
 		if (player == null)
 			return false;
@@ -69,7 +69,7 @@ public class CondChatVisibility extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return switch (pattern) {
 			case 0 -> player.toString(event, debug) + " can see all messages";
 			case 1 -> player.toString(event, debug) + " can only see commands";

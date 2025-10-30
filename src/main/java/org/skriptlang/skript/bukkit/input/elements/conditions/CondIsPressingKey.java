@@ -10,6 +10,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Input;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -70,12 +71,13 @@ public class CondIsPressingKey extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame frame) {
+		Event event = (Event) frame.getArguments()[0];
 		Player eventPlayer = event instanceof PlayerInputEvent inputEvent ? inputEvent.getPlayer() : null;
-		InputKey[] inputKeys = this.inputKeys.getAll(event);
+		InputKey[] inputKeys = this.inputKeys.executeAll(frame);
 		boolean and = this.inputKeys.getAnd();
 		boolean delayed = this.delayed || Delay.isDelayed(event);
-		return players.check(event, player -> {
+		return players.check(frame, player -> {
 			Input input;
 			// If we want to get the new input of the event-player, we must get it from the event
 			if (!delayed && !past && player.equals(eventPlayer)) {
@@ -88,7 +90,7 @@ public class CondIsPressingKey extends Condition {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append(players);
 		if (past) {

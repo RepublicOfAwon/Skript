@@ -3,9 +3,10 @@ package ch.njol.skript.lang;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
-import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.test.runner.TestMode;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
@@ -17,7 +18,7 @@ import org.skriptlang.skript.lang.script.ScriptWarning;
 public class SimplifiedCondition extends Condition {
 
 	/**
-	 * Creates a new {@link SimplifiedCondition} from a {@link Condition} by evaluating it with a {@link ContextlessEvent}.
+	 * Creates a new {@link SimplifiedCondition} from a {@link Condition} by evaluating it with a {@link ContextlessVirtualFrame}.
 	 * Any expression used by {@code original} that requires specific event data cannot be safely simplified.
 	 *
 	 * @param original The original {@link Condition} to simplify.
@@ -28,7 +29,7 @@ public class SimplifiedCondition extends Condition {
 	}
 
 	/**
-	 * Creates a new {@link SimplifiedCondition} from a {@link Condition} by evaluating it with a {@link ContextlessEvent}.
+	 * Creates a new {@link SimplifiedCondition} from a {@link Condition} by evaluating it with a {@link ContextlessVirtualFrame}.
 	 * Any expression used by {@code original} that requires specific event data cannot be safely simplified.
 	 *
 	 * @param original The original {@link Condition} to simplify.
@@ -39,8 +40,8 @@ public class SimplifiedCondition extends Condition {
 		if (original instanceof SimplifiedCondition simplifiedCondition)
 			return simplifiedCondition;
 
-		Event event = ContextlessEvent.get();
-		boolean result = original.check(event);
+		VirtualFrame event = ContextlessVirtualFrame.get();
+		boolean result = original.executeBoolean(event);
 
 		if (warn) {
 			ParserInstance parser = ParserInstance.get();
@@ -60,7 +61,7 @@ public class SimplifiedCondition extends Condition {
 	 * Constructs a new {@link SimplifiedCondition}.
 	 *
 	 * @param source The source {@link Condition} this was created from.
-	 * @param result The evaluated result from {@code source} via {@link Condition#check(Event)}.
+	 * @param result The evaluated result from {@code source} via {@link Condition#executeBoolean(VirtualFrame)}.
 	 */
 	private SimplifiedCondition(Condition source, boolean result) {
 		this.source = source;
@@ -87,12 +88,12 @@ public class SimplifiedCondition extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		return result;
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return source.toString(event, debug);
 	}
 

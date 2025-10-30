@@ -12,6 +12,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -94,7 +95,7 @@ public abstract class PropertyBaseExpression<Handler extends ExpressionPropertyH
 	}
 
 	@Override
-	protected Object @Nullable [] get(Event event) {
+	protected Object @Nullable [] execute(VirtualFrame event) {
 		return expr.stream(event)
 			.flatMap(source -> {
 				var handler = properties.getHandler(source.getClass());
@@ -118,14 +119,14 @@ public abstract class PropertyBaseExpression<Handler extends ExpressionPropertyH
 	 * It is guaranteed that the handler can handle the source object, but the Java generics system cannot
 	 * reflect that. See the default implementation for an example of this sort of casting.
 	 *
-	 * @param event The event in which the conversion is happening.
+	 * @param frame The event in which the conversion is happening.
 	 * @param handler The handler to use for conversion.
 	 * @param source The source object to convert.
 	 * @return The converted property value, or null if the conversion failed.
 	 * @param <T> The type of the source object and the type the handler will accept.
 	 */
 	@SuppressWarnings("unchecked")
-	protected <T> @Nullable Object convert(Event event, Handler handler, T source) {
+	protected <T> @Nullable Object convert(VirtualFrame frame, Handler handler, T source) {
 		return ((ExpressionPropertyHandler<T, ?>) handler).convert(source);
 	}
 
@@ -192,7 +193,7 @@ public abstract class PropertyBaseExpression<Handler extends ExpressionPropertyH
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 
 		Function<Object, ?> updateTypeFunction = (propertyHaver) -> {
 
@@ -256,7 +257,7 @@ public abstract class PropertyBaseExpression<Handler extends ExpressionPropertyH
 	}
 
 	@Override
-	public String toString(Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return getPropertyName() + " of " + expr.toString(event, debug);
 	}
 

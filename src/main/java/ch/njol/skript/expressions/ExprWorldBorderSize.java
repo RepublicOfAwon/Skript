@@ -13,8 +13,8 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.WorldBorder;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Size of World Border")
@@ -53,13 +53,13 @@ public class ExprWorldBorderSize extends SimplePropertyExpression<WorldBorder, D
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		double input = mode == ChangeMode.RESET ? MAX_WORLDBORDER_SIZE : ((Number) delta[0]).doubleValue() * (radius ? 2 : 1);
 		if (Double.isNaN(input)) {
 			error("NaN is not a valid world border size");
 			return;
 		}
-		for (WorldBorder worldBorder : getExpr().getArray(event)) {
+		for (WorldBorder worldBorder : getExpr().executeArray(event)) {
 			switch (mode) {
 				case SET, RESET -> worldBorder.setSize(Math2.fit(1, input, MAX_WORLDBORDER_SIZE));
 				case ADD -> worldBorder.setSize(Math2.fit(1, worldBorder.getSize() + input, MAX_WORLDBORDER_SIZE));
@@ -79,7 +79,7 @@ public class ExprWorldBorderSize extends SimplePropertyExpression<WorldBorder, D
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "world border " + (radius ? "radius" : "diameter") + " of " + getExpr().toString(event, debug);
 	}
 

@@ -14,9 +14,9 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
@@ -64,9 +64,9 @@ public class ExprMidpoint extends SimpleExpression<Object> implements SyntaxRunt
 	}
 
 	@Override
-	protected Object @Nullable [] get(Event event) {
-		Object object1 = this.object1.getSingle(event);
-		Object object2 = this.object2.getSingle(event);
+	protected Object @Nullable [] execute(VirtualFrame event) {
+		Object object1 = this.object1.executeSingle(event);
+		Object object2 = this.object2.executeSingle(event);
 		if (object1 == null || object2 == null) {
 			return null;
 		} else if (object1 instanceof Location loc1 && object2 instanceof Location loc2) {
@@ -116,7 +116,7 @@ public class ExprMidpoint extends SimpleExpression<Object> implements SyntaxRunt
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
 			.append("the midpoint between")
 			.append(object1)

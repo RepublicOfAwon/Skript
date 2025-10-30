@@ -7,6 +7,7 @@ import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +25,7 @@ import java.util.function.Supplier;
  * In most cases though, a section should load its code through one of the following loading methods:
  * {@link #loadCode(SectionNode)}, {@link #loadCode(SectionNode, String, Class[])}, {@link #loadOptionalCode(SectionNode)}
  * <br><br>
- * Every section must override the {@link TriggerItem#walk(Event)} method. In this method, you can determine whether *  the section should run. If you have stored a {@link Trigger} from {@link #loadCode(SectionNode, String, Class[])}, you
+ * Every section must override the {@link TriggerItem#execute(com.oracle.truffle.api.frame.VirtualFrame)} method. In this method, you can determine whether *  the section should run. If you have stored a {@link Trigger} from {@link #loadCode(SectionNode, String, Class[])}, you
  * should not run it with this event passed in this walk method.
  * <br><br>
  * In the walk method, it is recommended that you return {@link TriggerSection#walk(Event, boolean)}.
@@ -303,7 +304,7 @@ public abstract class Section extends TriggerSection implements SyntaxElement, S
 		}
 
 		@Override
-		public String toString(@Nullable Event event, boolean debug) {
+		public String toString(@Nullable VirtualFrame event, boolean debug) {
 			return "";
 		}
 	}

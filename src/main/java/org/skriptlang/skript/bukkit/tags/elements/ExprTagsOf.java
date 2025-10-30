@@ -9,9 +9,9 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Keyed;
 import org.bukkit.Tag;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.tags.TagModule;
@@ -58,7 +58,7 @@ public class ExprTagsOf extends PropertyExpression<Object, Tag> {
 	}
 
 	@Override
-	protected Tag<?> @Nullable [] get(Event event, Object @NotNull [] source) {
+	protected Tag<?> @Nullable [] get(VirtualFrame event, Object @NotNull [] source) {
 		if (source.length == 0)
 			return null;
 		boolean isAny = (source[0] instanceof ItemType itemType && !itemType.isAll());
@@ -111,7 +111,7 @@ public class ExprTagsOf extends PropertyExpression<Object, Tag> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String registry = types.length > 1 ? "" : " " + types[0].toString();
 		return  origin.toString(datapackOnly) + registry + " tags of " + getExpr().toString(event, debug);
 	}

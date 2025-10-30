@@ -8,6 +8,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +46,7 @@ public class ExprFunctionCall<T> extends SimpleExpression<T> implements KeyProvi
 	}
 
 	@Override
-	protected T @Nullable [] get(Event event) {
+	protected T @Nullable [] execute(VirtualFrame event) {
 		Object[] values = function.execute(event);
 		String[] keys = function.returnedKeys();
 		function.resetReturnValue();
@@ -73,7 +74,7 @@ public class ExprFunctionCall<T> extends SimpleExpression<T> implements KeyProvi
 	}
 
 	@Override
-	public @NotNull String @NotNull [] getArrayKeys(Event event) throws IllegalStateException {
+	public @NotNull String @NotNull [] getArrayKeys(VirtualFrame event) throws IllegalStateException {
 		if (!cache.containsKey(event))
 			throw new IllegalStateException();
 		return cache.remove(event);
@@ -116,7 +117,7 @@ public class ExprFunctionCall<T> extends SimpleExpression<T> implements KeyProvi
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return function.toString(event, debug);
 	}
 

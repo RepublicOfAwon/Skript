@@ -8,7 +8,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.common.properties.conditions.PropCondIsEmpty;
@@ -69,7 +69,7 @@ public abstract class PropertyBaseCondition<Handler extends ConditionPropertyHan
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		return propertyHolder.check(event, (element) -> {
 				//noinspection unchecked
 				var handler = (ConditionPropertyHandler<Object>) properties.getHandler(element.getClass());
@@ -88,7 +88,7 @@ public abstract class PropertyBaseCondition<Handler extends ConditionPropertyHan
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return PropertyCondition.toString(this, getPropertyType(), event, debug, propertyHolder, getPropertyName());
 	}
 

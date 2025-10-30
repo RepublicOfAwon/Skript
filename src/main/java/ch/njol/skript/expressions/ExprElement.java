@@ -18,8 +18,8 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import com.google.common.collect.Iterators;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.apache.commons.lang.ArrayUtils;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 import org.skriptlang.skript.lang.util.SkriptQueue;
@@ -108,7 +108,7 @@ public class ExprElement<T> extends SimpleExpression<T> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected T @Nullable [] get(Event event) {
+	protected T @Nullable [] execute(VirtualFrame event) {
 		if (queue)
 			return this.getFromQueue(event);
 		Iterator<? extends T> iterator = expr.iterator(event);
@@ -118,7 +118,7 @@ public class ExprElement<T> extends SimpleExpression<T> {
 		Class<T> returnType = (Class<T>) getReturnType();
 		int startIndex = 0, endIndex = 0;
 		if (this.startIndex != null) {
-			Integer integer = this.startIndex.getSingle(event);
+			Integer integer = this.startIndex.executeSingle(event);
 			if (integer == null)
 				return null;
 			startIndex = integer;
@@ -126,7 +126,7 @@ public class ExprElement<T> extends SimpleExpression<T> {
 				return null;
 		}
 		if (this.endIndex != null) {
-			Integer integer = this.endIndex.getSingle(event);
+			Integer integer = this.endIndex.executeSingle(event);
 			if (integer == null)
 				return null;
 			endIndex = integer;
@@ -177,18 +177,18 @@ public class ExprElement<T> extends SimpleExpression<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	private T @Nullable [] getFromQueue(Event event) {
-		SkriptQueue queue = (SkriptQueue) expr.getSingle(event);
+	private T @Nullable [] getFromQueue(VirtualFrame event) {
+		SkriptQueue queue = (SkriptQueue) expr.executeSingle(event);
 		if (queue == null)
 			return null;
 		Integer startIndex = 0, endIndex = 0;
 		if (this.startIndex != null) {
-			startIndex = this.startIndex.getSingle(event);
+			startIndex = this.startIndex.executeSingle(event);
 			if (startIndex == null || startIndex <= 0 && type != ElementType.RANGE)
 				return null;
 		}
 		if (this.endIndex != null) {
-			endIndex = this.endIndex.getSingle(event);
+			endIndex = this.endIndex.executeSingle(event);
 			if (endIndex == null)
 				return null;
 		}
@@ -267,7 +267,7 @@ public class ExprElement<T> extends SimpleExpression<T> {
   }
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String prefix;
 		switch (type) {
 			case FIRST_ELEMENT:

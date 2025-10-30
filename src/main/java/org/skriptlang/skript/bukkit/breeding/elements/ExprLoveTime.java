@@ -8,9 +8,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Love Time")
@@ -49,7 +49,7 @@ public class ExprLoveTime extends SimplePropertyExpression<LivingEntity, Timespa
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		int changeTicks = 0;
 
 		if (delta != null) {
@@ -58,7 +58,7 @@ public class ExprLoveTime extends SimplePropertyExpression<LivingEntity, Timespa
 			}
 		}
 
-		for (LivingEntity livingEntity : getExpr().getArray(event)) {
+		for (LivingEntity livingEntity : getExpr().executeArray(event)) {
 			if (!(livingEntity instanceof Animals animal))
 				continue;
 

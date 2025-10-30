@@ -13,9 +13,9 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Color;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 
@@ -48,9 +48,9 @@ public class ExprNewBannerPattern extends SimpleExpression<Pattern> {
 	}
 
 	@Override
-	protected Pattern @Nullable [] get(Event event) {
-		Color color = selectedColor.getSingle(event);
-		PatternType patternType = selectedPattern.getSingle(event);
+	protected Pattern @Nullable [] execute(VirtualFrame event) {
+		Color color = selectedColor.executeSingle(event);
+		PatternType patternType = selectedPattern.executeSingle(event);
 		if (color == null || color.asDyeColor() == null || patternType == null)
 			return null;
 
@@ -75,7 +75,7 @@ public class ExprNewBannerPattern extends SimpleExpression<Pattern> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "a " + selectedPattern.toString(event, debug) + " colored " + selectedColor.toString(event, debug);
 	}
 

@@ -12,9 +12,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -54,10 +54,10 @@ public class ExprBreakSpeed extends SimpleExpression<Float> {
 
 	@Override
 	@Nullable
-	protected Float[] get(Event event) {
+	protected Float[] execute(VirtualFrame event) {
 		ArrayList<Float> speeds = new ArrayList<>();
-		for (Block block : this.blocks.getArray(event)) {
-			for (Player player : this.players.getArray(event)) {
+		for (Block block : this.blocks.executeArray(event)) {
+			for (Player player : this.players.executeArray(event)) {
 				speeds.add(block.getBreakSpeed(player));
 			}
 		}
@@ -76,7 +76,7 @@ public class ExprBreakSpeed extends SimpleExpression<Float> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "break speed of " + blocks.toString(event, debug) + " for " + players.toString(event, debug);
 	}
 }

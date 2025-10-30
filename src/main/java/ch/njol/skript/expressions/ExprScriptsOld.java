@@ -13,7 +13,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Feature;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.experiment.ExperimentData;
 import org.skriptlang.skript.lang.experiment.SimpleExperimentalSyntax;
@@ -66,7 +66,7 @@ public class ExprScriptsOld extends SimpleExpression<String> implements SimpleEx
 	}
 
 	@Override
-	protected String[] get(Event event) {
+	protected String[] execute(VirtualFrame event) {
 		List<Path> scripts = new ArrayList<>();
 		if (includeEnabled) {
 			for (Script script : ScriptLoader.getLoadedScripts())
@@ -102,7 +102,7 @@ public class ExprScriptsOld extends SimpleExpression<String> implements SimpleEx
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String text;
 		if (!includeEnabled) {
 			text = "all disabled scripts";

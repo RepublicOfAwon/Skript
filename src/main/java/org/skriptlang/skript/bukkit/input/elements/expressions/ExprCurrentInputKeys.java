@@ -9,6 +9,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerInputEvent;
@@ -41,7 +42,8 @@ public class ExprCurrentInputKeys extends PropertyExpression<Player, InputKey> {
 	}
 
 	@Override
-	protected InputKey[] get(Event event, Player[] source) {
+	protected InputKey[] get(VirtualFrame frame, Player[] source) {
+		Event event = (Event) frame.getArguments()[0];
 		Player eventPlayer = null;
 		if (SUPPORTS_TIME_STATES && getTime() == EventValues.TIME_NOW && event instanceof PlayerInputEvent inputEvent)
 			eventPlayer = inputEvent.getPlayer();
@@ -77,7 +79,7 @@ public class ExprCurrentInputKeys extends PropertyExpression<Player, InputKey> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the current input keys of " + getExpr().toString(event, debug);
 	}
 

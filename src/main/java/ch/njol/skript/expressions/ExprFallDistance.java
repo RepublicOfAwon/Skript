@@ -1,7 +1,7 @@
 package ch.njol.skript.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -37,9 +37,9 @@ public class ExprFallDistance extends SimplePropertyExpression<Entity, Number> {
 	}
 	
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta != null) {
-			Entity[] entities = getExpr().getArray(e);
+			Entity[] entities = getExpr().executeArray(e);
 			if (entities.length < 1)
 				return;
 			Float number = ((Number) delta[0]).floatValue();

@@ -14,8 +14,8 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SectionUtils;
 import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -92,11 +92,14 @@ public class ExprSecBlankEquipComp extends SectionExpression<EquippableWrapper> 
 	}
 
 	@Override
-	protected EquippableWrapper @Nullable [] get(Event event) {
+	protected EquippableWrapper @Nullable [] execute(VirtualFrame frame) {
 		EquippableWrapper wrapper = EquippableWrapper.newInstance();
 		if (trigger != null) {
 			BlankEquippableSectionEvent sectionEvent = new BlankEquippableSectionEvent(wrapper);
-			Variables.withLocalVariables(event, sectionEvent, () -> TriggerItem.walk(trigger, sectionEvent));
+			Event previousEvent = (Event) frame.getArguments()[0];
+			frame.getArguments()[0] = sectionEvent;
+			trigger.execute(frame);
+			frame.getArguments()[0] = previousEvent;
 		}
 		return new EquippableWrapper[] {wrapper};
 	}
@@ -112,7 +115,7 @@ public class ExprSecBlankEquipComp extends SectionExpression<EquippableWrapper> 
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "a blank equippable component";
 	}
 

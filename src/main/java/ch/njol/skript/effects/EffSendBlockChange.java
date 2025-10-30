@@ -12,10 +12,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Send Block Change")
@@ -53,27 +53,27 @@ public class EffSendBlockChange extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		if (asOriginal) {
-			Player[] players = this.players.getArray(event);
-			for (Location location : locations.getArray(event)) {
+			Player[] players = this.players.executeArray(event);
+			for (Location location : locations.executeArray(event)) {
 				for (Player player : players)
 					player.sendBlockChange(location, location.getBlock().getBlockData());
 			}
 			return;
 		}
 		assert type != null;
-		Object type = this.type.getSingle(event);
+		Object type = this.type.executeSingle(event);
 		if (type == null)
 			return;
-		Player[] players = this.players.getArray(event);
+		Player[] players = this.players.executeArray(event);
 		if (type instanceof ItemType itemType) {
-			for (Location location : locations.getArray(event))  {
+			for (Location location : locations.executeArray(event))  {
 				for (Player player : players)
 					itemType.sendBlockChange(player, location);
 			}
 		} else if (type instanceof BlockData blockData) {
-			for (Location location : locations.getArray(event)) {
+			for (Location location : locations.executeArray(event)) {
 				for (Player player : players)
 					player.sendBlockChange(location, blockData);
 			}
@@ -81,7 +81,7 @@ public class EffSendBlockChange extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append("make", players, "see", locations, "as");
 		if (asOriginal) {

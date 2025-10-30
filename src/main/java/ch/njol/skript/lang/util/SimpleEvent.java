@@ -4,7 +4,7 @@ import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -17,7 +17,7 @@ public class SimpleEvent extends SkriptEvent {
 	public SimpleEvent() {}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		return true;
 	}
 
@@ -29,7 +29,7 @@ public class SimpleEvent extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "simple event";
 	}
 

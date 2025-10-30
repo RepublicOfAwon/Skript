@@ -1,8 +1,8 @@
 package ch.njol.skript.conditions;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -47,14 +47,14 @@ public class CondIsBlockRedstonePowered extends Condition {
 	}
 	
 	@Override
-	public boolean check(Event e) {
+	public boolean executeBoolean(VirtualFrame e) {
 		return isIndirectlyPowered
 			? blocks.check(e, Block::isBlockIndirectlyPowered, isNegated())
 			: blocks.check(e, Block::isBlockPowered, isNegated());
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return PropertyCondition.toString(this, PropertyCondition.PropertyType.BE, e, debug, blocks, (isIndirectlyPowered ? "indirectly " : "") + "powered");
 	}
 	

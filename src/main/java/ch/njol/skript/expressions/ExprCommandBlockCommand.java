@@ -7,10 +7,10 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.entity.minecart.CommandMinecart;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Command Block Command")
@@ -47,9 +47,9 @@ public class ExprCommandBlockCommand extends SimplePropertyExpression<Object, St
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		String newCommand = delta == null ? null : ((String) delta[0]);
-		for (Object holder : getExpr().getArray(event)) {
+		for (Object holder : getExpr().executeArray(event)) {
 			switch (mode) {
 				case RESET:
 				case DELETE:

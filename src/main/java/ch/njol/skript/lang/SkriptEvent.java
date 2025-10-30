@@ -12,6 +12,7 @@ import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.structures.StructEvent.EventData;
 import ch.njol.util.coll.iterator.ConsumingIterator;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
@@ -183,7 +184,7 @@ public abstract class SkriptEvent extends Structure {
 	 * will only be called for events this SkriptEvent is registered for.
 	 * @return true if this is SkriptEvent is represented by the Bukkit Event or false if not
 	 */
-	public abstract boolean check(Event event);
+	public abstract boolean check(VirtualFrame event);
 
 	/**
 	 * Script loader checks this before loading items in event. If false is

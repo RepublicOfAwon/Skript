@@ -14,7 +14,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Free / Max / Total Memory")
@@ -53,7 +53,7 @@ public class ExprMemory extends SimpleExpression<Double> {
 	}
 
 	@Override
-	protected Double[] get(Event event) {
+	protected Double[] execute(VirtualFrame event) {
 		double memory = 0;
 		switch (type) {
 			case FREE:
@@ -80,7 +80,7 @@ public class ExprMemory extends SimpleExpression<Double> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return type.name().toLowerCase(Locale.ENGLISH) + " memory";
 	}
 

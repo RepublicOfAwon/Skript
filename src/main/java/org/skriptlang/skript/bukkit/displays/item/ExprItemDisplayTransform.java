@@ -7,10 +7,10 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.ItemDisplay.ItemDisplayTransform;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Item Display Transform")
@@ -42,10 +42,10 @@ public class ExprItemDisplayTransform extends SimplePropertyExpression<Display, 
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		//noinspection ConstantConditions
 		ItemDisplayTransform transform = mode == ChangeMode.SET ? (ItemDisplayTransform) delta[0] : ItemDisplayTransform.NONE;
-		for (Display display : getExpr().getArray(event)) {
+		for (Display display : getExpr().executeArray(event)) {
 			if (display instanceof ItemDisplay itemDisplay)
 				itemDisplay.setItemDisplayTransform(transform);
 		}

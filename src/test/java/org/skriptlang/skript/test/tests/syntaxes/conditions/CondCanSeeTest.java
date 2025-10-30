@@ -2,7 +2,7 @@ package org.skriptlang.skript.test.tests.syntaxes.conditions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.test.runner.SkriptJUnitTest;
 import ch.njol.skript.util.Version;
 import ch.njol.skript.variables.Variables;
@@ -14,7 +14,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -45,7 +44,7 @@ public class CondCanSeeTest extends SkriptJUnitTest {
 		if (canSeeCondition == null)
 			Assert.fail("Hide entity effect is null");
 
-		ContextlessEvent event = ContextlessEvent.get();
+		ContextlessVirtualFrame event = ContextlessVirtualFrame.get();
 		Variables.setVariable("player", testPlayer, event, true);
 		Variables.setVariable("entity", testEntity, event, true);
 
@@ -53,7 +52,7 @@ public class CondCanSeeTest extends SkriptJUnitTest {
 		EasyMock.expect(testPlayer.canSee(testEntity))
 			.andAnswer(() -> !hiddenEntities.contains(((Entity) EasyMock.getCurrentArgument(0)).getUniqueId()));
 		EasyMock.replay(testPlayer);
-		assert canSeeCondition.check(event);
+		assert canSeeCondition.executeBoolean(event);
 		EasyMock.verify(testPlayer);
 
 		hiddenEntities.add(testEntity.getUniqueId());
@@ -61,7 +60,7 @@ public class CondCanSeeTest extends SkriptJUnitTest {
 		EasyMock.expect(testPlayer.canSee(testEntity))
 			.andAnswer(() -> !hiddenEntities.contains(((Entity) EasyMock.getCurrentArgument(0)).getUniqueId()));
 		EasyMock.replay(testPlayer);
-		assert !canSeeCondition.check(event);
+		assert !canSeeCondition.executeBoolean(event);
 		EasyMock.verify(testPlayer);
 
 		hiddenEntities.remove(testEntity.getUniqueId());
@@ -69,7 +68,7 @@ public class CondCanSeeTest extends SkriptJUnitTest {
 		EasyMock.expect(testPlayer.canSee(testEntity))
 			.andAnswer(() -> !hiddenEntities.contains(((Entity) EasyMock.getCurrentArgument(0)).getUniqueId()));
 		EasyMock.replay(testPlayer);
-		assert canSeeCondition.check(event);
+		assert canSeeCondition.executeBoolean(event);
 		EasyMock.verify(testPlayer);
 	}
 

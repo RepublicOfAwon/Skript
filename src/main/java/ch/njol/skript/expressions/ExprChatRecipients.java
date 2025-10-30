@@ -3,8 +3,8 @@ package ch.njol.skript.expressions;
 import java.util.Set;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,13 +57,13 @@ public class ExprChatRecipients extends SimpleExpression<Player> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "chat recipients";
 	}
 
 	@Override
 	@Nullable
-	protected Player[] get(Event event) {
+	protected Player[] execute(VirtualFrame event) {
 		if (!(event instanceof AsyncPlayerChatEvent))
 			return null;
 
@@ -73,7 +73,7 @@ public class ExprChatRecipients extends SimpleExpression<Player> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (!(event instanceof AsyncPlayerChatEvent))
 			return;
 

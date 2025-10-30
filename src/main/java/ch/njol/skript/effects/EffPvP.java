@@ -10,9 +10,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.GameRule;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("PvP")
@@ -41,18 +41,18 @@ public class EffPvP extends Effect {
 	}
 	
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		if (PVP_GAME_RULE_EXISTS) {
-			for (World world : worlds.getArray(event))
+			for (World world : worlds.executeArray(event))
 				world.setGameRule(GameRule.PVP, enable);
 		} else {
-			for (World world : worlds.getArray(event))
+			for (World world : worlds.executeArray(event))
 				world.setPVP(enable);
 		}
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (enable ? "enable" : "disable") + " PvP in " + worlds.toString(event, debug);
 	}
 	

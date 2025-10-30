@@ -1,6 +1,6 @@
 package ch.njol.skript.events;
 
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +40,7 @@ public class EvtEntityTransform extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		if (!(event instanceof EntityTransformEvent))
 			return false;
 		EntityTransformEvent transformEvent = (EntityTransformEvent) event;
@@ -52,7 +52,7 @@ public class EvtEntityTransform extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (datas == null)
 			return "entities transforming" + (reasons == null ? "" : " due to " + reasons.toString(event, debug));
 		return datas.toString(event, debug) + " transforming" + (reasons == null ? "" : " due to " + reasons.toString(event, debug));

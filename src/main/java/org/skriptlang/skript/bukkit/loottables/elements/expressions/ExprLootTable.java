@@ -7,7 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.loot.LootTable;
 import org.bukkit.loot.Lootable;
 import org.jetbrains.annotations.Nullable;
@@ -50,10 +50,10 @@ public class ExprLootTable extends SimplePropertyExpression<Object, LootTable> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		LootTable lootTable = delta != null ? ((LootTable) delta[0]) : null;
 
-		for (Object object : getExpr().getArray(event)) {
+		for (Object object : getExpr().executeArray(event)) {
 			if (!LootTableUtils.isLootable(object))
 				continue;
 

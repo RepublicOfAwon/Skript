@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +49,7 @@ public class ExprBreedingFamily extends SimpleExpression<LivingEntity> {
 	}
 
 	@Override
-	protected @Nullable LivingEntity [] get(Event event) {
+	protected @Nullable LivingEntity [] execute(VirtualFrame event) {
 		if (!(event instanceof EntityBreedEvent breedEvent))
 			return new LivingEntity[0];
 
@@ -73,7 +73,7 @@ public class ExprBreedingFamily extends SimpleExpression<LivingEntity> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "breeding family";
 	}
 

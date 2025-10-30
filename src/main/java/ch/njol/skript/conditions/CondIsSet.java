@@ -2,6 +2,7 @@ package ch.njol.skript.conditions;
 
 import ch.njol.skript.lang.*;
 import ch.njol.skript.localization.Language;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +42,7 @@ public class CondIsSet extends Condition implements VerboseAssert {
 		return this;
 	}
 	
-	private boolean check(final Expression<?> expr, final Event e) {
+	private boolean check(final Expression<?> expr, final VirtualFrame e) {
 		if (expr instanceof ExpressionList) {
 			for (final Expression<?> ex : ((ExpressionList<?>) expr).getExpressions()) {
 				assert ex != null;
@@ -52,28 +53,28 @@ public class CondIsSet extends Condition implements VerboseAssert {
 			return expr.getAnd();
 		}
 		assert expr.getAnd();
-		final Object[] all = expr.getAll(e);
+		final Object[] all = expr.executeAll(e);
 		return isNegated() ^ (all.length != 0);
 	}
 	
 	@Override
-	public boolean check(final Event e) {
+	public boolean executeBoolean(final VirtualFrame e) {
 		return check(expr, e);
 	}
 
 	@Override
-	public String getExpectedMessage(Event event) {
+	public String getExpectedMessage(VirtualFrame event) {
 		return isNegated() ? Language.get("none") : "a value";
 	}
 
 	@Override
-	public String getReceivedMessage(Event event) {
+	public String getReceivedMessage(VirtualFrame event) {
 		// TODO: may need to make this enumerate each value: "a, b, <none>, and d"
 		return VerboseAssert.getExpressionValue(expr,event);
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return expr.toString(e, debug) + (isNegated() ? " isn't" : " is") + " set";
 	}
 	

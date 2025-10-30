@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Last Caught Errors")
@@ -38,7 +38,7 @@ public class ExprCaughtErrors extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected String @Nullable [] get(Event event) {
+	protected String @Nullable [] execute(VirtualFrame event) {
 		return lastErrors;
 	}
 
@@ -53,7 +53,7 @@ public class ExprCaughtErrors extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "last caught runtime errors";
 	}
 

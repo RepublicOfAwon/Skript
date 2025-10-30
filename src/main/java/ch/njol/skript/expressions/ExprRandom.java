@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import ch.njol.skript.lang.*;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -61,8 +61,8 @@ public class ExprRandom extends SimpleExpression<Object> {
 	}
 
 	@Override
-	protected Object[] get(Event event) {
-		Object[] set = expr.getAll(event);
+	protected Object[] execute(VirtualFrame event) {
+		Object[] set = expr.executeAll(event);
 		if (set.length <= 1)
 			return set;
 		Object[] one = (Object[]) Array.newInstance(set.getClass().getComponentType(), 1);
@@ -81,7 +81,7 @@ public class ExprRandom extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "a random element out of " + expr.toString(event, debug);
 	}
 

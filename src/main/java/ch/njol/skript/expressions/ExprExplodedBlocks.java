@@ -5,6 +5,7 @@ import java.util.List;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.*;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -59,7 +60,7 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> implements Event
 
 	@Nullable
 	@Override
-	protected Block[] get(Event e) {
+	protected Block[] execute(VirtualFrame e) {
 		if (!(e instanceof EntityExplodeEvent))
 			return null;
 
@@ -81,7 +82,7 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> implements Event
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		if (!(event instanceof EntityExplodeEvent))
 			return;
 
@@ -119,7 +120,7 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> implements Event
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean d) {
+	public String toString(@Nullable VirtualFrame e, boolean d) {
 		return "exploded blocks";
 	}
 	

@@ -10,6 +10,7 @@ import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import io.papermc.lib.PaperLib;
 import io.papermc.lib.environments.PaperEnvironment;
 import io.papermc.paper.entity.TeleportFlag;
@@ -80,15 +81,17 @@ public class EffTeleport extends Effect {
 	}
 
 	@Override
-	public Object walk(Event event) {
+	public Object execute(VirtualFrame frame) {
+
+		Event event = (Event) frame.getArguments()[0];
 
 		boolean delayed = Delay.isDelayed(event);
-		Location location = this.location.getSingle(event);
+		Location location = this.location.executeSingle(frame);
 		if (location == null)
 			return null;
 		boolean unknownWorld = !location.isWorldLoaded();
 
-		Entity[] entityArray = entities.getArray(event); // We have to fetch this before possible async execution to avoid async local variable access.
+		Entity[] entityArray = entities.executeArray(frame); // We have to fetch this before possible async execution to avoid async local variable access.
 		if (entityArray.length == 0)
 			return null;
 
@@ -123,7 +126,7 @@ public class EffTeleport extends Effect {
 		}
 
 		if (!async) {
-			SkriptTeleportFlag[] teleportFlags = this.teleportFlags == null ? null : this.teleportFlags.getArray(event);
+			SkriptTeleportFlag[] teleportFlags = this.teleportFlags == null ? null : this.teleportFlags.executeArray(frame);
 			for (Entity entity : entityArray) {
 				teleport(entity, location, teleportFlags);
 			}
@@ -133,19 +136,19 @@ public class EffTeleport extends Effect {
 
 		final Location fixed = location;
 		Delay.addDelayedEvent(event);
-		Object localVars = Variables.removeLocals(event);
+		Object localVars = Variables.removeLocals(frame);
 
 		// This will either fetch the chunk instantly if on Spigot or already loaded or fetch it async if on Paper.
 		PaperLib.getChunkAtAsync(location).thenAccept(chunk -> {
 			// The following is now on the main thread
-			SkriptTeleportFlag[] teleportFlags = this.teleportFlags == null ? null : this.teleportFlags.getArray(event);
+			SkriptTeleportFlag[] teleportFlags = this.teleportFlags == null ? null : this.teleportFlags.executeArray(frame);
 			for (Entity entity : entityArray) {
 				teleport(entity, fixed, teleportFlags);
 			}
 
 			// Re-set local variables
 			if (localVars != null)
-				Variables.setLocalVariables(event, localVars);
+				Variables.setLocalVariables(frame, localVars);
 			
 			// Continue the rest of the trigger if there is one
 			Object timing = null;
@@ -161,19 +164,19 @@ public class EffTeleport extends Effect {
 //			}
 			future.complete(null);
 
-			Variables.removeLocals(event); // Clean up local vars, we may be exiting now
+			Variables.removeLocals(frame); // Clean up local vars, we may be exiting now
 			SkriptTimings.stop(timing);
 		});
 		throw new Trigger.DelayException(future);
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		assert false;
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug)
 				.append("teleport", entities, "to", location);
 		if (teleportFlags != null)

@@ -4,7 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.player.PlayerEditBookEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +23,7 @@ public class EvtBookEdit extends SkriptEvent{
 	}
 	
 	@Override
-	public boolean check(Event e) {
+	public boolean check(VirtualFrame e) {
 		if (!(e instanceof PlayerEditBookEvent)){
 			return false;
 		}
@@ -31,7 +31,7 @@ public class EvtBookEdit extends SkriptEvent{
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "book edit";
 	}
 }

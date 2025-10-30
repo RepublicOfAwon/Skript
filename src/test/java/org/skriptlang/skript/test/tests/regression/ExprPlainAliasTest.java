@@ -2,12 +2,10 @@ package org.skriptlang.skript.test.tests.regression;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.lang.util.ContextlessEvent;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.test.runner.SkriptJUnitTest;
 import ch.njol.skript.variables.Variables;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.easymock.EasyMock;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
@@ -31,7 +29,7 @@ public class ExprPlainAliasTest extends SkriptJUnitTest {
 		if (getPlainRandomItemEffect == null)
 			Assert.fail("Plain item effect is null");
 
-		ContextlessEvent event = ContextlessEvent.get();
+		ContextlessVirtualFrame event = ContextlessVirtualFrame.get();
 		Variables.setVariable("item", itemType, event, true);
 
 		EasyMock.expect(itemType.getMaterial()).andReturn(Material.STONE).atLeastOnce();

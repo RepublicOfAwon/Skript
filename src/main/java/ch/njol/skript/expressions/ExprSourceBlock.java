@@ -13,8 +13,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
-import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +43,7 @@ public class ExprSourceBlock extends SimpleExpression<Block> {
 	}
 
 	@Override
-	protected Block[] get(Event event) {
+	protected Block[] execute(VirtualFrame event) {
 		if (!(event instanceof BlockSpreadEvent))
 			return new Block[0];
 		return new Block[]{((BlockSpreadEvent) event).getSource()};
@@ -60,7 +60,7 @@ public class ExprSourceBlock extends SimpleExpression<Block> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the source block";
 	}
 

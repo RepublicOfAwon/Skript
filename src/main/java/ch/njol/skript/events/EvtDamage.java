@@ -1,9 +1,9 @@
 package ch.njol.skript.events;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.Nullable;
@@ -39,7 +39,7 @@ public class EvtDamage extends SkriptEvent {
 	}
 	
 	@Override
-	public boolean check(Event evt) {
+	public boolean check(VirtualFrame evt) {
 		EntityDamageEvent e = (EntityDamageEvent) evt;
 		if (evt instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) evt;
@@ -78,7 +78,7 @@ public class EvtDamage extends SkriptEvent {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "damage" + (ofTypes != null ? " of " + ofTypes.toString(e, debug) : "") +
 			(byTypes != null ? " by " + byTypes.toString(e, debug) : "");
 	}

@@ -7,7 +7,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 public class ExprTestLoopPeeking extends SimpleExpression<Integer> {
@@ -27,7 +27,7 @@ public class ExprTestLoopPeeking extends SimpleExpression<Integer> {
 	}
 
 	@Override
-	protected Integer[] get(Event event) {
+	protected Integer[] execute(VirtualFrame event) {
 		return new Integer[]{1, 2, 3, 4, 5};
 	}
 
@@ -47,7 +47,7 @@ public class ExprTestLoopPeeking extends SimpleExpression<Integer> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "test loop peeking";
 	}
 

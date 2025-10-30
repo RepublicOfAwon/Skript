@@ -11,11 +11,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import io.papermc.paper.entity.LookAnchor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Look At")
@@ -82,23 +82,23 @@ public class EffLook extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		Object object = target.getSingle(event);
+	protected void executeVoid(VirtualFrame event) {
+		Object object = target.executeSingle(event);
 		if (object == null)
 			return;
 
-		Float speed = this.speed == null ? null : this.speed.getOptionalSingle(event).map(Number::floatValue).orElse(null);
-		Float maxPitch = this.maxPitch == null ? null : this.maxPitch.getOptionalSingle(event).map(Number::floatValue).orElse(null);
+		Float speed = this.speed == null ? null : this.speed.executeOptional(event).map(Number::floatValue).orElse(null);
+		Float maxPitch = this.maxPitch == null ? null : this.maxPitch.executeOptional(event).map(Number::floatValue).orElse(null);
 
 		if (LOOK_ANCHORS) {
-			PaperEntityUtils.lookAt(anchor, object, speed, maxPitch, entities.getArray(event));
+			PaperEntityUtils.lookAt(anchor, object, speed, maxPitch, entities.executeArray(event));
 		} else {
-			PaperEntityUtils.lookAt(object, speed, maxPitch, entities.getArray(event));
+			PaperEntityUtils.lookAt(object, speed, maxPitch, entities.executeArray(event));
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "force " + entities.toString(event, debug) + " to look at " + target.toString(event, debug);
 	}
 

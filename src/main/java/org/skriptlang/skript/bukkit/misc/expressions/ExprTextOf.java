@@ -1,7 +1,7 @@
 package org.skriptlang.skript.bukkit.misc.expressions;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.TextDisplay;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.ServerPlatform;
@@ -59,9 +59,9 @@ public class ExprTextOf extends SimplePropertyExpression<Object, String> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		String value = delta == null ? null : (String) delta[0];
-		for (Object object : getExpr().getArray(event)) {
+		for (Object object : getExpr().executeArray(event)) {
 			if (!(object instanceof TextDisplay textDisplay))
 				continue;
 			if (IS_RUNNING_PAPER && serializer != null && value != null) {

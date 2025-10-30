@@ -9,7 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,9 +41,9 @@ public class ExprBookAuthor extends SimplePropertyExpression<ItemType, String> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		String author = delta == null ? null : (String) delta[0];
-		for (ItemType item : getExpr().getArray(event)) {
+		for (ItemType item : getExpr().executeArray(event)) {
 			if (item.getItemMeta() instanceof BookMeta bookMeta) {
 				bookMeta.setAuthor(author);
 				item.setItemMeta(bookMeta);

@@ -10,7 +10,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 
 import javax.annotation.Nullable;
 
@@ -32,7 +32,7 @@ public class ExprParseLogs extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected String[] get(Event event) {
+	protected String[] execute(VirtualFrame event) {
 		return lastLogs;
 	}
 
@@ -47,7 +47,7 @@ public class ExprParseLogs extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@org.jetbrains.annotations.Nullable VirtualFrame event, boolean debug) {
 		return "last parse logs";
 	}
 

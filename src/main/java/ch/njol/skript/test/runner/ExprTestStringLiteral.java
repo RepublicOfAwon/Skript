@@ -8,7 +8,7 @@ import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Test String Literal")
@@ -31,8 +31,8 @@ public class ExprTestStringLiteral extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected @Nullable String[] get(Event event) {
-		return literal.getArray(event);
+	protected @Nullable String[] execute(VirtualFrame event) {
+		return literal.executeArray(event);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class ExprTestStringLiteral extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "test string literal " + literal.toString(event, debug);
 	}
 

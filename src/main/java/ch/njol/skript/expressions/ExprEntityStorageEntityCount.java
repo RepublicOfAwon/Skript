@@ -11,10 +11,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Beehive;
 import org.bukkit.block.Block;
 import org.bukkit.block.EntityBlockStorage;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -65,7 +65,7 @@ public class ExprEntityStorageEntityCount extends SimplePropertyExpression<Block
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		int value = delta != null ? (int) delta[0] : 0;
 		Consumer<EntityBlockStorage<?>> consumer = switch (mode) {
 			case SET, DELETE -> blockStorage -> blockStorage.setMaxEntities(value);
@@ -87,7 +87,7 @@ public class ExprEntityStorageEntityCount extends SimplePropertyExpression<Block
 			default -> throw new IllegalStateException("Unexpected value: " + mode);
 		};
 
-		for (Block block : getExpr().getArray(event)) {
+		for (Block block : getExpr().executeArray(event)) {
 			if (!(block.getState() instanceof EntityBlockStorage<?> blockStorage))
 				continue;
 			consumer.accept(blockStorage);

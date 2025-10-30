@@ -7,11 +7,11 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.entity.ZombieVillager;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Villager Profession")
@@ -47,10 +47,10 @@ public class ExprVillagerProfession extends SimplePropertyExpression<LivingEntit
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		Profession profession = delta != null && delta[0] instanceof Profession pro ? pro : Profession.NONE;
 
-		for (LivingEntity livingEntity : getExpr().getArray(event)) {
+		for (LivingEntity livingEntity : getExpr().executeArray(event)) {
 			if (livingEntity instanceof Villager villager)
 				villager.setProfession(profession);
 			else if (livingEntity instanceof ZombieVillager zombie)

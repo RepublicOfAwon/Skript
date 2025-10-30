@@ -12,8 +12,8 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.ScriptWarning;
 
@@ -51,11 +51,11 @@ public class ExprNoDamageTicks extends SimplePropertyExpression<LivingEntity, Lo
 	}
 	
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		int providedTicks = 0;
 		if (delta != null && delta[0] instanceof Number number)
 			providedTicks = number.intValue();
-		for (LivingEntity entity : getExpr().getArray(event)) {
+		for (LivingEntity entity : getExpr().executeArray(event)) {
 			switch (mode) {
 				case SET, DELETE, RESET -> entity.setNoDamageTicks(providedTicks);
 				case ADD -> {

@@ -10,9 +10,9 @@ import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SectionUtils;
 import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.variables.Variables;
 import ch.njol.skript.doc.Example;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.WorldBorder;
 import org.bukkit.event.Event;
@@ -64,12 +64,15 @@ public class ExprSecCreateWorldBorder extends SectionExpression<WorldBorder> {
 	}
 
 	@Override
-	protected WorldBorder @Nullable [] get(Event event) {
+	protected WorldBorder @Nullable [] execute(VirtualFrame frame) {
 		WorldBorder worldBorder = Bukkit.createWorldBorder();
 		if (trigger == null) 
 			return new WorldBorder[] {worldBorder};
 		CreateWorldborderEvent worldborderEvent = new CreateWorldborderEvent(worldBorder);
-		Variables.withLocalVariables(event, worldborderEvent, () -> TriggerItem.walk(trigger, worldborderEvent));
+		Event previousEvent = (Event) frame.getArguments()[0];
+		frame.getArguments()[0] = worldborderEvent;
+		trigger.execute(frame);
+		frame.getArguments()[0] = previousEvent;
 		return new WorldBorder[] {worldborderEvent.getWorldBorder()};
 	}
 
@@ -84,7 +87,7 @@ public class ExprSecCreateWorldBorder extends SectionExpression<WorldBorder> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "a virtual worldborder";
 	}
 

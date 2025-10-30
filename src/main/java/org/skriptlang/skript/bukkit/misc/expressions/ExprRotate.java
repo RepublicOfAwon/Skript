@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -94,11 +94,11 @@ public class ExprRotate extends SimpleExpression<Object> {
 
 	@Override
 	@Nullable
-	protected Object[] get(Event event) {
+	protected Object[] execute(VirtualFrame event) {
 		if (matchedPattern == 3) {
-			Number x = this.x.getSingle(event);
-			Number y = this.y.getSingle(event);
-			Number z = this.z.getSingle(event);
+			Number x = this.x.executeSingle(event);
+			Number y = this.y.executeSingle(event);
+			Number z = this.z.executeSingle(event);
 			if (x == null || y == null || z == null)
 				return new Quaternionf[0];
 
@@ -113,7 +113,7 @@ public class ExprRotate extends SimpleExpression<Object> {
 		}
 
 		// rotate around axis
-		Number angle = this.angle.getSingle(event);
+		Number angle = this.angle.executeSingle(event);
 		if (angle == null)
 			return new Object[0];
 		double radAngle = (angle.doubleValue() * Math.PI / 180);
@@ -125,7 +125,7 @@ public class ExprRotate extends SimpleExpression<Object> {
 
 		if (axis == Axis.ARBITRARY) {
 			// rotate around arbitrary axis
-			Vector axis = vector.getSingle(event);
+			Vector axis = vector.executeSingle(event);
 			if (axis == null || axis.isZero())
 				return new Object[0];
 			axis.normalize();
@@ -187,7 +187,7 @@ public class ExprRotate extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return switch (matchedPattern) {
 			case 0, 1 -> toRotate.toString(event, debug) +
 				" rotated around the " + axis + "-axis " +

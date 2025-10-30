@@ -3,9 +3,9 @@ package ch.njol.skript.expressions;
 import java.util.UUID;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -60,10 +60,10 @@ public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
 
 	@Override
 	@Nullable
-	protected Object[] get(Event e) {
-		if (!(e instanceof ScriptCommandEvent))
+	protected Object[] execute(VirtualFrame frame) {
+		if (!(frame instanceof ScriptCommandEvent))
 			return null;
-		ScriptCommandEvent event = ((ScriptCommandEvent) e);
+		ScriptCommandEvent event = (ScriptCommandEvent) frame.getArguments()[0];
 		ScriptCommand scriptCommand = event.getScriptCommand();
 		
 		CommandSender sender = event.getSender();
@@ -76,13 +76,13 @@ public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
 			case 0:
 			case 1:
 				long ms = pattern != 1
-						? scriptCommand.getRemainingMilliseconds(uuid, event)
-						: scriptCommand.getElapsedMilliseconds(uuid, event);
+						? scriptCommand.getRemainingMilliseconds(uuid, frame)
+						: scriptCommand.getElapsedMilliseconds(uuid, frame);
 				return new Timespan[] { new Timespan(ms) };
 			case 2:
 				return new Timespan[] { scriptCommand.getCooldown() };
 			case 3:
-				return new Date[] { scriptCommand.getLastUsage(uuid, event) };
+				return new Date[] { scriptCommand.getLastUsage(uuid, frame) };
 			case 4:
 				return new String[] { scriptCommand.getCooldownBypass() };
 		}
@@ -112,10 +112,10 @@ public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
-		if (!(e instanceof ScriptCommandEvent))
+	public void change(VirtualFrame frame, @Nullable Object[] delta, Changer.ChangeMode mode) {
+		if (!(frame instanceof ScriptCommandEvent))
 			return;
-		ScriptCommandEvent commandEvent = (ScriptCommandEvent) e;
+		ScriptCommandEvent commandEvent = (ScriptCommandEvent) frame.getArguments()[0];
 		ScriptCommand command = commandEvent.getScriptCommand();
 		Timespan cooldown = command.getCooldown();
 		CommandSender sender = commandEvent.getSender();
@@ -131,41 +131,41 @@ public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
 				case REMOVE:
 					long change = (mode == Changer.ChangeMode.ADD ? 1 : -1) * timespan.getAs(Timespan.TimePeriod.MILLISECOND);
 					if (pattern == 0) {
-						long remaining = command.getRemainingMilliseconds(uuid, commandEvent);
+						long remaining = command.getRemainingMilliseconds(uuid, frame);
 						long changed = remaining + change;
 						if (changed < 0)
 							changed = 0;
-						command.setRemainingMilliseconds(uuid, commandEvent, changed);
+						command.setRemainingMilliseconds(uuid, frame, changed);
 					} else {
-						long elapsed = command.getElapsedMilliseconds(uuid, commandEvent);
+						long elapsed = command.getElapsedMilliseconds(uuid, frame);
 						long changed = elapsed + change;
 						if (changed > cooldownMs)
 							changed = cooldownMs;
-						command.setElapsedMilliSeconds(uuid, commandEvent, changed);
+						command.setElapsedMilliSeconds(uuid, frame, changed);
 					}
 					break;
 				case RESET:
 					if (pattern == 0)
-						command.setRemainingMilliseconds(uuid, commandEvent, cooldownMs);
+						command.setRemainingMilliseconds(uuid, frame, cooldownMs);
 					else
-						command.setElapsedMilliSeconds(uuid, commandEvent, 0);
+						command.setElapsedMilliSeconds(uuid, frame, 0);
 					break;
 				case SET:
 					if (pattern == 0)
-						command.setRemainingMilliseconds(uuid, commandEvent, timespan.getAs(Timespan.TimePeriod.MILLISECOND));
+						command.setRemainingMilliseconds(uuid, frame, timespan.getAs(Timespan.TimePeriod.MILLISECOND));
 					else
-						command.setElapsedMilliSeconds(uuid, commandEvent, timespan.getAs(Timespan.TimePeriod.MILLISECOND));
+						command.setElapsedMilliSeconds(uuid, frame, timespan.getAs(Timespan.TimePeriod.MILLISECOND));
 					break;
 			}
 		} else if (pattern == 3) {
 			switch (mode) {
 				case REMOVE_ALL:
 				case RESET:
-					command.setLastUsage(uuid, commandEvent, null);
+					command.setLastUsage(uuid, frame, null);
 					break;
 				case SET:
 					Date date = delta == null ? null : (Date) delta[0];
-					command.setLastUsage(uuid, commandEvent, date);
+					command.setLastUsage(uuid, frame, date);
 					break;
 			}
 		}
@@ -184,7 +184,7 @@ public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the " + getExpressionName() + " of the cooldown";
 	}
 

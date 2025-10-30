@@ -1,9 +1,9 @@
 package ch.njol.skript.events;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.event.Event;
 import org.bukkit.event.block.*;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingEvent;
@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.comparator.Relation;
 import ch.njol.skript.classes.data.DefaultComparators;
 import ch.njol.skript.entity.EntityData;
@@ -92,7 +91,7 @@ public class EvtBlock extends SkriptEvent {
 	
 	@SuppressWarnings("null")
 	@Override
-	public boolean check(final Event event) {
+	public boolean check(final VirtualFrame event) {
 		if (mine && event instanceof BlockBreakEvent) {
 			if (((BlockBreakEvent) event).getBlock().getDrops(((BlockBreakEvent) event).getPlayer().getItemInHand()).isEmpty())
 				return false;
@@ -146,7 +145,7 @@ public class EvtBlock extends SkriptEvent {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "break/place/burn/fade/form/drop of " + Classes.toString(types);
 	}
 	

@@ -10,7 +10,7 @@ import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Date;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 
@@ -72,12 +72,12 @@ public class ExprFormatDate extends PropertyExpression<Date, String> {
 	}
 
 	@Override
-	protected String[] get(Event e, Date[] source) {
+	protected String[] get(VirtualFrame e, Date[] source) {
 		SimpleDateFormat format;
 		String formatString;
 
 		if (customFormat != null && this.format == null) { // customFormat is not Literal or VariableString
-			formatString = customFormat.getSingle(e);
+			formatString = customFormat.executeSingle(e);
 			if (formatString == null)
 				return null;
 
@@ -106,7 +106,7 @@ public class ExprFormatDate extends PropertyExpression<Date, String> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return getExpr().toString(e, debug) + " formatted as " + (customFormat != null ? customFormat.toString(e, debug)
 			: (format != null ? format.toPattern() : DEFAULT_FORMAT.toPattern()));
 	}

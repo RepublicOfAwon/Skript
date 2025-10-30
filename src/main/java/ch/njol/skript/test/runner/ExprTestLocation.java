@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Test Location")
@@ -38,7 +38,7 @@ public class ExprTestLocation extends SimpleExpression<Location> {
 	}
 
 	@Override
-	protected Location @Nullable [] get(Event event) {
+	protected Location @Nullable [] execute(VirtualFrame event) {
 		return new Location[]{SkriptJUnitTest.getTestLocation()};
 	}
 
@@ -53,7 +53,7 @@ public class ExprTestLocation extends SimpleExpression<Location> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the test location";
 	}
 

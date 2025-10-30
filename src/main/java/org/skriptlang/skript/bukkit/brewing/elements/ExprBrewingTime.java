@@ -17,6 +17,7 @@ import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.event.Event;
@@ -64,8 +65,9 @@ public class ExprBrewingTime extends PropertyExpression<Block, Timespan> {
 	}
 
 	@Override
-	protected Timespan[] get(Event event, Block[] source) {
-		List<Block> blocks = new ArrayList<>(getExpr().stream(event).toList());
+	protected Timespan[] get(VirtualFrame frame, Block[] source) {
+		Event event = (Event) frame.getArguments()[0];
+		List<Block> blocks = new ArrayList<>(getExpr().stream(frame).toList());
 
 		List<Timespan> timespans = new ArrayList<>();
 		if (isEvent && event instanceof BrewingStartEvent brewingStartEvent) {
@@ -102,7 +104,7 @@ public class ExprBrewingTime extends PropertyExpression<Block, Timespan> {
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 		int providedValue = delta != null ? (int) ((Timespan) delta[0]).getAs(TimePeriod.TICK) : 0;
 		List<Block> blocks = new ArrayList<>(getExpr().stream(event).toList());
 
@@ -143,7 +145,7 @@ public class ExprBrewingTime extends PropertyExpression<Block, Timespan> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
 			.append("the current brewing time of", getExpr())
 			.toString();

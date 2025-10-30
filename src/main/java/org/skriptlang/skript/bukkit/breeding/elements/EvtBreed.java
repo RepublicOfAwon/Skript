@@ -5,8 +5,8 @@ import ch.njol.skript.entity.EntityType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +38,7 @@ public class EvtBreed extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		return event instanceof EntityBreedEvent breedEvent && checkEntity(breedEvent.getEntity());
 	}
 
@@ -54,7 +54,7 @@ public class EvtBreed extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "on breeding" + (entitiesLiteral == null ? "" : " of " + entitiesLiteral);
 	}
 	

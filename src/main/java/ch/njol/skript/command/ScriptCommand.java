@@ -29,6 +29,9 @@ import ch.njol.skript.variables.HintManager;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.StringUtils;
 import com.google.common.base.Preconditions;
+import com.oracle.truffle.api.Truffle;
+import com.oracle.truffle.api.frame.FrameDescriptor;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -272,8 +275,9 @@ public class ScriptCommand implements TabExecutor {
 		}
 
 		final ScriptCommandEvent event = new ScriptCommandEvent(ScriptCommand.this, sender, commandLabel, rest);
+		final VirtualFrame frame = Truffle.getRuntime().createVirtualFrame(new Object[] {event}, new FrameDescriptor());
 
-		if (!checkPermissions(sender, event))
+		if (!checkPermissions(sender, frame))
 			return false;
 
 		cooldownCheck : {
@@ -283,16 +287,16 @@ public class ScriptCommand implements TabExecutor {
 
 				// Cooldown bypass
 				if (!cooldownBypass.isEmpty() && player.hasPermission(cooldownBypass)) {
-					setLastUsage(uuid, event, null);
+					setLastUsage(uuid, frame, null);
 					break cooldownCheck;
 				}
 
-				if (getLastUsage(uuid, event) != null) {
-					if (getRemainingMilliseconds(uuid, event) <= 0) {
+				if (getLastUsage(uuid, frame) != null) {
+					if (getRemainingMilliseconds(uuid, frame) <= 0) {
 						if (!SkriptConfig.keepLastUsageDates.value())
-							setLastUsage(uuid, event, null);
+							setLastUsage(uuid, frame, null);
 					} else {
-						String msg = cooldownMessage.getSingle(event);
+						String msg = cooldownMessage.executeSingle(frame);
 						if (msg != null)
 							sender.sendMessage(msg);
 						return false;
@@ -305,17 +309,17 @@ public class ScriptCommand implements TabExecutor {
 			// save previous last usage date to check if the execution has set the last usage date
 			Date previousLastUsage = null;
 			if (sender instanceof Player)
-				previousLastUsage = getLastUsage(((Player) sender).getUniqueId(), event);
+				previousLastUsage = getLastUsage(((Player) sender).getUniqueId(), frame);
 
 			// execute the command - may modify the last usage date
-			execute2(event, sender, commandLabel, rest);
+			execute2(frame, sender, commandLabel, rest);
 
 			if (sender instanceof Player && !event.isCooldownCancelled()) {
-				Date lastUsage = getLastUsage(((Player) sender).getUniqueId(), event);
+				Date lastUsage = getLastUsage(((Player) sender).getUniqueId(), frame);
 				// check if the execution has set the last usage date
 				// if not, set it to the current date. if it has, we leave it alone so as not to affect the remaining/elapsed time (#5862)
 				if (Objects.equals(lastUsage, previousLastUsage))
-					setLastUsage(((Player) sender).getUniqueId(), event, new Date());
+					setLastUsage(((Player) sender).getUniqueId(), frame, new Date());
 			}
 		};
 		if (Bukkit.isPrimaryThread()) {
@@ -328,7 +332,7 @@ public class ScriptCommand implements TabExecutor {
 		return true; // Skript prints its own error message anyway
 	}
 
-	boolean execute2(final ScriptCommandEvent event, final CommandSender sender, final String commandLabel, final String rest) {
+	boolean execute2(final VirtualFrame event, final CommandSender sender, final String commandLabel, final String rest) {
 		final ParseLogHandler log = SkriptLogger.startParseLogHandler();
 		try {
 			final boolean ok = SkriptParser.parseArguments(rest, ScriptCommand.this, event);
@@ -349,7 +353,7 @@ public class ScriptCommand implements TabExecutor {
 			Skript.info("# /" + name + " " + rest);
 		final long startTrigger = System.nanoTime();
 
-		if (!trigger.execute(event))
+		if (!trigger.execute((Event) event.getArguments()[0]))
 			sender.sendMessage(Commands.m_internal_error.toString());
 
 		if (Skript.log(Verbosity.VERY_HIGH))
@@ -358,17 +362,17 @@ public class ScriptCommand implements TabExecutor {
 	}
 
 	public boolean checkPermissions(CommandSender sender, String commandLabel, String arguments) {
-		return checkPermissions(sender, new ScriptCommandEvent(this, sender, commandLabel, arguments));
+		return checkPermissions(sender, Truffle.getRuntime().createVirtualFrame(new Object[] {new ScriptCommandEvent(this, sender, commandLabel, arguments)}, new FrameDescriptor()));
 	}
 
-	public boolean checkPermissions(CommandSender sender, Event event) {
+	public boolean checkPermissions(CommandSender sender, VirtualFrame event) {
 		if (!permission.isEmpty() && !sender.hasPermission(permission)) {
 			if (sender instanceof Player) {
 				List<MessageComponent> components =
 					permissionMessage.getMessageComponents(event);
 				((Player) sender).spigot().sendMessage(BungeeConverter.convert(components));
 			} else {
-				sender.sendMessage(permissionMessage.getSingle(event));
+				sender.sendMessage(permissionMessage.executeSingle(event));
 			}
 			return false;
 		}
@@ -513,9 +517,9 @@ public class ScriptCommand implements TabExecutor {
 	}
 
 	@Nullable
-	private String getStorageVariableName(Event event) {
+	private String getStorageVariableName(VirtualFrame event) {
 		assert cooldownStorage != null;
-		String variableString = cooldownStorage.getSingle(event);
+		String variableString = cooldownStorage.executeSingle(event);
 		if (variableString == null)
 			return null;
 		if (variableString.startsWith("{"))
@@ -526,7 +530,7 @@ public class ScriptCommand implements TabExecutor {
 	}
 
 	@Nullable
-	public Date getLastUsage(UUID uuid, Event event) {
+	public Date getLastUsage(UUID uuid, VirtualFrame event) {
 		if (cooldownStorage == null) {
 			return lastUsageMap.get(uuid);
 		} else {
@@ -542,7 +546,7 @@ public class ScriptCommand implements TabExecutor {
 		}
 	}
 
-	public void setLastUsage(UUID uuid, Event event, @Nullable Date date) {
+	public void setLastUsage(UUID uuid, VirtualFrame event, @Nullable Date date) {
 		if (cooldownStorage != null) {
 			// Using a variable
 			String name = getStorageVariableName(event);
@@ -557,7 +561,7 @@ public class ScriptCommand implements TabExecutor {
 		}
 	}
 
-	public long getRemainingMilliseconds(UUID uuid, Event event) {
+	public long getRemainingMilliseconds(UUID uuid, VirtualFrame event) {
 		Date lastUsage = getLastUsage(uuid, event);
 		if (lastUsage == null)
 			return 0;
@@ -569,7 +573,7 @@ public class ScriptCommand implements TabExecutor {
 		return remaining;
 	}
 
-	public void setRemainingMilliseconds(UUID uuid, Event event, long milliseconds) {
+	public void setRemainingMilliseconds(UUID uuid, VirtualFrame event, long milliseconds) {
 		Timespan cooldown = this.cooldown;
 		assert cooldown != null;
 		long cooldownMs = cooldown.getAs(Timespan.TimePeriod.MILLISECOND);
@@ -578,12 +582,12 @@ public class ScriptCommand implements TabExecutor {
 		setElapsedMilliSeconds(uuid, event, cooldownMs - milliseconds);
 	}
 
-	public long getElapsedMilliseconds(UUID uuid, Event event) {
+	public long getElapsedMilliseconds(UUID uuid, VirtualFrame event) {
 		Date lastUsage = getLastUsage(uuid, event);
 		return lastUsage == null ? 0 : Date.now().getTime() - lastUsage.getTime();
 	}
 
-	public void setElapsedMilliSeconds(UUID uuid, Event event, long milliseconds) {
+	public void setElapsedMilliSeconds(UUID uuid, VirtualFrame event, long milliseconds) {
 		Date date = Date.now();
 		date.subtract(new Timespan(milliseconds));
 		setLastUsage(uuid, event, date);

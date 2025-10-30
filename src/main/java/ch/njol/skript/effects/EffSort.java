@@ -9,6 +9,7 @@ import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -77,7 +78,7 @@ public class EffSort extends Effect implements InputSource {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		Object[] sorted;
 		int sortingMultiplier = descendingOrder ? -1 : 1;
 		if (mappingExpr == null) {
@@ -94,7 +95,7 @@ public class EffSort extends Effect implements InputSource {
 				KeyedValue<?> keyedValue = it.next();
 				currentIndex = keyedValue.key();
 				currentValue = keyedValue.value();
-				Object mappedValue = mappingExpr.getSingle(event);
+				Object mappedValue = mappingExpr.executeSingle(event);
 				if (mappedValue == null) {
 					error("Sorting failed because Skript cannot sort null values. "
 						+ "The mapping expression '" + mappingExpr.toString(event, false)
@@ -137,7 +138,7 @@ public class EffSort extends Effect implements InputSource {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "sort " + unsortedObjects.toString(event, debug)
 				+ " in " + (descendingOrder ? "descending" : "ascending") + " order"
 				+ (mappingExpr == null ? "" : " by " + mappingExpr.toString(event, debug));

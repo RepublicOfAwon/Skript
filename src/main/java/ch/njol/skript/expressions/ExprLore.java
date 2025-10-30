@@ -8,9 +8,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
@@ -69,9 +69,9 @@ public class ExprLore extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String[] get(final Event e) {
-		final Object i = item.getSingle(e);
-		final Number n = lineNumber != null ? lineNumber.getSingle(e) : null;
+	protected String[] execute(final VirtualFrame e) {
+		final Object i = item.executeSingle(e);
+		final Number n = lineNumber != null ? lineNumber.executeSingle(e) : null;
 		if (n == null && lineNumber != null)
 			return null;
 		if (i == null || i instanceof ItemStack && ((ItemStack) i).getType() == Material.AIR)
@@ -111,8 +111,8 @@ public class ExprLore extends SimpleExpression<String> {
 	}
 
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
-		Object i = item.getSingle(e);
+	public void change(final VirtualFrame e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
+		Object i = item.executeSingle(e);
 
 		String[] stringDelta = delta == null ? null : Arrays.copyOf(delta, delta.length, String[].class);
 
@@ -124,7 +124,7 @@ public class ExprLore extends SimpleExpression<String> {
 		if (meta == null)
 			meta = Bukkit.getItemFactory().getItemMeta(Material.STONE);
 
-		Number lineNumber = this.lineNumber != null ? this.lineNumber.getSingle(e) : null;
+		Number lineNumber = this.lineNumber != null ? this.lineNumber.executeSingle(e) : null;
 		List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
 
 		if (lineNumber == null) {
@@ -245,7 +245,7 @@ public class ExprLore extends SimpleExpression<String> {
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
 		return (lineNumber != null ? "the line " + lineNumber.toString(e, debug) + " of " : "") + "the lore of " + item.toString(e, debug);
 	}
 }

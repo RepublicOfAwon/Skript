@@ -2,7 +2,7 @@ package ch.njol.skript.expressions;
 
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.registrations.EventValues;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -58,7 +58,7 @@ public class ExprTimeState extends WrapperExpression<Object> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the " + (getTime() == EventValues.TIME_PAST ? "past" : "future") + " state of " + getExpr().toString(event, debug);
 	}
 

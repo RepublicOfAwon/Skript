@@ -15,9 +15,9 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.slot.EquipmentSlot;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.EntityEquipment;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,7 +95,7 @@ public class ExprArmorSlot extends PropertyExpression<LivingEntity, Slot> {
 	}
 
 	@Override
-	protected Slot @Nullable [] get(Event event, LivingEntity[] source) {
+	protected Slot @Nullable [] get(VirtualFrame event, LivingEntity[] source) {
 		if (slots == null) {
 			return Arrays.stream(source)
 				.map(LivingEntity::getEquipment)
@@ -113,7 +113,7 @@ public class ExprArmorSlot extends PropertyExpression<LivingEntity, Slot> {
 					);
 				}).toArray(Slot[]::new);
 		}
-		org.bukkit.inventory.EquipmentSlot[] equipmentSlots = this.slots.getArray(event);
+		org.bukkit.inventory.EquipmentSlot[] equipmentSlots = this.slots.executeArray(event);
 		if (equipmentSlots.length == 0)
 			return new EquipmentSlot[0];
 		List<EquipmentSlot> slots = new ArrayList<>();
@@ -161,7 +161,7 @@ public class ExprArmorSlot extends PropertyExpression<LivingEntity, Slot> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		builder.append("the");
 		if (slots != null) {

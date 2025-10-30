@@ -3,10 +3,10 @@ package ch.njol.skript.expressions;
 import java.util.Iterator;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -94,9 +94,9 @@ public class ExprBlocks extends SimpleExpression<Block> {
 
 	@Override
 	@Nullable
-	protected Block[] get(Event event) {
+	protected Block[] execute(VirtualFrame event) {
 		if (this.direction != null && !from.isSingle()) {
-			Direction direction = this.direction.getSingle(event);
+			Direction direction = this.direction.executeSingle(event);
 			if (direction == null)
 				return new Block[0];
 			return from.stream(event)
@@ -119,22 +119,22 @@ public class ExprBlocks extends SimpleExpression<Block> {
 
 	@Override
 	@Nullable
-	public Iterator<Block> iterator(Event event) {
+	public Iterator<Block> iterator(VirtualFrame event) {
 		try {
 			if (chunk != null) {
-				Chunk chunk = this.chunk.getSingle(event);
+				Chunk chunk = this.chunk.executeSingle(event);
 				if (chunk != null)
 					return new AABB(chunk).iterator();
 			} else if (direction != null) {
 				if (!from.isSingle())
-					return new ArrayIterator<>(get(event));
-				Object object = from.getSingle(event);
+					return new ArrayIterator<>(execute(event));
+				Object object = from.executeSingle(event);
 				if (object == null)
 					return null;
 				Location location = object instanceof Location
 					? (Location) object
 					: ((Block) object).getLocation().add(0.5, 0.5, 0.5);
-				Direction direction = this.direction.getSingle(event);
+				Direction direction = this.direction.executeSingle(event);
 				if (direction == null || location.getWorld() == null)
 					return null;
 				Vector vector = object != location
@@ -148,18 +148,18 @@ public class ExprBlocks extends SimpleExpression<Block> {
 				if (this.direction instanceof ExprDirection) {
 					Expression<Number> numberExpression = ((ExprDirection) this.direction).amount;
 					if (numberExpression != null) {
-						Number number = numberExpression.getSingle(event);
+						Number number = numberExpression.executeSingle(event);
 						if (number != null)
 							distance = number.intValue();
 					}
 				}
 				return new BlockLineIterator(location, vector, distance);
 			} else {
-				Location loc = (Location) from.getSingle(event);
+				Location loc = (Location) from.executeSingle(event);
 				if (loc == null)
 					return null;
 				assert end != null;
-				Location loc2 = end.getSingle(event);
+				Location loc2 = end.executeSingle(event);
 				if (loc2 == null || loc2.getWorld() != loc.getWorld())
 					return null;
 				if (pattern == 4)
@@ -185,7 +185,7 @@ public class ExprBlocks extends SimpleExpression<Block> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (chunk != null) {
 			return "blocks within chunk " + chunk.toString(event, debug);
 		} else if (pattern == 4) {

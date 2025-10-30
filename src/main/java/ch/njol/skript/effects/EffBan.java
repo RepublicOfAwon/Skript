@@ -12,11 +12,11 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.InetSocketAddress;
@@ -73,12 +73,12 @@ public class EffBan extends Effect {
 
 	@SuppressWarnings("null")
 	@Override
-	protected void execute(final Event e) {
-		final String reason = this.reason != null ? this.reason.getSingle(e) : null; // don't check for null, just ignore an invalid reason
-		Timespan ts = this.expires != null ? this.expires.getSingle(e) : null;
+	protected void executeVoid(final VirtualFrame e) {
+		final String reason = this.reason != null ? this.reason.executeSingle(e) : null; // don't check for null, just ignore an invalid reason
+		Timespan ts = this.expires != null ? this.expires.executeSingle(e) : null;
 		final Date expires = ts != null ? new Date(System.currentTimeMillis() + ts.getAs(Timespan.TimePeriod.MILLISECOND)) : null;
 		final String source = "Skript ban effect";
-		for (final Object o : players.getArray(e)) {
+		for (final Object o : players.executeArray(e)) {
 			if (o instanceof Player) {
 				Player player = (Player) o;
 				if (ipBan) {
@@ -122,7 +122,7 @@ public class EffBan extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 
 		if (ipBan)

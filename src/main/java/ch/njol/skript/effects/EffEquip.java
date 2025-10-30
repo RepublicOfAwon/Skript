@@ -12,6 +12,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.entity.AbstractHorse;
@@ -23,7 +24,6 @@ import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Steerable;
 import org.bukkit.entity.Wolf;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
@@ -153,16 +153,16 @@ public class EffEquip extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		ItemType[] itemTypes;
 		boolean unequipHelmet = false;
 		if (this.itemTypes != null) {
-			itemTypes = this.itemTypes.getArray(event);
+			itemTypes = this.itemTypes.executeArray(event);
 		} else {
 			itemTypes = ALL_EQUIPMENT;
 			unequipHelmet = true;
 		}
-		for (LivingEntity entity : entities.getArray(event)) {
+		for (LivingEntity entity : entities.executeArray(event)) {
 			if (entity instanceof Steerable steerable) {
 				for (ItemType itemType : itemTypes) {
 					if (SADDLE.isOfType(itemType.getMaterial())) {
@@ -237,7 +237,7 @@ public class EffEquip extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (equip) {
 			assert itemTypes != null;
 			return "equip " + entities.toString(event, debug) + " with " + itemTypes.toString(event, debug);

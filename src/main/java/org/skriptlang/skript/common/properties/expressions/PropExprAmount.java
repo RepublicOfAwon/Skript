@@ -8,7 +8,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,10 +69,10 @@ public class PropExprAmount extends PropertyBaseExpression<ExpressionPropertyHan
 	}
 
 	@Override
-	protected Object @Nullable [] get(Event event) {
+	protected Object @Nullable [] execute(VirtualFrame event) {
 		if (useProperties)
-			return super.get(event);
-		return new Long[]{(long) exprs.getArray(event).length};
+			return super.execute(event);
+		return new Long[]{(long) exprs.executeArray(event).length};
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class PropExprAmount extends PropertyBaseExpression<ExpressionPropertyHan
 	}
 
 	@Override
-	public String toString(Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (useProperties)
 			return super.toString(event, debug);
 		return "amount of " + this.exprs.toString(event, debug);

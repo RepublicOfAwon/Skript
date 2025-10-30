@@ -12,10 +12,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
@@ -48,8 +48,8 @@ public class EffGlowingText extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (Object obj : objects.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (Object obj : objects.executeArray(event)) {
 			if (obj instanceof Block) {
 				BlockState state = ((Block) obj).getState();
 				if (state instanceof Sign) {
@@ -74,7 +74,7 @@ public class EffGlowingText extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "make " + objects.toString(event, debug) + " have " + (glowing ? "glowing text" : "normal text");
 	}
 

@@ -20,9 +20,9 @@ import ch.njol.skript.util.Patterns;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Damageable;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -100,10 +100,10 @@ public class EffHealth extends Effect implements SyntaxRuntimeErrorProducer {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		Double amount = null;
 		if (this.amount != null) {
-			Number amountPostCheck = this.amount.getSingle(event);
+			Number amountPostCheck = this.amount.executeSingle(event);
 			if (amountPostCheck == null)
 				return;
 			amount = amountPostCheck.doubleValue();
@@ -111,12 +111,12 @@ public class EffHealth extends Effect implements SyntaxRuntimeErrorProducer {
 
 		Object damageData = null;
 		if (damageCause != null) {
-			damageData = damageCause.getSingle(event);
+			damageData = damageCause.executeSingle(event);
 		} else if (damageSource != null) {
-			damageData = damageSource.getSingle(event);
+			damageData = damageSource.executeSingle(event);
 		}
 
-		for (Object obj : this.damageables.getArray(event)) {
+		for (Object obj : this.damageables.executeArray(event)) {
 			if (obj instanceof ItemType itemType) {
 				handleItem(itemType.getRandom(), amount, integer -> ItemUtils.setDamage(itemType, integer));
 			} else if (obj instanceof Slot slot) {
@@ -174,7 +174,7 @@ public class EffHealth extends Effect implements SyntaxRuntimeErrorProducer {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 		switch (effectType) {
 			case DAMAGE -> {

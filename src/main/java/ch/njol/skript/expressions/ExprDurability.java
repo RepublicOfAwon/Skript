@@ -14,7 +14,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,11 +65,11 @@ public class ExprDurability extends SimplePropertyExpression<Object, Integer> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		int change = delta == null ? 0 : ((Number) delta[0]).intValue();
 		if (mode == ChangeMode.REMOVE)
 			change = -change;
-		for (Object object : getExpr().getArray(event)) {
+		for (Object object : getExpr().executeArray(event)) {
 			ItemStack itemStack = ItemUtils.asItemStack(object);
 			if (itemStack == null)
 				continue;

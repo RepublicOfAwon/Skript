@@ -10,9 +10,9 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Container;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.meta.BlockStateMeta;
@@ -63,9 +63,9 @@ public class ExprInventory extends SimpleExpression<Object> {
 	}
 
 	@Override
-	protected Object[] get(Event e) {
+	protected Object[] execute(VirtualFrame e) {
 		List<Inventory> inventories = new ArrayList<>();
-		for (Object holder : holders.getArray(e)) {
+		for (Object holder : holders.executeArray(e)) {
 			if (holder instanceof InventoryHolder) {
 				inventories.add(((InventoryHolder) holder).getInventory());
 			} else if (holder instanceof ItemType) {
@@ -104,7 +104,7 @@ public class ExprInventory extends SimpleExpression<Object> {
 			expr.init(new Expression[] {
 					new SimpleExpression() {
 						@Override
-						protected Object[] get(Event e) {
+						protected Object[] execute(VirtualFrame e) {
 							return invArray;
 						}
 
@@ -119,7 +119,7 @@ public class ExprInventory extends SimpleExpression<Object> {
 						}
 
 						@Override
-						public String toString(@Nullable Event e, boolean debug) {
+						public String toString(@Nullable VirtualFrame e, boolean debug) {
 							return "loop of inventory expression";
 						}
 
@@ -129,7 +129,7 @@ public class ExprInventory extends SimpleExpression<Object> {
 						}
 					}
 			}, 0, Kleenean.FALSE, null);
-			return expr.get(e);
+			return expr.execute(e);
 		}
 		return invArray;
 	}
@@ -145,7 +145,7 @@ public class ExprInventory extends SimpleExpression<Object> {
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "inventor" + (holders.isSingle() ? "y" : "ies") + " of " + holders.toString(e, debug);
 	}
 	

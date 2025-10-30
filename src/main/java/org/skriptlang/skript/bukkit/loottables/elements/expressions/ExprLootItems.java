@@ -12,8 +12,8 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
@@ -59,10 +59,10 @@ public class ExprLootItems extends SimpleExpression<ItemStack> {
 	}
 
 	@Override
-	protected ItemStack @Nullable [] get(Event event) {
+	protected ItemStack @Nullable [] execute(VirtualFrame event) {
 		LootContext context;
 		if (this.context != null) {
-			context = this.context.getSingle(event);
+			context = this.context.executeSingle(event);
 			if (context == null)
 				return new ItemStack[0];
 		} else {
@@ -72,7 +72,7 @@ public class ExprLootItems extends SimpleExpression<ItemStack> {
 		List<ItemStack> items = new ArrayList<>();
 
 		Random random = ThreadLocalRandom.current();
-		for (LootTable lootTable : lootTables.getArray(event)) {
+		for (LootTable lootTable : lootTables.executeArray(event)) {
 			try {
 				// todo: perhaps runtime error in the future
 				items.addAll(lootTable.populateLoot(random, context));
@@ -93,7 +93,7 @@ public class ExprLootItems extends SimpleExpression<ItemStack> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 
 		builder.append("the loot of", lootTables);

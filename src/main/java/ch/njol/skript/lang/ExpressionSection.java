@@ -5,6 +5,7 @@ import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.expressions.base.SectionExpression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +53,7 @@ public class ExpressionSection extends Section {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return expression.toString(event, debug);
 	}
 
@@ -70,8 +71,8 @@ public class ExpressionSection extends Section {
 		super.loadOptionalCode(sectionNode);
 	}
 
-	public Object runSection(Event event) {
-		super.walk(event);
+	public Object runSection(VirtualFrame frame) {
+		super.execute(frame);
 		return null;
 	}
 

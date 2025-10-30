@@ -10,10 +10,10 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Persistent")
@@ -62,8 +62,8 @@ public class EffPersistent extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (Object object : source.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (Object object : source.executeArray(event)) {
 			if (object instanceof Entity entity) {
 				entity.setPersistent(persist);
 			} else if (object instanceof Block block && block.getBlockData() instanceof Leaves leaves) {
@@ -74,7 +74,7 @@ public class EffPersistent extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (persist)
 			return "make " + source.toString(event, debug) + " persistent";
 		return "prevent " + source.toString(event, debug) + " from persisting";

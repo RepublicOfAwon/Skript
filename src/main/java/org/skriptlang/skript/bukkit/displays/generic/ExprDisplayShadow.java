@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Display;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Display Shadow Radius/Strength")
@@ -48,8 +48,8 @@ public class ExprDisplayShadow extends SimplePropertyExpression<Display, Float> 
 	}
 
 	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		Display[] displays = getExpr().getArray(event);
+	public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
+		Display[] displays = getExpr().executeArray(event);
 		float change = delta == null ? 0F : ((Number) delta[0]).floatValue();
 		if (Float.isInfinite(change) || Float.isNaN(change))
 			return;

@@ -12,8 +12,8 @@ import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SectionUtils;
 import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
@@ -111,16 +111,20 @@ public class ExprSecDamageSource extends SectionExpression<DamageSource> impleme
 	}
 
 	@Override
-	protected DamageSource @Nullable [] get(Event event) {
+	protected DamageSource @Nullable [] execute(VirtualFrame event) {
 		DamageSourceSectionEvent sectionEvent = new DamageSourceSectionEvent();
 		if (damageType != null) {
-			DamageType damageType = this.damageType.getSingle(event);
+			DamageType damageType = this.damageType.executeSingle(event);
 			if (damageType != null) {
 				sectionEvent.damageType = damageType;
 			}
 		}
 		if (trigger != null) {
-			Variables.withLocalVariables(event, sectionEvent, () -> TriggerItem.walk(trigger, sectionEvent));
+
+			Event previousEvent = (Event) event.getArguments()[0];
+			event.getArguments()[0] = sectionEvent;
+			trigger.execute(event);
+			event.getArguments()[0] = previousEvent;
 			if (sectionEvent.causingEntity != null && sectionEvent.directEntity == null) {
 				error("You must set a 'direct entity' when setting a 'causing entity'.");
 				return null;
@@ -140,7 +144,7 @@ public class ExprSecDamageSource extends SectionExpression<DamageSource> impleme
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "a custom damage source";
 	}
 

@@ -10,9 +10,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.Lidded;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Open/Close Lid")
@@ -43,8 +43,8 @@ public class EffLidState extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (Block block : blocks.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (Block block : blocks.executeArray(event)) {
 			if (block.getState() instanceof Lidded lidded) {
 				if (setOpen) {
 					lidded.open();
@@ -56,7 +56,7 @@ public class EffLidState extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (setOpen ? "open" : "close") + " lid of " + blocks.toString(event, debug);
 	}
 

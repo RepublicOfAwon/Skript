@@ -8,7 +8,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.simplification.SimplifiedLiteral;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
@@ -16,7 +16,7 @@ import java.util.Iterator;
 /**
  * Represents an expression which is a wrapper of another one. Remember to set the wrapped expression in the constructor ({@link #WrapperExpression(SimpleExpression)})
  * or with {@link #setExpr(Expression)} in {@link SyntaxElement#init(Expression[], int, Kleenean, ParseResult) init()}.<br/>
- * If you override {@link #get(Event)} you must override {@link #iterator(Event)} as well.
+ * If you override {@link SimpleExpression#execute(VirtualFrame)} you must override {@link ch.njol.skript.lang.Loopable#iterator(VirtualFrame)} as well.
  * 
  * @author Peter Güttinger
  */
@@ -45,13 +45,13 @@ public abstract class WrapperExpression<T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	protected T[] get(Event event) {
-		return expr.getArray(event);
+	protected T[] execute(VirtualFrame event) {
+		return expr.executeArray(event);
 	}
 
 	@Override
 	@Nullable
-	public Iterator<? extends T> iterator(Event event) {
+	public Iterator<? extends T> iterator(VirtualFrame event) {
 		return expr.iterator(event);
 	}
 
@@ -77,7 +77,7 @@ public abstract class WrapperExpression<T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(VirtualFrame event, @Nullable Object[] delta, ChangeMode mode) {
 		expr.change(event, delta, mode);
 	}
 

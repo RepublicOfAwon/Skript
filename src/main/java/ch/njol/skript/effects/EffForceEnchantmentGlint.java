@@ -1,7 +1,7 @@
 package ch.njol.skript.effects;
 
 import ch.njol.skript.lang.SyntaxElement;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,8 +44,8 @@ public class EffForceEnchantmentGlint extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (ItemType itemType : itemTypes.getArray(event)) {
+	protected void executeVoid(VirtualFrame event) {
+		for (ItemType itemType : itemTypes.executeArray(event)) {
 			ItemMeta meta = itemType.getItemMeta();
 			Boolean glint;
 			if (pattern == 0) {
@@ -64,7 +64,7 @@ public class EffForceEnchantmentGlint extends Effect {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		// Pattern: Clear glint override
 		if (pattern > 1)
 			return "clear the enchantment glint override of " + itemTypes.toString(event, debug);

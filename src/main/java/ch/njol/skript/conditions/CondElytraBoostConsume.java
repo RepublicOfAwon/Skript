@@ -8,7 +8,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Will Consume Boosting Firework")
@@ -42,14 +42,14 @@ public class CondElytraBoostConsume extends Condition {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean executeBoolean(VirtualFrame event) {
 		if (!(event instanceof PlayerElytraBoostEvent boostEvent))
 			return false;
 		return boostEvent.shouldConsume() == checkConsume;
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "the boosting firework will " + (checkConsume ? "" : "not") + " be consumed";
 	}
 

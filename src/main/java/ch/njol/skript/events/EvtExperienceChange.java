@@ -6,10 +6,9 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Experience;
-import org.bukkit.event.Event;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.jetbrains.annotations.Nullable;
-import org.skriptlang.skript.lang.converter.Converter;
 
 public class EvtExperienceChange extends SkriptEvent {
 
@@ -39,7 +38,7 @@ public class EvtExperienceChange extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		if (mode == ANY)
 			return true;
 		PlayerExpChangeEvent expChangeEvent = (PlayerExpChangeEvent) event;
@@ -47,7 +46,7 @@ public class EvtExperienceChange extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "player level progress " + (mode == ANY ? "change" : mode == UP ? "increase" : "decrease");
 	}
 

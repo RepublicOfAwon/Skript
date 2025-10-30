@@ -10,8 +10,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.World;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Save World")
@@ -40,13 +40,13 @@ public class EffWorldSave extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
-		for (World world : worlds.getArray(event))
+	protected void executeVoid(VirtualFrame event) {
+		for (World world : worlds.executeArray(event))
 			world.save();
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "save the world(s) " + worlds.toString(event, debug);
 	}
 

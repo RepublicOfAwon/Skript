@@ -11,6 +11,7 @@ import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -59,7 +60,9 @@ public class Delay extends Effect {
 	}
 
 	@Override
-	public Object walk(Event event) {
+	public Object execute(VirtualFrame frame) {
+
+		Event event = (Event) frame.getArguments()[0];
 		long start = Skript.debug() ? System.nanoTime() : 0;
 
 		CompletableFuture<Void> future = new CompletableFuture<>();
@@ -67,19 +70,19 @@ public class Delay extends Effect {
 		if (Skript.getInstance().isEnabled()) { // See https://github.com/SkriptLang/Skript/issues/3702
 			addDelayedEvent(event);
 
-			Timespan duration = this.duration.getSingle(event);
+			Timespan duration = this.duration.executeSingle(frame);
 			if (duration == null)
 				return null;
 
 			// Back up local variables
-			Object localVars = Variables.removeLocals(event);
+			Object localVars = Variables.removeLocals(frame);
 
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), () -> {
 				//Skript.debug(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1_000_000_000. + "s");
 
 				// Re-set local variables
 				if (localVars != null)
-					Variables.setLocalVariables(event, localVars);
+					Variables.setLocalVariables(frame, localVars);
 
 				Object timing = null; // Timings reference must be kept so that it can be stopped after TriggerItem execution
 //				if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
@@ -89,7 +92,7 @@ public class Delay extends Effect {
 //				}
 				future.complete(null);
 
-				Variables.removeLocals(event); // Clean up local vars, we may be exiting now
+				Variables.removeLocals(frame); // Clean up local vars, we may be exiting now
 
 				SkriptTimings.stop(timing); // Stop timing if it was even started
 			}, Math.max(duration.getAs(Timespan.TimePeriod.TICK), 1)); // Minimum delay is one tick, less than it is useless!
@@ -98,12 +101,12 @@ public class Delay extends Effect {
 	}
 
 	@Override
-	protected void execute(Event event) {
+	protected void executeVoid(VirtualFrame event) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return "wait for " + duration.toString(event, debug) + (event == null ? "" : "...");
 	}
 

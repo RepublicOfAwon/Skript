@@ -2,6 +2,7 @@ package org.skriptlang.skript.lang.condition;
 
 import ch.njol.util.Kleenean;
 import com.google.common.base.Preconditions;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -130,7 +131,7 @@ class CompoundConditional<T> implements Conditional<T> {
 
 	//TODO: replace event with context object in debuggable rework pr
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		String output = joinConditionals(event, debug);
 
 		if (componentConditionals.size() > 1)
@@ -141,7 +142,7 @@ class CompoundConditional<T> implements Conditional<T> {
 		return output;
 	}
 
-	private String joinConditionals(@Nullable Event event, boolean debug) {
+	private String joinConditionals(@Nullable VirtualFrame event, boolean debug) {
 		return componentConditionals.stream()
 			.map(conditional -> conditional.toString(event, debug))
 			.collect(Collectors.joining(" " + operator.getSymbol() + " "));

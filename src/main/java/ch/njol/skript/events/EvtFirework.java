@@ -7,8 +7,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ColorRGB;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.FireworkEffect;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.FireworkExplodeEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +45,7 @@ public class EvtFirework extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(Event event) {
+	public boolean check(VirtualFrame event) {
 		if (!(event instanceof FireworkExplodeEvent fireworkExplodeEvent))
 			return false;
 
@@ -69,7 +69,7 @@ public class EvtFirework extends SkriptEvent {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
 
 		builder.append("firework explode");

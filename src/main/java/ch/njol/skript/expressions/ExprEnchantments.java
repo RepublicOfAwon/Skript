@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import ch.njol.skript.lang.SyntaxElement;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,10 +51,10 @@ public class ExprEnchantments extends SimpleExpression<EnchantmentType> {
 
 	@Override
 	@Nullable
-	protected EnchantmentType[] get(Event e) {
+	protected EnchantmentType[] execute(VirtualFrame e) {
 		List<EnchantmentType> enchantments = new ArrayList<>();
 		
-		for (ItemType item : items.getArray(e)) {
+		for (ItemType item : items.executeArray(e)) {
 			EnchantmentType[] enchants = item.getEnchantmentTypes();
 			
 			if (enchants == null)
@@ -76,8 +76,8 @@ public class ExprEnchantments extends SimpleExpression<EnchantmentType> {
 
 	
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		ItemType[] source = items.getArray(e);
+	public void change(VirtualFrame e, @Nullable Object[] delta, ChangeMode mode) {
+		ItemType[] source = items.executeArray(e);
 		
 		EnchantmentType[] enchants = new EnchantmentType[delta != null ? delta.length : 0];
 		
@@ -132,7 +132,7 @@ public class ExprEnchantments extends SimpleExpression<EnchantmentType> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		return "the enchantments of " + items.toString(e, debug);
 	}
 	

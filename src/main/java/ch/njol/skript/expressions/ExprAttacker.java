@@ -3,6 +3,7 @@ package ch.njol.skript.expressions;
 import ch.njol.skript.lang.EventRestrictedSyntax;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.coll.CollectionUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event;
@@ -56,8 +57,8 @@ public class ExprAttacker extends SimpleExpression<Entity> implements EventRestr
 	}
 
 	@Override
-	protected Entity[] get(Event e) {
-		return new Entity[] {getAttacker(e)};
+	protected Entity[] execute(VirtualFrame e) {
+		return new Entity[] {getAttacker((Event) e.getArguments()[0])};
 	}
 	
 	@Nullable
@@ -92,10 +93,10 @@ public class ExprAttacker extends SimpleExpression<Entity> implements EventRestr
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable VirtualFrame e, boolean debug) {
 		if (e == null)
 			return "the attacker";
-		return Classes.getDebugMessage(getSingle(e));
+		return Classes.getDebugMessage("attacker");
 	}
 	
 	@Override

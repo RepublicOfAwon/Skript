@@ -15,7 +15,6 @@ import ch.njol.skript.lang.function.ExprFunctionCall;
 import ch.njol.skript.lang.function.FunctionReference;
 import ch.njol.skript.lang.function.FunctionRegistry;
 import ch.njol.skript.lang.function.Functions;
-import ch.njol.skript.lang.function.Signature;
 import ch.njol.skript.lang.parser.DefaultValueData;
 import ch.njol.skript.lang.parser.ParseStackOverflowException;
 import ch.njol.skript.lang.parser.ParserInstance;
@@ -42,6 +41,7 @@ import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Booleans;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +49,6 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
 import org.skriptlang.skript.lang.experiment.ExperimentSet;
 import org.skriptlang.skript.lang.experiment.ExperimentalSyntax;
-import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.script.ScriptWarning;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
@@ -65,7 +64,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -1333,7 +1331,7 @@ public final class SkriptParser {
 	/**
 	 * Prints parse errors (i.e. must start a ParseLog before calling this method)
 	 */
-	public static boolean parseArguments(String args, ScriptCommand command, ScriptCommandEvent event) {
+	public static boolean parseArguments(String args, ScriptCommand command, VirtualFrame event) {
 		SkriptParser parser = new SkriptParser(args, PARSE_LITERALS, ParseContext.COMMAND);
 		ParseResult parseResult = parser.parse_i(command.getPattern());
 		if (parseResult == null)
@@ -1345,7 +1343,7 @@ public final class SkriptParser {
 			if (parseResult.exprs[i] == null)
 				arguments.get(i).setToDefault(event);
 			else
-				arguments.get(i).set(event, parseResult.exprs[i].getArray(event));
+				arguments.get(i).set(event, parseResult.exprs[i].executeArray(event));
 		}
 		return true;
 	}
