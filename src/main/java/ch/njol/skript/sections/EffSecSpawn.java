@@ -110,7 +110,7 @@ public class EffSecSpawn extends EffectSection {
 	}
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
+	public Object walk(Event event) {
 		lastSpawned = null;
 
 		Consumer<? extends Entity> consumer;
@@ -154,8 +154,9 @@ public class EffSecSpawn extends EffectSection {
 				}
 			}
 		}
+		super.walk(event);
 
-		return super.walk(event, false);
+		return null;
 	}
 
 	@Override

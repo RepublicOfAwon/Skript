@@ -1079,7 +1079,8 @@ public class ScriptLoader {
 					afterParse.printLog();
 				}
 
-				items.add(item); //이거 어떡하냐
+				if (item instanceof TriggerItem.Null) continue;
+				items.add(item);
 			} else {
 				continue;
 			}
@@ -1109,9 +1110,6 @@ public class ScriptLoader {
 		}
 		// Destroy local variable type hints for this section
 		parser.getHintManager().exitScope();
-
-		for (int i = 0; i < items.size() - 1; i++)
-			items.get(i).setNext(items.get(i + 1));
 
 		parser.setNode(node);
 

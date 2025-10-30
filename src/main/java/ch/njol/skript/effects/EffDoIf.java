@@ -57,15 +57,12 @@ public class EffDoIf extends Effect  {
 	@Override
 	protected void execute(Event e) {}
 	
-	@Nullable
 	@Override
-	public TriggerItem walk(Event e) {
+	public Object walk(Event e) {
 		if (condition.check(e)) {
-			effect.setParent(getParent());
-			effect.setNext(getNext());
-			return effect;
+			effect.walk(e);
 		}
-		return getNext();
+		return null;
 	}
 
 	@Override

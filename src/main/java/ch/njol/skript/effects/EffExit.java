@@ -98,7 +98,7 @@ public class EffExit extends Effect {
 	}
 
 	@Override
-	protected @Nullable Object walk(Event event) {
+	public Object walk(Event event) {
 		for (SectionExitHandler section : sectionsToExit)
 			section.exit(event);
 		if (outerSection == null) // "stop trigger"

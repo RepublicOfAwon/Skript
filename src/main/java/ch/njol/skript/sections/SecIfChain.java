@@ -5,16 +5,19 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Name("If Chain")
 public class SecIfChain extends Section {
 
-    private final List<SecConditional> conditionals = new ArrayList<>();
+    private final List<TriggerItem> conditionals = new ArrayList<>();
+	private boolean init;
 
     public void addConditional(SecConditional cond) {
         conditionals.add(cond);
@@ -24,26 +27,31 @@ public class SecIfChain extends Section {
     public SyntaxElement init(Expression<?>[] exprs, int matchedPattern,
 							  Kleenean delayed, SkriptParser.ParseResult result,
 							  SectionNode node, List<TriggerItem> items) {
-        // code not parsed here, handled by child SecConditionals
-        return this;
+        throw new RuntimeException();
     }
 
     @Override
-    protected @Nullable Object walk(Event event) {
-        for (SecConditional cond : conditionals) {
-            Object result = cond.walk(event);
-            if (result instanceof SecConditional.SkipException)
-                break;
-        }
-        return null;
+	public Object walk(Event event) {
+		if (!init) init();
+		try {
+			super.walk(event);
+		} catch (SecConditional.SkipException e) {
+
+		}
+		return null;
     }
+
+	private void init() {
+		setTriggerItems(conditionals);
+		init = true;
+	}
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return "if chain";
 	}
 
-	public List<SecConditional> getConditionals() {
+	public List<TriggerItem> getConditionals() {
 		return conditionals;
 	}
 

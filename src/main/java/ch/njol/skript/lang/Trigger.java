@@ -1,11 +1,13 @@
 package ch.njol.skript.lang;
 
 import ch.njol.skript.variables.Variables;
+import com.oracle.truffle.api.nodes.ControlFlowException;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class Trigger extends TriggerSection {
 
@@ -48,6 +50,30 @@ public class Trigger extends TriggerSection {
 		 */
 
 		return success;
+	}
+
+	@Override
+	public Object walk(Event event) {
+		try {
+			super.walk(event);
+		} catch (ReturnException e) {
+
+		} catch (DelayException e) {
+			e.future.thenAccept(v -> walk(event));
+		}
+		return null;
+	}
+
+	public static class DelayException extends ControlFlowException {
+		final CompletableFuture<Void> future;
+
+		public DelayException(CompletableFuture<Void> future) {
+			this.future = future;
+		}
+	}
+
+	public static class ReturnException extends ControlFlowException {
+
 	}
 
 	@Override

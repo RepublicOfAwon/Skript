@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  * In most cases though, a section should load its code through one of the following loading methods:
  * {@link #loadCode(SectionNode)}, {@link #loadCode(SectionNode, String, Class[])}, {@link #loadOptionalCode(SectionNode)}
  * <br><br>
- * Every section must override the {@link TriggerSection#walk(Event)} method. In this method, you can determine whether *  the section should run. If you have stored a {@link Trigger} from {@link #loadCode(SectionNode, String, Class[])}, you
+ * Every section must override the {@link TriggerItem#walk(Event)} method. In this method, you can determine whether *  the section should run. If you have stored a {@link Trigger} from {@link #loadCode(SectionNode, String, Class[])}, you
  * should not run it with this event passed in this walk method.
  * <br><br>
  * In the walk method, it is recommended that you return {@link TriggerSection#walk(Event, boolean)}.
@@ -293,6 +293,19 @@ public abstract class Section extends TriggerSection implements SyntaxElement, S
 	@Override
 	public @NotNull String getSyntaxTypeName() {
 		return "section";
+	}
+
+	public static class Null extends Section implements TriggerItem.Null {
+
+		@Override
+		public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+			return null;
+		}
+
+		@Override
+		public String toString(@Nullable Event event, boolean debug) {
+			return "";
+		}
 	}
 
 }

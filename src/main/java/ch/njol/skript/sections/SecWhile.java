@@ -63,9 +63,8 @@ public class SecWhile extends LoopSection {
 		return this;
 	}
 
-	@Nullable
 	@Override
-	protected Object walk(Event event) {
+	public Object walk(Event event) {
 		while (true) {
 			if ((doWhile && !ranDoWhile) || condition.check(event)) {
 				ranDoWhile = true;

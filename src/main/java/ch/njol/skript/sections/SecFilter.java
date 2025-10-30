@@ -109,7 +109,7 @@ public class SecFilter extends Section implements InputSource {
 	}
 
 	@Override
-	protected @Nullable Object walk(Event event) {
+	public Object walk(Event event) {
 		// get the name only once to avoid issues where the name may change between evaluations.
 		String varName = unfilteredObjects.getName().toString(event);
 		String varSubName = StringUtils.substring(varName, 0, -1);

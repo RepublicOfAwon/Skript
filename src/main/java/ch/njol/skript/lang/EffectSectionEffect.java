@@ -25,28 +25,8 @@ public class EffectSectionEffect extends Effect {
 	protected void execute(Event event) { }
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
+	public Object walk(Event event) {
 		return effectSection.walk(event);
-	}
-
-	@Override
-	public String getIndentation() {
-		return effectSection.getIndentation();
-	}
-
-	@Override
-	public TriggerItem setParent(@Nullable TriggerSection parent) {
-		return effectSection.setParent(parent);
-	}
-
-	@Override
-	public TriggerItem setNext(@Nullable TriggerItem next) {
-		return effectSection.setNext(next);
-	}
-
-	@Override
-	public @Nullable TriggerItem getNext() {
-		return effectSection.getNext();
 	}
 
 	@Override

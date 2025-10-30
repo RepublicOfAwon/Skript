@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.CompletableFuture;
 
 @Name("Delay")
 @Description("Delays the script's execution by a given timespan. Please note that delays are not persistent, e.g. trying to create a tempban script with <code>ban player → wait 7 days → unban player</code> will not work if you restart your server anytime within these 7 days. You also have to be careful even when using small delays!")
@@ -58,42 +59,42 @@ public class Delay extends Effect {
 	}
 
 	@Override
-	@Nullable
-	protected TriggerItem walk(Event event) {
-		debug(event, true);
+	public Object walk(Event event) {
 		long start = Skript.debug() ? System.nanoTime() : 0;
-		TriggerItem next = getNext();
-		if (next != null && Skript.getInstance().isEnabled()) { // See https://github.com/SkriptLang/Skript/issues/3702
+
+		CompletableFuture<Void> future = new CompletableFuture<>();
+
+		if (Skript.getInstance().isEnabled()) { // See https://github.com/SkriptLang/Skript/issues/3702
 			addDelayedEvent(event);
 
 			Timespan duration = this.duration.getSingle(event);
 			if (duration == null)
 				return null;
-			
+
 			// Back up local variables
 			Object localVars = Variables.removeLocals(event);
-			
+
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), () -> {
-				Skript.debug(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1_000_000_000. + "s");
+				//Skript.debug(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1_000_000_000. + "s");
 
 				// Re-set local variables
 				if (localVars != null)
 					Variables.setLocalVariables(event, localVars);
 
 				Object timing = null; // Timings reference must be kept so that it can be stopped after TriggerItem execution
-				if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
-					Trigger trigger = getTrigger();
-					if (trigger != null)
-						timing = SkriptTimings.start(trigger.getDebugLabel());
-				}
+//				if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
+//					Trigger trigger = getTrigger();
+//					if (trigger != null)
+//						timing = SkriptTimings.start(trigger.getDebugLabel());
+//				}
+				future.complete(null);
 
-				TriggerItem.walk(next, event);
 				Variables.removeLocals(event); // Clean up local vars, we may be exiting now
 
 				SkriptTimings.stop(timing); // Stop timing if it was even started
 			}, Math.max(duration.getAs(Timespan.TimePeriod.TICK), 1)); // Minimum delay is one tick, less than it is useless!
 		}
-		return null;
+		throw new Trigger.DelayException(future);
 	}
 
 	@Override

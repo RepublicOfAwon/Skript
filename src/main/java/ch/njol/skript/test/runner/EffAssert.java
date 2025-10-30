@@ -82,7 +82,6 @@ public class EffAssert extends Effect {
 	protected void execute(Event event) {
 	}
 
-	@Nullable
 	@Override
 	public Object walk(Event event) {
 		if (shouldFail && condition == null)

@@ -21,11 +21,11 @@ public abstract class TriggerItem implements Debuggable {
 	 * Executes this item and returns the next item to run.
 	 * <p>
 	 * If this method is overridden, {@link #run(Event)} is not used anymore and can be ignored.
-	 * 
+	 *
 	 * @param event The event
 	 * @return The next item to run or null to stop execution
 	 */
-	protected Object walk(Event event) {
+	public Object walk(Event event) {
 		return run(event);
 	}
 
@@ -77,6 +77,10 @@ public abstract class TriggerItem implements Debuggable {
 	@Override
 	public final String toString() {
 		return toString(null, false);
+	}
+
+	public interface Null {
+
 	}
 
 }

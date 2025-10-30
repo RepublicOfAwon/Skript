@@ -19,8 +19,8 @@ import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.Iterables;
 import com.oracle.truffle.api.nodes.ControlFlowException;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import org.skriptlang.skript.lang.condition.Conditional;
@@ -237,7 +237,7 @@ public class SecConditional extends Section {
 		}
 
 		SecIfChain.IfChainData data = parser.getData(SecIfChain.IfChainData.class);
-		SyntaxElement result = null;
+		SyntaxElement result = new Section.Null();
 		if (type == ConditionalType.IF) {
 			data.chainNode = new SecIfChain();
 			result = data.chainNode;
@@ -312,7 +312,7 @@ public class SecConditional extends Section {
 	}
 
 	@Override
-	protected @Nullable Object walk(Event event) {
+	public Object walk(Event event) {
 		if (type == ConditionalType.THEN || (parseIf && !parseIfPassed)) {
 			return null;
 		} else if (parseIf || checkConditions(event)) {
@@ -366,6 +366,9 @@ public class SecConditional extends Section {
 	 */
 	private static @Nullable SecConditional getPrecedingConditional(List<TriggerItem> triggerItems, @Nullable ConditionalType type) {
 		// loop through the triggerItems in reverse order so that we find the most recent items first
+		TriggerItem o = triggerItems.getLast();
+		if (!(o instanceof SecIfChain ifChain)) return null;
+		triggerItems = ifChain.getConditionals();
 		for (int i = triggerItems.size() - 1; i >= 0; i--) {
 			TriggerItem triggerItem = triggerItems.get(i);
 			if (triggerItem instanceof SecConditional precedingSecConditional) {

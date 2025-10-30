@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 @Name("Teleport")
@@ -79,26 +80,24 @@ public class EffTeleport extends Effect {
 	}
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
-		debug(event, true);
-		TriggerItem next = getNext();
+	public Object walk(Event event) {
 
 		boolean delayed = Delay.isDelayed(event);
 		Location location = this.location.getSingle(event);
 		if (location == null)
-			return next;
+			return null;
 		boolean unknownWorld = !location.isWorldLoaded();
 
 		Entity[] entityArray = entities.getArray(event); // We have to fetch this before possible async execution to avoid async local variable access.
 		if (entityArray.length == 0)
-			return next;
+			return null;
 
 		if (!delayed) {
 			if (event instanceof PlayerRespawnEvent playerRespawnEvent && entityArray.length == 1 && entityArray[0].equals(playerRespawnEvent.getPlayer())) {
 				if (unknownWorld)
-					return next;
+					return null;
 				playerRespawnEvent.setRespawnLocation(location);
-				return next;
+				return null;
 			}
 
 			if (event instanceof PlayerMoveEvent playerMoveEvent && entityArray.length == 1 && entityArray[0].equals(playerMoveEvent.getPlayer())) {
@@ -107,19 +106,19 @@ public class EffTeleport extends Effect {
 					location.setWorld(playerMoveEvent.getFrom().getWorld());
 				}
 				playerMoveEvent.setTo(location);
-				return next;
+				return null;
 			}
 		}
 		if (unknownWorld) { // we can't fetch the chunk without a world
 			if (entityArray.length == 1) { // if there's 1 thing we can borrow its world
 				Entity entity = entityArray[0];
 				if (entity == null)
-					return next;
+					return null;
 				// assume it's a local teleport, use the first entity we find as a reference
 				location = location.clone();
 				location.setWorld(entity.getWorld());
 			} else {
-				return next; // no entities = no chunk = nobody teleporting
+				return null; // no entities = no chunk = nobody teleporting
 			}
 		}
 
@@ -128,8 +127,9 @@ public class EffTeleport extends Effect {
 			for (Entity entity : entityArray) {
 				teleport(entity, location, teleportFlags);
 			}
-			return next;
+			return null;
 		}
+		CompletableFuture<Void> future = new CompletableFuture<>();
 
 		final Location fixed = location;
 		Delay.addDelayedEvent(event);
@@ -149,20 +149,22 @@ public class EffTeleport extends Effect {
 			
 			// Continue the rest of the trigger if there is one
 			Object timing = null;
-			if (next != null) {
-				if (SkriptTimings.enabled()) {
-					Trigger trigger = getTrigger();
-					if (trigger != null) {
-						timing = SkriptTimings.start(trigger.getDebugLabel());
-					}
-				}
+//			if (next != null) {
+//				if (SkriptTimings.enabled()) {
+//					Trigger trigger = getTrigger();
+//					if (trigger != null) {
+//						timing = SkriptTimings.start(trigger.getDebugLabel());
+//					}
+//				}
+//
+//				TriggerItem.walk(next, event);
+//			}
+			future.complete(null);
 
-				TriggerItem.walk(next, event);
-			}
 			Variables.removeLocals(event); // Clean up local vars, we may be exiting now
 			SkriptTimings.stop(timing);
 		});
-		return null;
+		throw new Trigger.DelayException(future);
 	}
 
 	@Override

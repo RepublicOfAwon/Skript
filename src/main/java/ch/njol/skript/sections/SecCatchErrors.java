@@ -63,14 +63,13 @@ public class SecCatchErrors extends Section implements ExperimentalSyntax {
 	}
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
+	public Object walk(Event event) {
 		RuntimeErrorCatcher catcher = new RuntimeErrorCatcher().start();
-		last.setNext(null);
-		TriggerItem.walk(first, event);
+		super.walk(event);
         ExprCaughtErrors.lastErrors = catcher.getCachedErrors().stream().map(RuntimeError::error).toArray(String[]::new);
 		catcher.clearCachedErrors()
 			.stop();
-		return walk(event, false);
+		return null;
 	}
 
 	@Override

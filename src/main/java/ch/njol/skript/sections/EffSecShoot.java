@@ -196,7 +196,7 @@ public class EffSecShoot extends EffectSection {
 	}
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
+	public Object walk(Event event) {
 		lastSpawned = null;
 		Number finalVelocity = velocity != null ? velocity.getSingle(event) : DEFAULT_SPEED;
 		Direction finalDirection = direction != null ? direction.getSingle(event) : Direction.IDENTITY;
@@ -256,8 +256,9 @@ public class EffSecShoot extends EffectSection {
 				}
 			}
 		}
+		super.walk(event);
 
-		return super.walk(event, false);
+		return null;
 	}
 
 	@Override

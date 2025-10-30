@@ -110,13 +110,13 @@ public class EffLog extends Effect {
 					logWriter.flush();
 				}
 			} else {
-				Trigger t = getTrigger();
+				//Trigger t = getTrigger();
 				String scriptName = "---";
-				if (t != null) {
+				/*if (t != null) {
 					Script script = t.getScript();
 					if (script != null)
 						scriptName = script.getConfig().getFileName();
-				}
+				}*/
 				SkriptLogger.LOGGER.log(logLevel, "[" + scriptName + "] " + message);
 			}
 		}

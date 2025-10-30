@@ -54,7 +54,7 @@ public class SecParse extends Section {
 	}
 
 	@Override
-	protected @Nullable Object walk(Event event) {
+	public Object walk(Event event) {
 		ExprParseLogs.lastLogs = logs;
 		super.walk(event);
 		return null;

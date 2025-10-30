@@ -96,7 +96,7 @@ public class EffReturn extends Effect {
 	}
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
+	public Object walk(Event event) {
 		//noinspection rawtypes,unchecked
 		((ReturnHandler) handler).returnValues(event, value);
 

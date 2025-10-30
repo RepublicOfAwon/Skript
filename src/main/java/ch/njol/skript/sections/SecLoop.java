@@ -125,7 +125,7 @@ public class SecLoop extends LoopSection {
 	}
 
 	@Override
-	protected @Nullable Object walk(Event event) {
+	public Object walk(Event event) {
 		while (true) {
 			Iterator<?> iter = iteratorMap.get(event);
 			if (iter == null) {

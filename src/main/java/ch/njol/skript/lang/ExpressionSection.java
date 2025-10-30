@@ -52,11 +52,6 @@ public class ExpressionSection extends Section {
 	}
 
 	@Override
-	protected @Nullable TriggerItem walk(Event event) {
-		return super.walk(event, false);
-	}
-
-	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return expression.toString(event, debug);
 	}
@@ -75,8 +70,9 @@ public class ExpressionSection extends Section {
 		super.loadOptionalCode(sectionNode);
 	}
 
-	public boolean runSection(Event event) {
-		return TriggerItem.walk(this.first, event);
+	public Object runSection(Event event) {
+		super.walk(event);
+		return null;
 	}
 
 	@Override

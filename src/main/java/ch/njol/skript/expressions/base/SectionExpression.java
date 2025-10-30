@@ -177,7 +177,7 @@ public abstract class SectionExpression<Value> extends SimpleExpression<Value> {
 	 * @param event The event to pass as context.
 	 * @return False if an exception occurred while executing the section.
 	 */
-	protected boolean runSection(Event event) {
+	protected Object runSection(Event event) {
 		return this.section.runSection(event);
 	}
 
