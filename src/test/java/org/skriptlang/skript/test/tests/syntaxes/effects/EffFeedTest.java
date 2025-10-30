@@ -43,14 +43,14 @@ public class EffFeedTest extends SkriptJUnitTest {
 		easyMockPlayer.setFoodLevel(EasyMock.eq(maxFoodLevel));
 		EasyMock.expectLastCall();
 		EasyMock.replay(easyMockPlayer);
-		TriggerItem.walk(feedFullyEffect, event);
+		feedFullyEffect.run(event);
 		EasyMock.verify(easyMockPlayer);
 
 		EasyMock.resetToNice(easyMockPlayer);
 		easyMockPlayer.setFoodLevel(EasyMock.eq(amountToFeed));
 		EasyMock.expectLastCall();
 		EasyMock.replay(easyMockPlayer);
-		TriggerItem.walk(feedPartiallyEffect, event);
+		feedPartiallyEffect.run(event);
 		EasyMock.verify(easyMockPlayer);
 	}
 

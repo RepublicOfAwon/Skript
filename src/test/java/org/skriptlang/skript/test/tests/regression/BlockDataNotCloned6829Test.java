@@ -18,7 +18,7 @@ public class BlockDataNotCloned6829Test extends SkriptJUnitTest {
 		Effect effect = Effect.parse(unparsedEffect, "Can't understand this effect: " + unparsedEffect);
 		if (effect == null)
 			throw new IllegalStateException();
-		TriggerItem.walk(effect, event);
+		effect.run(event);
 	}
 
 	@Test

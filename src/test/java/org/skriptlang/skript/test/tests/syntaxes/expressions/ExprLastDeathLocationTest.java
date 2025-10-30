@@ -42,14 +42,14 @@ public class ExprLastDeathLocationTest extends SkriptJUnitTest {
 		player.setLastDeathLocation(locationMatcher(location));
 		EasyMock.expectLastCall();
 		EasyMock.replay(player);
-		TriggerItem.walk(set, event);
+		set.run(event);
 		EasyMock.verify(player);
 
 		EasyMock.resetToNice(player);
 
 		EasyMock.expect(player.getLastDeathLocation()).andReturn(location);
 		EasyMock.replay(player);
-		TriggerItem.walk(get, event);
+		get.run(event);
 		EasyMock.verify(player);
 	}
 

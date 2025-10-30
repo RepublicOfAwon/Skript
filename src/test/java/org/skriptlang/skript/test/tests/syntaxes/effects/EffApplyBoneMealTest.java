@@ -50,13 +50,13 @@ public class EffApplyBoneMealTest {
 
 		EasyMock.expect(stubTestBlock.applyBoneMeal(EasyMock.notNull())).andReturn(true).times(1);
 		EasyMock.replay(stubTestBlock);
-		TriggerItem.walk(applyBonemealEffect, event);
+		applyBonemealEffect.run(event);
 		EasyMock.verify(stubTestBlock);
 
 		EasyMock.resetToNice(stubTestBlock);
 		EasyMock.expect(stubTestBlock.applyBoneMeal(EasyMock.notNull())).andReturn(true).times(2);
 		EasyMock.replay(stubTestBlock);
-		TriggerItem.walk(applyMultipleBonemealEffect, event);
+		applyMultipleBonemealEffect.run(event);
 		EasyMock.verify(stubTestBlock);
 	}
 

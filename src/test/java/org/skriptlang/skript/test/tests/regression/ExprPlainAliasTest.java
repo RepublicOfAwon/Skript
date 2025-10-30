@@ -36,7 +36,7 @@ public class ExprPlainAliasTest extends SkriptJUnitTest {
 
 		EasyMock.expect(itemType.getMaterial()).andReturn(Material.STONE).atLeastOnce();
 		EasyMock.replay(itemType);
-		TriggerItem.walk(getPlainRandomItemEffect, event);
+		getPlainRandomItemEffect.run(event);
 		EasyMock.verify(itemType);
 
 	}

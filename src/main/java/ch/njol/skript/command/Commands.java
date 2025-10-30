@@ -188,7 +188,8 @@ public abstract class Commands {
 						sender.sendMessage(ChatColor.GRAY + "executing '" + SkriptColor.replaceColorChar(command) + "'");
 						if (SkriptConfig.logEffectCommands.value() && !(sender instanceof ConsoleCommandSender))
 							Skript.info(sender.getName() + " issued effect command: " + SkriptColor.replaceColorChar(command));
-						TriggerItem.walk(effect, effectCommand);
+						//TriggerItem.walk(effect, effectCommand);
+						effect.run(effectCommand);
 						Variables.removeLocals(effectCommand);
 					} else {
 						sender.sendMessage(ChatColor.RED + "your effect command '" + SkriptColor.replaceColorChar(command) + "' was cancelled.");

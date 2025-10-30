@@ -43,14 +43,14 @@ public class EffSwingHandTest extends SkriptJUnitTest {
 		testEntity.swingMainHand();
 		EasyMock.expectLastCall();
 		EasyMock.replay(testEntity);
-		TriggerItem.walk(swingMainHandEffect, event);
+		swingMainHandEffect.run(event);
 		EasyMock.verify(testEntity);
 
 		EasyMock.resetToNice(testEntity);
 		testEntity.swingOffHand();
 		EasyMock.expectLastCall();
 		EasyMock.replay(testEntity);
-		TriggerItem.walk(swingOffhandEffect, event);
+		swingOffhandEffect.run(event);
 		EasyMock.verify(testEntity);
 	}
 

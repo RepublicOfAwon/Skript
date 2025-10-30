@@ -1,6 +1,9 @@
 package ch.njol.skript.lang;
 
 import ch.njol.skript.Skript;
+import com.oracle.truffle.api.Truffle;
+import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.Node;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
  * @see Trigger
  * @see Statement
  */
-public abstract class TriggerItem implements Debuggable {
+public abstract class TriggerItem extends Node implements Debuggable {
 
 	protected TriggerItem() {
 	}
@@ -42,16 +45,17 @@ public abstract class TriggerItem implements Debuggable {
 	 * @param event The event to run the items with
 	 * @return false if an exception occurred
 	 */
-	public static boolean walk(TriggerItem start, Event event) {
+	public static boolean walk(Trigger start, Event event) {
 		try {
-			start.walk(event);
+			VirtualFrame vf = Truffle.getRuntime().createMaterializedFrame(new Object[]{event});
+			start.execute(vf);
 			return true;
 		} catch (StackOverflowError err) {
 			if (Skript.debug())
 				err.printStackTrace();
 		} catch (Exception ex) {
 			if (ex.getStackTrace().length != 0) // empty exceptions have already been printed
-				Skript.exception(ex, start);
+				Skript.exception(ex, start.toString(event, Skript.debug()));
 		} catch (Throwable throwable) {
 			// not all Throwables are Exceptions, but we usually don't want to catch them (without rethrowing)
 			Skript.markErrored();

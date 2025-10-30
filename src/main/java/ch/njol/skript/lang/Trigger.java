@@ -1,7 +1,9 @@
 package ch.njol.skript.lang;
 
 import ch.njol.skript.variables.Variables;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ControlFlowException;
+import com.oracle.truffle.api.nodes.RootNode;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
@@ -9,7 +11,7 @@ import org.skriptlang.skript.lang.script.Script;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class Trigger extends TriggerSection {
+public class Trigger extends RootNode {
 
 	private final String name;
 	private final SkriptEvent event;
@@ -17,9 +19,16 @@ public class Trigger extends TriggerSection {
 	private final @Nullable Script script;
 	private int line = -1; // -1 is default: it means there is no line number available
 	private String debugLabel;
+	protected final TriggerSection body;
 
 	public Trigger(@Nullable Script script, String name, SkriptEvent event, List<TriggerItem> items) {
-		super(items);
+		super(null);
+		this.body = new TriggerSection(items) {
+			@Override
+			public String toString(@Nullable Event event, boolean debug) {
+				return "trigger_body";
+			}
+		};
 		this.script = script;
 		this.name = name;
 		this.event = event;
@@ -52,18 +61,6 @@ public class Trigger extends TriggerSection {
 		return success;
 	}
 
-	@Override
-	public Object walk(Event event) {
-		try {
-			super.walk(event);
-		} catch (ReturnException e) {
-
-		} catch (DelayException e) {
-			e.future.thenAccept(v -> walk(event));
-		}
-		return null;
-	}
-
 	public static class DelayException extends ControlFlowException {
 		final CompletableFuture<Void> future;
 
@@ -76,7 +73,7 @@ public class Trigger extends TriggerSection {
 
 	}
 
-	@Override
+	//@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return name + " (" + this.event.toString(event, debug) + ")";
 	}
@@ -86,6 +83,19 @@ public class Trigger extends TriggerSection {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public Object execute(VirtualFrame frame) {
+		Event event = (Event) frame.getArguments()[0];
+		try {
+			this.body.walk(event);
+		} catch (ReturnException e) {
+
+		} catch (DelayException e) {
+			e.future.thenAccept(v -> execute(frame));
+		}
+		return null;
 	}
 
 	public SkriptEvent getEvent() {

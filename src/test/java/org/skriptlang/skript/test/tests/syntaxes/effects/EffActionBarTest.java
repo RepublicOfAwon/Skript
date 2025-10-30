@@ -52,7 +52,7 @@ public class EffActionBarTest extends SkriptJUnitTest {
 		ContextlessEvent event = ContextlessEvent.get();
 		Variables.setVariable("content", expectedActionBarContent, event, true);
 		Variables.setVariable("player", testPlayer, event, true);
-		TriggerItem.walk(actionBarEffect, event);
+		actionBarEffect.run(event);
 
 		EasyMock.verify(testPlayer, testSpigotPlayer);
 	}

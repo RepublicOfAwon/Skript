@@ -38,7 +38,7 @@ public class EffSendEffConnectConflict7517Test extends SkriptJUnitTest {
 		sender.sendMessage(EasyMock.capture(messageCapture));
 		EasyMock.replay(sender);
 
-		TriggerItem.walk(sendEffect, event);
+		sendEffect.run(event);
 		EasyMock.verify(sender);
 		Assert.assertEquals(MESSAGE, messageCapture.getValue());
 	}

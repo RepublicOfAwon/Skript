@@ -15,7 +15,7 @@ public class ReturnableTrigger<T> extends Trigger implements ReturnHandler<T> {
 	public ReturnableTrigger(ReturnHandler<T> handler, @Nullable Script script, String name, SkriptEvent event, Function<ReturnHandler<T>, List<TriggerItem>> loadItems) {
 		super(script, name, event, Collections.emptyList());
 		this.handler = handler;
-		setTriggerItems(loadItems.apply(this));
+		this.body.setTriggerItems(loadItems.apply(this));
 	}
 
 	@Override
