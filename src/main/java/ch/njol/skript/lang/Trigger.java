@@ -8,7 +8,9 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class Trigger extends RootNode {
@@ -42,8 +44,8 @@ public class Trigger extends RootNode {
 	 * @param event The event to execute this Trigger with.
 	 * @return false if an exception occurred.
 	 */
-	public boolean execute(Event event) {
-		boolean success = TriggerItem.walk(this, event);
+	public boolean execute(Event event, Map<String, Object> params) {
+		boolean success = TriggerItem.walk(this, event, params);
 
 		// Clear local variables
 		//Variables.removeLocals(event);
@@ -61,6 +63,10 @@ public class Trigger extends RootNode {
 		 */
 
 		return success;
+	}
+
+	public boolean execute(Event event) {
+		return TriggerItem.walk(this, event, new HashMap<>());
 	}
 
 	public static class DelayException extends ControlFlowException {
@@ -88,6 +94,11 @@ public class Trigger extends RootNode {
 
 	@Override
 	public Object execute(VirtualFrame frame) {
+		Map<String, Object> maps = (Map<String, Object>) frame.getArguments()[1];
+		for (Map.Entry<String, Object> entry : maps.entrySet()) {
+			Variables.setVariable(entry.getKey(), entry.getValue(), frame, true);
+		}
+		maps.clear();
 		try {
 			this.body.execute(frame);
 		} catch (ReturnException e) {

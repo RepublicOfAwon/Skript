@@ -5,11 +5,10 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.experiment.Experiment;
@@ -37,7 +36,7 @@ public class StructUsing extends Structure {
 	private Experiment experiment;
 
 	@Override
-	public SyntaxElement init(Literal<?> @NotNull [] arguments, int pattern, ParseResult result, @Nullable EntryContainer container) {
+	public SyntaxElement init(Expression<?>[] arguments, int pattern, ParseResult result, @Nullable EntryContainer container) {
 		this.enableExperiment(result.regexes.get(0).group());
 		return this;
 	}

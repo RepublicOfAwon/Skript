@@ -52,7 +52,7 @@ public class ExprTimespanDetails extends SimplePropertyExpression<Timespan, Long
 
 	@Override
 	public Expression<? extends Long> simplify() {
-		if (getExpr() instanceof Literal<? extends Timespan>)
+		if (getExpr() instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

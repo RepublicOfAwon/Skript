@@ -23,7 +23,7 @@ public class ExprFunctionCall<T> extends SimpleExpression<T> implements KeyProvi
 	private final FunctionReference<?> function;
 	private final Class<? extends T>[] returnTypes;
 	private final Class<T> returnType;
-	private final Map<Event, String[]> cache = new WeakHashMap<>();
+	private final Map<VirtualFrame, String[]> cache = new WeakHashMap<>();
 
 	public ExprFunctionCall(FunctionReference<T> function) {
 		this(function, function.returnTypes);
@@ -113,7 +113,7 @@ public class ExprFunctionCall<T> extends SimpleExpression<T> implements KeyProvi
 
 	@Override
 	public boolean isLoopOf(String input) {
-		return KeyProviderExpression.super.isLoopOf(input);
+		return (canReturnKeys() && isIndexLoop(input)); //=KeyProviderExpression#isLoopOf
 	}
 
 	@Override

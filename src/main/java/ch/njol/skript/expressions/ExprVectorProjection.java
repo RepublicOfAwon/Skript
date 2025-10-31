@@ -60,7 +60,7 @@ public class ExprVectorProjection extends SimpleExpression<Vector> {
 
 	@Override
 	public Expression<? extends Vector> simplify() {
-		if (left instanceof Literal<Vector> && right instanceof Literal<Vector>)
+		if (left instanceof Literal && right instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

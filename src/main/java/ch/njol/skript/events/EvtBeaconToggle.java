@@ -1,12 +1,13 @@
 package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import io.papermc.paper.event.block.BeaconActivatedEvent;
 import io.papermc.paper.event.block.BeaconDeactivatedEvent;
+import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 public class EvtBeaconToggle extends SkriptEvent {
@@ -29,14 +30,14 @@ public class EvtBeaconToggle extends SkriptEvent {
 	private boolean isActivate, isToggle;
 
 	@Override
-    public boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		isToggle = matchedPattern == 0;
 		isActivate = matchedPattern == 1;
 		return true;
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (!isToggle) {
 			if (event instanceof BeaconActivatedEvent) {
 				return isActivate;

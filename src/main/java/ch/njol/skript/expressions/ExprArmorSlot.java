@@ -113,7 +113,7 @@ public class ExprArmorSlot extends PropertyExpression<LivingEntity, Slot> {
 					);
 				}).toArray(Slot[]::new);
 		}
-		org.bukkit.inventory.EquipmentSlot[] equipmentSlots = this.slots.executeArray(event);
+		org.bukkit.inventory.EquipmentSlot[] equipmentSlots = ((Expression<org.bukkit.inventory.EquipmentSlot>)this.slots).executeArray(event);
 		if (equipmentSlots.length == 0)
 			return new EquipmentSlot[0];
 		List<EquipmentSlot> slots = new ArrayList<>();
@@ -152,7 +152,7 @@ public class ExprArmorSlot extends PropertyExpression<LivingEntity, Slot> {
 
 	@Override
 	public boolean isSingle() {
-		return slots != null && slots.isSingle();
+		return slots != null && ((Expression)slots).isSingle();
 	}
 
 	@Override

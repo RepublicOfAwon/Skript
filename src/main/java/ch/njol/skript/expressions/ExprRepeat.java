@@ -62,7 +62,7 @@ public class ExprRepeat extends SimpleExpression<String> {
 
 	@Override
 	public Expression<? extends String> simplify() {
-		if (strings instanceof Literal<String> && repeatCount instanceof Literal<Integer>)
+		if (strings instanceof Literal && repeatCount instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

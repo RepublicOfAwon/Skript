@@ -31,7 +31,7 @@ import org.skriptlang.skript.util.Executable;
 })
 @Since("2.10")
 @Keywords({"run", "result", "execute", "function", "reflection"})
-public class ExprResult extends PropertyExpression<Executable<Event, Object>, Object> implements ReflectionExperimentSyntax {
+public class ExprResult extends PropertyExpression<Executable<VirtualFrame, Object>, Object> implements ReflectionExperimentSyntax {
 
 	static {
 		Skript.registerExpression(ExprResult.class, Object.class, ExpressionType.COMBINED,
@@ -45,7 +45,7 @@ public class ExprResult extends PropertyExpression<Executable<Event, Object>, Ob
 	@Override
 	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult result) {
 		//noinspection unchecked
-		this.setExpr((Expression<? extends Executable<Event, Object>>) expressions[0]);
+		this.setExpr((Expression<? extends Executable<VirtualFrame, Object>>) expressions[0]);
 		this.hasArguments = result.hasTag("arguments");
 		this.isPlural = result.hasTag("plural");
 		if (hasArguments) {
@@ -65,8 +65,8 @@ public class ExprResult extends PropertyExpression<Executable<Event, Object>, Ob
 	}
 
 	@Override
-	protected Object[] get(VirtualFrame event, Executable<Event, Object>[] source) {
-		for (Executable<Event, Object> task : source) {
+	protected Object[] get(VirtualFrame event, Executable<VirtualFrame, Object>[] source) {
+		for (Executable<VirtualFrame, Object> task : source) {
 			Object[] arguments;
 			//noinspection rawtypes
 			if (task instanceof DynamicFunctionReference reference) {

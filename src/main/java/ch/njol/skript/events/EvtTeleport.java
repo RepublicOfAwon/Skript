@@ -1,6 +1,7 @@
 package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -12,6 +13,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.jetbrains.annotations.Nullable;
@@ -86,7 +88,7 @@ public class EvtTeleport extends SkriptEvent {
 	private EntityType @Nullable [] entities;
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		if (args[0] != null) {
 			entitiesLiteral = ((Literal<EntityType>) args[0]); // evaluate only once
 			entities = entitiesLiteral.getAll();
@@ -96,7 +98,7 @@ public class EvtTeleport extends SkriptEvent {
 
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (event instanceof EntityTeleportEvent) {
 			Entity entity = ((EntityTeleportEvent) event).getEntity();
 			return checkEntity(entity);
@@ -121,7 +123,7 @@ public class EvtTeleport extends SkriptEvent {
 
 	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (entitiesLiteral != null)
-			return "on " + entitiesLiteral.toString(event, debug) + " teleport";
+			return "on " + ((Expression)entitiesLiteral).toString(event, debug) + " teleport";
 		return "on teleport";
 	}
 

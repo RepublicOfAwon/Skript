@@ -13,6 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.script.Script;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ScriptFunction<T> extends Function<T> implements ReturnHandler<T> {
 
 	private final Trigger trigger;
@@ -55,21 +58,22 @@ public class ScriptFunction<T> extends Function<T> implements ReturnHandler<T> {
 	// REM: use patterns, e.g. {_a%b%} is like "a.*", and thus subsequent {_axyz} may be set and of that type.
 	@Override
 	public T @Nullable [] execute(FunctionEvent<?> event, Object[][] params) {
+		Map<String, Object> maps = new HashMap<>();
 		Parameter<?>[] parameters = getSignature().getParameters();
 		for (int i = 0; i < parameters.length; i++) {
 			Parameter<?> parameter = parameters[i];
 			Object[] val = params[i];
 			if (parameter.single && val.length > 0) {
-				Variables.setVariable(parameter.name(), val[0], event, true);
+				maps.put(parameter.name(), val[0]);
 			} else {
 				for (Object value : val) {
 					KeyedValue<?> keyedValue = (KeyedValue<?>) value;
-					Variables.setVariable(parameter.name() + "::" + keyedValue.key(), keyedValue.value(), event, true);
+					maps.put(parameter.name() + "::" + keyedValue.key(), keyedValue.value());
 				}
 			}
 		}
 
-		trigger.execute(event);
+		trigger.execute(event, maps);
 		ClassInfo<T> returnType = getReturnType();
 		return returnType != null ? returnValues : null;
 	}

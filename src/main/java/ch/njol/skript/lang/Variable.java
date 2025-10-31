@@ -791,7 +791,7 @@ public class Variable<T> extends Expression<T> implements KeyReceiverExpression<
 
 	@Override
 	public boolean isLoopOf(String input) {
-		return KeyProviderExpression.super.isLoopOf(input)
+		return (canReturnKeys() && isIndexLoop(input)) //=KeyProviderExpression#isLoopOf
 			|| input.equalsIgnoreCase("var")
 			|| input.equalsIgnoreCase("variable")
 			|| input.equalsIgnoreCase("value");

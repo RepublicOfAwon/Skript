@@ -1,6 +1,7 @@
 package ch.njol.skript.lang.util;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.KeyProviderExpression;
 import ch.njol.skript.lang.KeyReceiverExpression;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -23,16 +24,16 @@ import java.util.function.Consumer;
  */
 public class ConvertedKeyProviderExpression<F, T> extends ConvertedExpression<F, T> implements KeyProviderExpression<T>, KeyReceiverExpression<T> {
 
-	private final WeakHashMap<Event, String[]> arrayKeysCache = new WeakHashMap<>();
-	private final WeakHashMap<Event, String[]> allKeysCache = new WeakHashMap<>();
+	private final WeakHashMap<VirtualFrame, String[]> arrayKeysCache = new WeakHashMap<>();
+	private final WeakHashMap<VirtualFrame, String[]> allKeysCache = new WeakHashMap<>();
 	private final boolean supportsKeyedChange;
 
-	public ConvertedKeyProviderExpression(KeyProviderExpression<? extends F> source, Class<T> to, ConverterInfo<? super F, ? extends T> info) {
+	public ConvertedKeyProviderExpression(Expression<? extends F> source, Class<T> to, ConverterInfo<? super F, ? extends T> info) {
 		super(source, to, info);
 		this.supportsKeyedChange = source instanceof KeyReceiverExpression<?>;
 	}
 
-	public ConvertedKeyProviderExpression(KeyProviderExpression<? extends F> source, Class<T>[] toExact, Collection<ConverterInfo<? super F, ? extends T>> converterInfos, boolean performFromCheck) {
+	public ConvertedKeyProviderExpression(Expression<? extends F> source, Class<T>[] toExact, Collection<ConverterInfo<? super F, ? extends T>> converterInfos, boolean performFromCheck) {
 		super(source, toExact, converterInfos, performFromCheck);
 		this.supportsKeyedChange = source instanceof KeyReceiverExpression<?>;
 	}
@@ -42,7 +43,7 @@ public class ConvertedKeyProviderExpression<F, T> extends ConvertedExpression<F,
 		if (!canReturnKeys()) {
 			return super.executeArray(frame);
 		}
-		return get(getSource().getArray(frame), getSource().getArrayKeys(frame), keys -> arrayKeysCache.put(frame, keys));
+		return get(getSource().executeArray(frame), ((KeyProviderExpression<? extends F>) getSource()).getArrayKeys(frame), keys -> arrayKeysCache.put(frame, keys));
 	}
 
 	@Override
@@ -50,7 +51,7 @@ public class ConvertedKeyProviderExpression<F, T> extends ConvertedExpression<F,
 		if (!canReturnKeys()) {
 			return super.executeAll(frame);
 		}
-		return get(getSource().getAll(frame), getSource().getAllKeys(frame), keys -> allKeysCache.put(frame, keys));
+		return get(getSource().executeAll(frame), ((KeyProviderExpression<? extends F>) getSource()).getAllKeys(frame), keys -> allKeysCache.put(frame, keys));
 	}
 
 	private T[] get(F[] source, String[] keys, Consumer<String[]> convertedKeysConsumer) {
@@ -65,8 +66,8 @@ public class ConvertedKeyProviderExpression<F, T> extends ConvertedExpression<F,
 	}
 
 	@Override
-	public KeyProviderExpression<? extends F> getSource() {
-		return (KeyProviderExpression<? extends F>) super.getSource();
+	public Expression<? extends F> getSource() {
+		return super.getSource();
 	}
 
 	@Override
@@ -85,16 +86,16 @@ public class ConvertedKeyProviderExpression<F, T> extends ConvertedExpression<F,
 
 	@Override
 	public boolean canReturnKeys() {
-		return getSource().canReturnKeys();
+		return ((KeyProviderExpression<? extends F>) getSource()).canReturnKeys();
 	}
 
 	@Override
 	public boolean areKeysRecommended() {
-		return getSource().areKeysRecommended();
+		return ((KeyProviderExpression<? extends F>) getSource()).areKeysRecommended();
 	}
 
 	@Override
-	public void change(Event event, Object @NotNull [] delta, ChangeMode mode, @NotNull String @NotNull [] keys) {
+	public void change(VirtualFrame event, Object @NotNull [] delta, ChangeMode mode, @NotNull String @NotNull [] keys) {
 		if (supportsKeyedChange) {
 			((KeyReceiverExpression<?>) getSource()).change(event, delta, mode, keys);
 		} else {

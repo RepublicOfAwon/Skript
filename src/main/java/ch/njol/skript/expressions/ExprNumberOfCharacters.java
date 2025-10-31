@@ -82,7 +82,7 @@ public class ExprNumberOfCharacters extends SimpleExpression<Long> {
 
 	@Override
 	public Expression<? extends Long> simplify() {
-		if (expr instanceof Literal<String>)
+		if (expr instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

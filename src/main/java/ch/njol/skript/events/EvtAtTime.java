@@ -3,6 +3,7 @@ package ch.njol.skript.events;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptEventHandler;
 import ch.njol.skript.events.bukkit.ScheduledEvent;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -12,6 +13,7 @@ import ch.njol.util.Math2;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
@@ -53,7 +55,7 @@ public class EvtAtTime extends SkriptEvent implements Comparable<EvtAtTime> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		time = ((Literal<Time>) args[0]).getSingle().getTicks();
 		worlds = args[1] == null ? Bukkit.getWorlds().toArray(new World[0]) : ((Literal<World>) args[1]).getAll();
 		return true;
@@ -90,7 +92,7 @@ public class EvtAtTime extends SkriptEvent implements Comparable<EvtAtTime> {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		throw new UnsupportedOperationException();
 	}
 

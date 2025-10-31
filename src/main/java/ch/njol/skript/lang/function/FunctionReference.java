@@ -13,6 +13,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Contract;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.StringUtils;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
@@ -372,7 +373,7 @@ public class FunctionReference<T> implements Contract, Executable<Event, T[]> {
 		return false;
 	}
 
-	protected T @Nullable [] execute(Event event) {
+	protected T @Nullable [] execute(VirtualFrame event) {
 		// If needed, acquire the function reference
 		if (function == null)
 			//noinspection unchecked
@@ -396,7 +397,7 @@ public class FunctionReference<T> implements Contract, Executable<Event, T[]> {
 		return function.execute(params);
 	}
 
-	private Object[] evaluateSingleListParameter(Expression<?>[] parameters, Event event, boolean keyed) {
+	private Object[] evaluateSingleListParameter(Expression<?>[] parameters, VirtualFrame event, boolean keyed) {
 		if (!keyed) {
 			List<Object> list = new ArrayList<>();
 			for (Expression<?> parameter : parameters)
@@ -431,7 +432,7 @@ public class FunctionReference<T> implements Contract, Executable<Event, T[]> {
 		return KeyedValue.zip(values.toArray(), keys.toArray(new String[0]));
 	}
 
-	private Object[] evaluateParameter(Expression<?> parameter, Event event, boolean keyed) {
+	private Object[] evaluateParameter(Expression<?> parameter, VirtualFrame event, boolean keyed) {
 		Object[] values = parameter.executeArray(event);
 
 		// Don't allow mutating across function boundary; same hack is applied to variables
@@ -479,7 +480,7 @@ public class FunctionReference<T> implements Contract, Executable<Event, T[]> {
 		return contract;
 	}
 
-	public String toString(@Nullable Event event, boolean debug) {
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		StringBuilder b = new StringBuilder(functionName + "(");
 		for (int i = 0; i < parameters.length; i++) {
 			if (i != 0)

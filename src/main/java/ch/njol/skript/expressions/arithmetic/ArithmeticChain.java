@@ -27,9 +27,9 @@ public class ArithmeticChain<L, R, T> extends ArithmeticGettable<T> {
 	private static List<Set<Operator>> operatorGroups = null;
 
 	@Child
-	private final ArithmeticGettable<L> left;
+	private ArithmeticGettable<L> left;
 	@Child
-	private final ArithmeticGettable<R> right;
+	private ArithmeticGettable<R> right;
 	private final Operator operator;
 	private final Class<? extends T> returnType;
 	private final @Nullable OperationInfo<? extends L, ? extends R, ? extends T> operationInfo;

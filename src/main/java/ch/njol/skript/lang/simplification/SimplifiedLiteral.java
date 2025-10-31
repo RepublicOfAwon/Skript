@@ -31,7 +31,7 @@ public class SimplifiedLiteral<T> extends SimpleLiteral<T> {
 		if (original instanceof SimplifiedLiteral<T> literal)
 			return literal;
 
-		Event event = ContextlessVirtualFrame.get();
+		VirtualFrame event = ContextlessVirtualFrame.get();
 		T[] values = original.executeAll(event);
 
 		//noinspection unchecked

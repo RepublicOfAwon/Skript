@@ -1,10 +1,11 @@
 package ch.njol.skript.lang.util;
 
 import ch.njol.skript.SkriptAPIException;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -17,12 +18,12 @@ public class SimpleEvent extends SkriptEvent {
 	public SimpleEvent() {}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		return true;
 	}
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parser) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parser) {
 		if (args.length != 0)
 			throw new SkriptAPIException("Invalid use of SimpleEvent");
 		return true;

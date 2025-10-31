@@ -55,7 +55,7 @@ public class ExprARGB extends SimplePropertyExpression<Color, Integer> {
 
 	@Override
 	public Expression<? extends Integer> simplify() {
-		if (getExpr() instanceof Literal<? extends Color>)
+		if (getExpr() instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

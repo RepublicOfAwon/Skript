@@ -1,11 +1,12 @@
 package ch.njol.skript.events;
 
+import ch.njol.skript.lang.Expression;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 
@@ -22,12 +23,12 @@ public class EvtFirstJoin extends SkriptEvent {
 	}
 	
 	@Override
-	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
+	public boolean init(final Expression<?>[] args, final int matchedPattern, final ParseResult parser) {
 		return true;
 	}
 	
 	@Override
-	public boolean check(final VirtualFrame e) {
+	public boolean check(final Event e) {
 		return !((PlayerJoinEvent) e).getPlayer().hasPlayedBefore();
 	}
 	

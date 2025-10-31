@@ -49,14 +49,14 @@ public class EffEntityVisibilityTest extends SkriptJUnitTest {
 		testPlayer.hideEntity(Skript.getInstance(), testEntity);
 		EasyMock.expectLastCall();
 		EasyMock.replay(testPlayer);
-		hideEntityEffect.run(event);
+		hideEntityEffect.execute(event);
 		EasyMock.verify(testPlayer);
 
 		EasyMock.resetToNice(testPlayer);
 		testPlayer.showEntity(Skript.getInstance(), testEntity);
 		EasyMock.expectLastCall();
 		EasyMock.replay(testPlayer);
-		revealEntityEffect.run(event);
+		revealEntityEffect.execute(event);
 		EasyMock.verify(testPlayer);
 	}
 

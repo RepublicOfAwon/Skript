@@ -1,12 +1,14 @@
 package org.skriptlang.skript.bukkit.brewing.elements;
 
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.registrations.EventValues;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.bukkit.event.inventory.BrewingStandFuelEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -42,14 +44,14 @@ public class EvtBrewingFuel extends SkriptEvent {
 	private Literal<ItemType> items;
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		//noinspection unchecked
 		items = (Literal<ItemType>) args[0];
 		return true;
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (!(event instanceof BrewingStandFuelEvent brewingStandFuelEvent))
 			return false;
 		if (items == null)

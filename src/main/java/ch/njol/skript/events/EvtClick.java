@@ -5,9 +5,11 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.ClickEventTracker;
 import ch.njol.skript.classes.data.DefaultComparators;
 import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.util.coll.CollectionUtils;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
@@ -15,6 +17,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Vehicle;
+import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -77,10 +80,10 @@ public class EvtClick extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		click = parseResult.mark == 0 ? ANY : parseResult.mark;
-		type = args[matchedPattern];
-		if (type != null && !type.canReturn(ItemType.class) && !type.canReturn(BlockData.class)) {
+		type = (Literal<?>) args[matchedPattern];
+		if (type != null && !((Expression)type).canReturn(ItemType.class) && !((Expression)type).canReturn(BlockData.class)) {
 			Literal<EntityData<?>> entitydata = (Literal<EntityData<?>>) type;
 			if (click == LEFT) {
 				if (Vehicle.class.isAssignableFrom(entitydata.getSingle().getType())) {
@@ -104,7 +107,7 @@ public class EvtClick extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		Block block;
 		Entity entity;
 
@@ -169,12 +172,12 @@ public class EvtClick extends SkriptEvent {
 			}
 		};
 
-		if (tools != null && !tools.check(event, checker))
+		if (tools != null && !((Expression<ItemType>)tools).check(ContextlessVirtualFrame.get(event), checker))
 			return false;
 
 		if (type != null) {
 			BlockData blockDataCheck = block != null ? block.getBlockData() : null;
-			return type.check(event, (Predicate<Object>) object -> {
+			return ((Expression)type).check(ContextlessVirtualFrame.get(event), (Predicate<Object>) object -> {
 				if (entity != null) {
 					if (object instanceof EntityData<?> entityData) {
 						return entityData.isInstance(entity);
@@ -201,8 +204,8 @@ public class EvtClick extends SkriptEvent {
 			case LEFT -> "left";
 			case RIGHT -> "right";
 			default -> "";
-		} + "click" + (type != null ? " on " + type.toString(event, debug) : "") +
-			(tools != null ? " holding " + tools.toString(event, debug) : "");
+		} + "click" + (type != null ? " on " + ((Expression)type).toString(event, debug) : "") +
+			(tools != null ? " holding " + ((Expression)tools).toString(event, debug) : "");
 	}
 
 }

@@ -3,15 +3,18 @@ package ch.njol.skript.events;
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.ItemUtils;
 import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Silverfish;
+import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,7 +86,7 @@ public class EvtEntityBlockChange extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		event = ChangeEvent.values()[matchedPattern];
 		if (event == ChangeEvent.GENERIC)
 			datas = (Literal<EntityData<?>>) args[0];
@@ -91,10 +94,10 @@ public class EvtEntityBlockChange extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (!(event instanceof EntityChangeBlockEvent))
 			return false;
-		if (datas != null && !datas.check(event, data -> data.isInstance(((EntityChangeBlockEvent) event).getEntity())))
+		if (datas != null && !((Expression<EntityData<?>>)datas).check(ContextlessVirtualFrame.get(event), data -> data.isInstance(((EntityChangeBlockEvent) event).getEntity())))
 			return false;
 		if (this.event.checker == null)
 			return true;

@@ -1,6 +1,6 @@
 package org.skriptlang.skript.registration;
 
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -20,7 +20,7 @@ public class StructureSyntaxInfoTest extends BaseSyntaxInfoTests<MockStructure, 
 	public static final class MockStructure extends Structure {
 
 		@Override
-		public SyntaxElement init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
+		public SyntaxElement init(Expression<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
 			throw new UnsupportedOperationException();
 		}
 

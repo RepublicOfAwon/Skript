@@ -1,7 +1,10 @@
 package ch.njol.skript.events;
 
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
@@ -40,14 +43,14 @@ public class EvtSpectate extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		pattern = matchedPattern - 1;
 		datas = (Literal<EntityData<?>>) args[0];
 		return true;
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		boolean swap = false;
 		Entity entity;
 		// Start or swap event, and must be PlayerStartSpectatingEntityEvent.
@@ -69,7 +72,7 @@ public class EvtSpectate extends SkriptEvent {
 			return false;
 		if (datas == null)
 			return true;
-		for (EntityData<?> data : this.datas.executeAll(event)) {
+		for (EntityData<?> data : ((Expression<EntityData<?>>)this.datas).executeAll(ContextlessVirtualFrame.get(event))) {
 			if (data.isInstance(entity))
 				return true;
 		}
@@ -79,7 +82,7 @@ public class EvtSpectate extends SkriptEvent {
 	@Override
 	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (pattern == START ? "start" : pattern == SWAP ? "swap" : "stop") + " spectating" +
-					(datas != null ? "of " + datas.toString(event, debug) : "");
+					(datas != null ? "of " + ((Expression)datas).toString(event, debug) : "");
 	}
 
 }

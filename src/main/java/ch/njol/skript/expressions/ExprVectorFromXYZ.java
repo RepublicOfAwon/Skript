@@ -65,7 +65,7 @@ public class ExprVectorFromXYZ extends SimpleExpression<Vector> {
 
 	@Override
 	public Expression<? extends Vector> simplify() {
-		if (x instanceof Literal<Number> && y instanceof Literal<Number> && z instanceof Literal<Number>)
+		if (x instanceof Literal && y instanceof Literal && z instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

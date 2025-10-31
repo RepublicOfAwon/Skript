@@ -10,7 +10,7 @@ import org.skriptlang.skript.lang.converter.Converters;
 
 import java.util.Optional;
 
-public class LiteralString extends VariableString implements Literal<String> {
+public class LiteralString extends VariableString implements Literal<String>{
 
 	/**
 	 * Creates a new VariableString which does not contain variables.
@@ -19,6 +19,36 @@ public class LiteralString extends VariableString implements Literal<String> {
 	 */
 	protected LiteralString(String input) {
 		super(input);
+	}
+
+	@Override
+	public Optional<String> executeOptional(VirtualFrame frame) {
+		return Optional.of(original);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <R> @Nullable Expression<R> getConvertedExpression(Class<R>... to) {
+		if (CollectionUtils.containsSuperclass(to, String.class))
+			return (Expression<R>) this;
+		Class<R> superType = (Class<R>) Utils.getSuperType(to);
+		R[] parsedData = Converters.convert(this.executeArray(null), to, superType);
+		if (parsedData.length != 1)
+			return null;
+		return new ConvertedLiteral<>(this, parsedData, superType);
+	}
+
+	/**
+	 * Use {@link #toString(VirtualFrame)} to get the actual string. This method is for debugging.
+	 */
+	@Override
+	public String toString(@Nullable VirtualFrame event, boolean debug) {
+		return '"' + original + '"';
+	}
+
+	@Override
+	public String toString(@Nullable VirtualFrame event) {
+		return original;
 	}
 
 	@Override
@@ -35,30 +65,4 @@ public class LiteralString extends VariableString implements Literal<String> {
 	public String[] getAll() {
 		return new String[]{original};
 	}
-
-	@Override
-	public Optional<String> executeOptional(VirtualFrame frame) {
-		return Optional.of(original);
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public <R> @Nullable Literal<? extends R> getConvertedExpression(Class<R>... to) {
-		if (CollectionUtils.containsSuperclass(to, String.class))
-			return (Literal<? extends R>) this;
-		Class<R> superType = (Class<R>) Utils.getSuperType(to);
-		R[] parsedData = Converters.convert(this.getArray(), to, superType);
-		if (parsedData.length != 1)
-			return null;
-		return new ConvertedLiteral<>(this, parsedData, superType);
-	}
-
-	/**
-	 * Use {@link #toString(Event)} to get the actual string. This method is for debugging.
-	 */
-	@Override
-	public String toString(@Nullable VirtualFrame event, boolean debug) {
-		return '"' + original + '"';
-	}
-
 }

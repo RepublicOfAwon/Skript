@@ -10,6 +10,7 @@ import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.ClassInfoReference;
 import ch.njol.skript.variables.Variables;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -43,7 +44,7 @@ public class ClassInfoReferenceTest {
 		Assert.assertEquals(Player.class, reference.getClassInfo().getC());
 		Assert.assertTrue(reference.isPlural().isTrue());
 
-		Event event = ContextlessVirtualFrame.get();
+		VirtualFrame event = ContextlessVirtualFrame.get();
 		Variables.setVariable("classinfo", Classes.getExactClassInfo(Block.class), event, true);
 		reference = parseAndWrap("{_classinfo}").executeSingle(event);
 		Assert.assertEquals(Block.class, reference.getClassInfo().getC());

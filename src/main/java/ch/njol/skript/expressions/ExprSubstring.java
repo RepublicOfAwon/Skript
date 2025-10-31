@@ -97,9 +97,9 @@ public class ExprSubstring extends SimpleExpression<String> {
 
 	@Override
 	public Expression<? extends String> simplify() {
-		if (string instanceof Literal<String>
-			&& (start == null || start instanceof Literal<Number>)
-			&& (end == null || end instanceof Literal<Number>))
+		if (string instanceof Literal
+			&& (start == null || start instanceof Literal)
+			&& (end == null || end instanceof Literal))
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

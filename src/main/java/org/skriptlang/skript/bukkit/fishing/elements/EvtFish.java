@@ -1,13 +1,14 @@
 package org.skriptlang.skript.bukkit.fishing.elements;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
+import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -89,13 +90,13 @@ public class EvtFish extends SkriptEvent {
 	private State state;
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		state = State.values()[matchedPattern];
 		return true;
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (!(event instanceof PlayerFishEvent fishEvent))
 			return false;
 		return state == State.STATE_CHANGE || state.state == fishEvent.getState();

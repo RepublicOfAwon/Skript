@@ -1,6 +1,7 @@
 package ch.njol.skript.lang.util;
 
 import ch.njol.skript.SkriptAPIException;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
@@ -16,12 +17,12 @@ import java.util.function.Predicate;
 /**
  * @see SimpleLiteral
  */
-public class ConvertedLiteral<F, T> extends ConvertedExpression<F, T> implements Literal<T> {
+public class ConvertedLiteral<F, T> extends ConvertedExpression<F, T> {
 
 	protected transient T[] data;
 
 	@SuppressWarnings("unchecked")
-	public ConvertedLiteral(Literal<F> source, T[] data, Class<T> to) {
+	public ConvertedLiteral(Expression<F> source, T[] data, Class<T> to) {
 		super(source, to, new ConverterInfo<>((Class<F>) source.getReturnType(), to, from -> Converters.convert(from, to), 0));
 		this.data = data;
 		assert data.length > 0;
@@ -29,10 +30,10 @@ public class ConvertedLiteral<F, T> extends ConvertedExpression<F, T> implements
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <R> @Nullable Literal<? extends R> getConvertedExpression(Class<R>... to) {
+	public <R> @Nullable Expression<? extends R> getConvertedExpression(Class<R>... to) {
 		if (CollectionUtils.containsSuperclass(to, this.to))
-			return (Literal<? extends R>) this;
-		return ((Literal<F>) source).getConvertedExpression(to);
+			return (Expression<? extends R>) this;
+		return source.getConvertedExpression(to);
 	}
 
 	@Override
@@ -41,30 +42,15 @@ public class ConvertedLiteral<F, T> extends ConvertedExpression<F, T> implements
 	}
 
 	@Override
-	public T[] getArray() {
-		return data;
-	}
-
-	@Override
-	public T[] getAll() {
-		return data;
-	}
-
-	@Override
 	public T[] executeArray(VirtualFrame frame) {
-		return getArray();
-	}
-
-	@Override
-	public T getSingle() {
-		if (getAnd() && data.length > 1)
-			throw new SkriptAPIException("Call to getSingle on a non-single expression");
-		return CollectionUtils.getRandom(data);
+		return data;
 	}
 
 	@Override
 	public T executeSingle(VirtualFrame frame) {
-		return getSingle();
+		if (getAnd() && data.length > 1)
+			throw new SkriptAPIException("Call to getSingle on a non-single expression");
+		return CollectionUtils.getRandom(data);
 	}
 
 	@Override

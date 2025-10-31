@@ -170,15 +170,15 @@ public class ExprRotate extends SimpleExpression<Object> {
 		if (toRotate instanceof Literal<?>) {
 			switch (matchedPattern) {
 				case 0, 1 -> {
-					if (angle instanceof Literal<Number>)
+					if (angle instanceof Literal)
 						return SimplifiedLiteral.fromExpression(this);
 				}
 				case 2 -> {
-					if (angle instanceof Literal<Number> && vector instanceof Literal<?>)
+					if (angle instanceof Literal && vector instanceof Literal<?>)
 						return SimplifiedLiteral.fromExpression(this);
 				}
 				case 3 -> {
-					if (x instanceof Literal<Number> && y instanceof Literal<Number> && z instanceof Literal<Number>)
+					if (x instanceof Literal && y instanceof Literal && z instanceof Literal)
 						return SimplifiedLiteral.fromExpression(this);
 				}
 			}

@@ -65,7 +65,7 @@ public class ExprVectorFromYawAndPitch extends SimpleExpression<Vector> {
 
 	@Override
 	public Expression<? extends Vector> simplify() {
-		if (pitch instanceof Literal<Number> && yaw instanceof Literal<Number>)
+		if (pitch instanceof Literal && yaw instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

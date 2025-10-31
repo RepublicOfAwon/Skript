@@ -4,7 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.SkriptEventHandler;
 import ch.njol.skript.events.bukkit.ExperienceSpawnEvent;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
@@ -104,7 +104,7 @@ public class EvtExperienceSpawn extends SkriptEvent {
 	};
 	
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		return true;
 	}
 
@@ -126,7 +126,7 @@ public class EvtExperienceSpawn extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		throw new UnsupportedOperationException();
 	}
 

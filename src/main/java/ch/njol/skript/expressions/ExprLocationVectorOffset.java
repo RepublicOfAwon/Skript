@@ -74,7 +74,7 @@ public class ExprLocationVectorOffset extends SimpleExpression<Location> {
 
 	@Override
 	public Expression<? extends Location> simplify() {
-		if (location instanceof Literal<Location> && vectors instanceof Literal<Vector>)
+		if (location instanceof Literal && vectors instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

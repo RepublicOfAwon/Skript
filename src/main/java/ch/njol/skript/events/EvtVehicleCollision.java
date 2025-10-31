@@ -3,6 +3,7 @@ package ch.njol.skript.events;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -12,6 +13,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
 import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
 import org.bukkit.event.vehicle.VehicleCollisionEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
@@ -46,9 +48,9 @@ public class EvtVehicleCollision extends SkriptEvent {
 	private final List<EntityData<?>> entityDatas = new ArrayList<>();
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		if (args[0] != null) {
-			expr = args[0];
+			expr = (Literal<?>) args[0];
 			for (Object object : expr.getAll()) {
 				if (object instanceof ItemType itemType) {
 					itemTypes.add(itemType);
@@ -65,7 +67,7 @@ public class EvtVehicleCollision extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (!(event instanceof VehicleCollisionEvent collisionEvent))
 			return false;
 

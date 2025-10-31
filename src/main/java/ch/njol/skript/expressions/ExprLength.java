@@ -34,7 +34,7 @@ public class ExprLength extends SimplePropertyExpression<String, Long> {
 
 	@Override
 	public Expression<? extends Long> simplify() {
-		if (getExpr() instanceof Literal<? extends String>)
+		if (getExpr() instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

@@ -9,11 +9,8 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.SyntaxElement;
-import ch.njol.skript.lang.Variable;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
@@ -134,7 +131,7 @@ public class StructVariables extends Structure {
 	}
 
 	@Override
-	public SyntaxElement init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
+	public SyntaxElement init(Expression<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
 		// noinspection ConstantConditions - entry container cannot be null as this structure is not simple
 		SectionNode node = entryContainer.getSource();
 		node.convertToEntries(0, "=");

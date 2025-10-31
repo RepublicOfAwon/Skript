@@ -24,7 +24,7 @@ import java.util.function.Predicate;
  *
  * @see UnparsedLiteral
  */
-public class SimpleLiteral<T> extends Literal<T> implements DefaultExpression<T> {
+public class SimpleLiteral<T> extends Expression<T> implements DefaultExpression<T>,Literal<T> {
 
 	protected final Class<T> type;
 
@@ -123,9 +123,9 @@ public class SimpleLiteral<T> extends Literal<T> implements DefaultExpression<T>
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <R> @Nullable Literal<? extends R> getConvertedExpression(Class<R>... to) {
+	public <R> @Nullable Expression<? extends R> getConvertedExpression(Class<R>... to) {
 		if (CollectionUtils.containsSuperclass(to, type))
-			return (Literal<? extends R>) this;
+			return (Expression<? extends R>) this;
 		R[] parsedData = Converters.convert(this.data(), to, (Class<R>) Utils.getSuperType(to));
 		if (parsedData.length != data.length)
 			return null;

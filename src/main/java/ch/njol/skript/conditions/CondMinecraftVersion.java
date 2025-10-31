@@ -42,7 +42,7 @@ public class CondMinecraftVersion extends Condition {
 
 	@Override
 	public Condition simplify() {
-		if (version instanceof Literal<String>)
+		if (version instanceof Literal)
 			return SimplifiedCondition.fromCondition(this);
 		return this;
 	}

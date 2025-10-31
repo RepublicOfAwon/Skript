@@ -5,6 +5,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.util.Kleenean;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
@@ -18,20 +19,20 @@ import static org.junit.Assert.*;
 
 public class ExpressionSyntaxInfoTest extends BaseSyntaxInfoTests<MockExpression, SyntaxInfo.Expression.Builder<?, MockExpression, String>> {
 
-	public static final class MockExpression implements Expression<String> {
+	public static final class MockExpression extends Expression<String> {
 
 		@Override
-		public String getSingle(Event event) {
+		public String executeSingle(VirtualFrame event) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public String[] getArray(Event event) {
+		public String[] executeArray(VirtualFrame event) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public String[] getAll(Event event) {
+		public String[] executeAll(VirtualFrame event) {
 			throw new UnsupportedOperationException();
 		}
 
@@ -41,12 +42,12 @@ public class ExpressionSyntaxInfoTest extends BaseSyntaxInfoTests<MockExpression
 		}
 
 		@Override
-		public boolean check(Event event, Predicate<? super String> checker, boolean negated) {
+		public boolean check(VirtualFrame event, Predicate<? super String> checker, boolean negated) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public boolean check(Event event, Predicate<? super String> checker) {
+		public boolean check(VirtualFrame event, Predicate<? super String> checker) {
 			throw new UnsupportedOperationException();
 		}
 
@@ -97,17 +98,17 @@ public class ExpressionSyntaxInfoTest extends BaseSyntaxInfoTests<MockExpression
 		}
 
 		@Override
-		public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+		public void change(VirtualFrame event, Object @Nullable [] delta, ChangeMode mode) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public String toString(@Nullable Event event, boolean debug) {
+		public String toString(@Nullable VirtualFrame event, boolean debug) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public Iterator<? extends String> iterator(Event event) {
+		public Iterator<? extends String> iterator(VirtualFrame event) {
 			throw new UnsupportedOperationException();
 		}
 

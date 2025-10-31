@@ -1,6 +1,8 @@
 package ch.njol.skript.events;
 
+import ch.njol.skript.lang.Expression;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,14 +26,14 @@ public class EvtPlantGrowth extends SkriptEvent {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		types = (Literal<ItemType>) args[0];
 		
 		return true;
 	}
 
 	@Override
-	public boolean check(VirtualFrame e) {
+	public boolean check(Event e) {
 		if (types != null) {
 			for (ItemType type : types.getAll()) {
 				if (new ItemType(((BlockGrowEvent) e).getBlock()).equals(type))

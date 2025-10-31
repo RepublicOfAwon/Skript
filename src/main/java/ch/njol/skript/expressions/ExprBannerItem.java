@@ -102,7 +102,7 @@ public class ExprBannerItem extends SimpleExpression<ItemType> {
 
 	@Override
 	public boolean isSingle() {
-		return literalPattern.isSingle();
+		return ((Expression)literalPattern).isSingle();
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class ExprBannerItem extends SimpleExpression<ItemType> {
 
 	@Override
 	public String toString(@Nullable VirtualFrame event, boolean debug) {
-		return literalPattern.toString(event, debug) + " items";
+		return ((Expression)literalPattern).toString(event, debug) + " items";
 	}
 
 	private static @Nullable Material getMaterial(Object object) {

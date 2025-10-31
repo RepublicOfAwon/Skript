@@ -4,19 +4,15 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * A literal, e.g. a number, string or item. Literals are constants which do not depend on the event and can thus e.g. be used in events.
- * 
+ *
  * @author Peter Güttinger
  */
-public abstract class Literal<T> extends Expression<T> {
+public interface Literal<T> {
 
-	public abstract T[] getArray();
+	T[] getArray();
 
-	public abstract T getSingle();
+	T getSingle();
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public abstract <R> @Nullable Literal<? extends R> getConvertedExpression(Class<R>... to);
-
-	public abstract T[] getAll();
+	T[] getAll();
 
 }

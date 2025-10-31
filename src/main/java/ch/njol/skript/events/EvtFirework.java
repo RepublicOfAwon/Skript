@@ -1,14 +1,17 @@
 package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ColorRGB;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.FireworkEffect;
+import org.bukkit.event.Event;
 import org.bukkit.event.entity.FireworkExplodeEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +40,7 @@ public class EvtFirework extends SkriptEvent {
 	private @Nullable Literal<Color> colors;
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		if (args[0] != null)
 			//noinspection unchecked
 			colors = (Literal<Color>) args[0];
@@ -45,14 +48,14 @@ public class EvtFirework extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (!(event instanceof FireworkExplodeEvent fireworkExplodeEvent))
 			return false;
 
 		if (colors == null)
 			return true;
 
-		Set<org.bukkit.Color> colours = colors.stream(event)
+		Set<org.bukkit.Color> colours = ((Expression<Color>)colors).stream(ContextlessVirtualFrame.get(event))
 			.map(color -> {
 				if (color instanceof ColorRGB)
 					return color.asBukkitColor();

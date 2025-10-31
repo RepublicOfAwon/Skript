@@ -32,9 +32,9 @@ public class SecCustomDefault extends Section {
 		this.type = ((Literal<ClassInfo<?>>) expressions[1]).getSingle();
 		Class<?> type = this.type.getC();
 
-		if (!type.isAssignableFrom(value.getReturnType())) {
+		if (!type.isAssignableFrom(((Expression)value).getReturnType())) {
 			Skript.error("The value expression returns an invalid type: expected " + type.getSimpleName() +
-				", got " + value.getReturnType().getSimpleName());
+				", got " + ((Expression)value).getReturnType().getSimpleName());
 			return this;
 		}
 
@@ -55,7 +55,7 @@ public class SecCustomDefault extends Section {
 
 	@Override
 	public String toString(@Nullable VirtualFrame event, boolean debug) {
-		return "run with custom default value " + value.toString(event, debug) + " for " + type.toString(event, debug);
+		return "run with custom default value " + ((Expression)value).toString(event, debug) + " for " + type.toString(event, debug);
 	}
 
 }

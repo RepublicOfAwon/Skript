@@ -69,7 +69,7 @@ public class ExprNewBannerPattern extends SimpleExpression<Pattern> {
 
 	@Override
 	public Expression<? extends Pattern> simplify() {
-		if (selectedPattern instanceof Literal<PatternType> && selectedColor instanceof Literal<Color>)
+		if (selectedPattern instanceof Literal && selectedColor instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

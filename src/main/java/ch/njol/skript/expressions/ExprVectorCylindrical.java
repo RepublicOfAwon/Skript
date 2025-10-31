@@ -70,7 +70,7 @@ public class ExprVectorCylindrical extends SimpleExpression<Vector> {
 
 	@Override
 	public Expression<? extends Vector> simplify() {
-		if (radius instanceof Literal<Number> && yaw instanceof Literal<Number> && height instanceof Literal<Number>)
+		if (radius instanceof Literal && yaw instanceof Literal && height instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

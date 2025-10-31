@@ -1,9 +1,11 @@
 package ch.njol.skript.events;
 
+import ch.njol.skript.lang.Expression;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.Nullable;
@@ -32,14 +34,14 @@ public class EvtDamage extends SkriptEvent {
 	private Literal<EntityData<?>> ofTypes, byTypes;
 	
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parser) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parser) {
 		ofTypes = (Literal<EntityData<?>>) args[0];
 		byTypes = (Literal<EntityData<?>>) args[1];
 		return true;
 	}
 	
 	@Override
-	public boolean check(VirtualFrame evt) {
+	public boolean check(Event evt) {
 		EntityDamageEvent e = (EntityDamageEvent) evt;
 		if (evt instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) evt;
@@ -79,8 +81,8 @@ public class EvtDamage extends SkriptEvent {
 	
 	@Override
 	public String toString(@Nullable VirtualFrame e, boolean debug) {
-		return "damage" + (ofTypes != null ? " of " + ofTypes.toString(e, debug) : "") +
-			(byTypes != null ? " by " + byTypes.toString(e, debug) : "");
+		return "damage" + (ofTypes != null ? " of " + ((Expression)ofTypes).toString(e, debug) : "") +
+			(byTypes != null ? " by " + ((Expression)byTypes).toString(e, debug) : "");
 	}
 	
 //	private final static WeakHashMap<LivingEntity, Integer> lastDamages = new WeakHashMap<LivingEntity, Integer>();

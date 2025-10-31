@@ -1,11 +1,13 @@
 package org.skriptlang.skript.bukkit.input.elements.events;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerInputEvent;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.input.InputKey;
@@ -32,7 +34,7 @@ public class EvtPlayerInput extends SkriptEvent {
 	private InputType type;
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		//noinspection unchecked
 		keysToCheck = (Literal<InputKey>) args[0];
 		type = InputType.values()[parseResult.mark];
@@ -40,12 +42,12 @@ public class EvtPlayerInput extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		PlayerInputEvent inputEvent = (PlayerInputEvent) event;
 		Set<InputKey> previousKeys = InputKey.fromInput(inputEvent.getPlayer().getCurrentInput());
 		Set<InputKey> currentKeys = InputKey.fromInput(inputEvent.getInput());
 		Set<InputKey> keysToCheck = this.keysToCheck != null ? Set.of(this.keysToCheck.getAll()) : null;
-		boolean and = this.keysToCheck != null && this.keysToCheck.getAnd();
+		boolean and = this.keysToCheck != null && ((Expression<InputKey>)this.keysToCheck).getAnd();
 		return type.checkInputKeys(previousKeys, currentKeys, keysToCheck, and);
 	}
 

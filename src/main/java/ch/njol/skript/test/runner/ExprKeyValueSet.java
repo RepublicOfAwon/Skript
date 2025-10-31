@@ -78,4 +78,14 @@ public class ExprKeyValueSet extends SimpleExpression<Object> implements KeyProv
 		return "test key values";
 	}
 
+	@Override
+	public boolean isLoopOf(String input) {
+		return canReturnKeys() && isIndexLoop(input);
+	}
+
+	@Override
+	public boolean isSingle() {
+		return false;
+	}
+
 }

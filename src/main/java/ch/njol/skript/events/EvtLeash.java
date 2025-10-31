@@ -1,8 +1,10 @@
 package ch.njol.skript.events;
 
+import ch.njol.skript.lang.Expression;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
@@ -73,7 +75,7 @@ public class EvtLeash extends SkriptEvent {
 	private EventType eventType;
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		//noinspection unchecked
 		types = args[0] == null ? null : ((Literal<EntityData<?>>) args[0]).getAll();
 		eventType = EventType.LEASH;
@@ -87,7 +89,7 @@ public class EvtLeash extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		Entity leashedEntity;
 		switch (eventType) {
             case LEASH -> {

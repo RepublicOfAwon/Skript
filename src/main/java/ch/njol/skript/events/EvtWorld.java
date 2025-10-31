@@ -1,12 +1,14 @@
 package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.LiteralList;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.World;
+import org.bukkit.event.Event;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldSaveEvent;
@@ -50,12 +52,12 @@ public class EvtWorld extends SkriptEvent {
 				.since("1.0, 2.8.0 (defining worlds)");
 	}
 
-	private Literal<World> worlds;
+	private Expression<World> worlds;
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
-		worlds = (Literal<World>) args[0];
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
+		worlds = (Expression<World>) args[0];
 		if (worlds instanceof LiteralList<?> && worlds.getAnd()) {
 			((LiteralList<World>) worlds).invertAnd();
 		}
@@ -63,11 +65,11 @@ public class EvtWorld extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (worlds == null)
 			return true;
 		World evtWorld = ((WorldEvent) event).getWorld();
-		return worlds.check(event, world -> world.equals(evtWorld));
+		return worlds.check(ContextlessVirtualFrame.get(event), world -> world.equals(evtWorld));
 	}
 
 	@Override

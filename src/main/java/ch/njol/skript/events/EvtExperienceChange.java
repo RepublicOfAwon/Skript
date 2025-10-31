@@ -1,12 +1,13 @@
 package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Experience;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +29,7 @@ public class EvtExperienceChange extends SkriptEvent {
 	private int mode = ANY;
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		if (parseResult.hasTag("increase")) {
 			mode = UP;
 		} else if (parseResult.hasTag("decrease")) {
@@ -38,7 +39,7 @@ public class EvtExperienceChange extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (mode == ANY)
 			return true;
 		PlayerExpChangeEvent expChangeEvent = (PlayerExpChangeEvent) event;

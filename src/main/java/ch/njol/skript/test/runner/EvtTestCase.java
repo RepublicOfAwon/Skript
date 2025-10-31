@@ -3,11 +3,13 @@ package ch.njol.skript.test.runner;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.*;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.registrations.EventValues;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @NoDoc
@@ -33,7 +35,7 @@ public class EvtTestCase extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Literal<?>[] args, int matchedPattern, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, SkriptParser.ParseResult parseResult) {
 		name = (Literal<String>) args[0];
 		if (!parseResult.regexes.isEmpty()) { // Do not parse or run unless condition is met
 			String cond = parseResult.regexes.get(0).group();
@@ -43,7 +45,7 @@ public class EvtTestCase extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		String n = name.getSingle();
 		if (n == null)
 			return false;
@@ -54,7 +56,9 @@ public class EvtTestCase extends SkriptEvent {
 
 	@Override
 	public boolean shouldLoadEvent() {
-		return condition != null ? condition.executeBoolean(new SkriptTestEvent()) : true;
+		var c = ContextlessVirtualFrame.get();
+		c.getArguments()[0] = new SkriptTestEvent();
+		return condition != null ? condition.executeBoolean(c) : true;
 	}
 
 	public String getTestName() {

@@ -4,6 +4,7 @@ import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -38,12 +39,12 @@ public class SectionSkriptEvent extends SkriptEvent {
 	}
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		throw new SkriptAPIException("init should never be called for a SectionSkriptEvent.");
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		throw new SkriptAPIException("check should never be called for a SectionSkriptEvent.");
 	}
 

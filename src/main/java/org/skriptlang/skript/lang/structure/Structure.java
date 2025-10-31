@@ -77,7 +77,7 @@ public abstract class Structure implements SyntaxElement, Debuggable {
 	 * Please note that this Structure <b>MUST</b> have been initialized for this to work.
 	 * This method is not usable for simple structures.
 	 * @deprecated This method will be removed in a future version.
-	 * If the EntryContainer is needed outside of {@link #init(Literal[], int, ParseResult, EntryContainer)},
+	 * If the EntryContainer is needed outside of {@link #init(Expression[], int, ParseResult, EntryContainer)},
 	 * the Structure should keep a reference to it.
 	 */
 	@Deprecated(since = "2.10.0", forRemoval = true)
@@ -89,7 +89,7 @@ public abstract class Structure implements SyntaxElement, Debuggable {
 
 	@Override
 	public final SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		Literal<?>[] literals = Arrays.copyOf(expressions, expressions.length, Literal[].class);
+		Expression<?>[] literals = Arrays.copyOf(expressions, expressions.length, Expression[].class);
 
 		StructureData structureData = getParser().getData(StructureData.class);
 		StructureInfo<? extends Structure> structureInfo = structureData.structureInfo;
@@ -125,7 +125,7 @@ public abstract class Structure implements SyntaxElement, Debuggable {
 	 * @return Whether initialization was successful.
 	 */
 	public abstract SyntaxElement init(
-		Literal<?>[] args, int matchedPattern, ParseResult parseResult,
+		Expression<?>[] args, int matchedPattern, ParseResult parseResult,
 		@UnknownNullability EntryContainer entryContainer
 	);
 

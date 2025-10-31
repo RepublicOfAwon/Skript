@@ -82,8 +82,10 @@ public class EffChange extends Effect {
 	}
 
 	// The expression to change
+	@Child
 	private Expression<?> changed;
 	// The expression providing the change values (delta)
+	@Child
 	private @Nullable Expression<?> changer;
 
 	private ChangeMode mode;

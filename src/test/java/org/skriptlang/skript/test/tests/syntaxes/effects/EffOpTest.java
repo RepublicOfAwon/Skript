@@ -36,14 +36,14 @@ public class EffOpTest extends SkriptJUnitTest {
 		testPlayer.setOp(true);
 		EasyMock.expectLastCall();
 		EasyMock.replay(testPlayer);
-		opPlayerEffect.run(event);
+		opPlayerEffect.execute(event);
 		EasyMock.verify(testPlayer);
 
 		EasyMock.resetToNice(testPlayer);
 		testPlayer.setOp(false);
 		EasyMock.expectLastCall();
 		EasyMock.replay(testPlayer);
-		deopPlayerEffect.run(event);
+		deopPlayerEffect.execute(event);
 		EasyMock.verify(testPlayer);
 	}
 

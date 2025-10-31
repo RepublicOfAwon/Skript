@@ -4,6 +4,7 @@ import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.lang.KeyProviderExpression;
 import ch.njol.skript.lang.KeyedValue;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -103,7 +104,7 @@ public abstract class Function<T> implements org.skriptlang.skript.common.functi
 				&& parameter.keyed
 				&& parameter.def != null
 			) {
-				Object[] defaultValue = parameter.def.executeArray(event);
+				Object[] defaultValue = parameter.def.executeArray(ContextlessVirtualFrame.get(event));
 				if (defaultValue.length == 1) {
 					parameterValue = KeyedValue.zip(defaultValue, null);
 				} else {
@@ -111,9 +112,9 @@ public abstract class Function<T> implements org.skriptlang.skript.common.functi
 				}
 			} else if (!(this instanceof DefaultFunction<?>) && parameterValue == null) { // Go for default value
 				assert parameter.def != null; // Should've been parse error
-				Object[] defaultValue = parameter.def.executeArray(event);
+				Object[] defaultValue = parameter.def.executeArray(ContextlessVirtualFrame.get(event));
 				if (parameter.hasModifier(Modifier.KEYED) && KeyProviderExpression.areKeysRecommended(parameter.def)) {
-					String[] keys = ((KeyProviderExpression<?>) parameter.def).getArrayKeys(event);
+					String[] keys = ((KeyProviderExpression<?>) parameter.def).getArrayKeys(ContextlessVirtualFrame.get(event));
 					parameterValue = KeyedValue.zip(defaultValue, keys);
 				} else {
 					parameterValue = defaultValue;

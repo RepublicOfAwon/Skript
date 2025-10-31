@@ -60,7 +60,7 @@ public class CondDate extends Condition {
 
 	@Override
 	public Condition simplify() {
-		if (date instanceof Literal<Date> && delta instanceof Literal<Timespan>)
+		if (date instanceof Literal && delta instanceof Literal)
 			return SimplifiedCondition.fromCondition(this);
 		return this;
 	}

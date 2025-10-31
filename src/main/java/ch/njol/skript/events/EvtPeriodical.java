@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptEventHandler;
 import ch.njol.skript.events.bukkit.ScheduledEvent;
 import ch.njol.skript.events.bukkit.ScheduledNoWorldEvent;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -11,6 +12,7 @@ import ch.njol.skript.util.Timespan;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 public class EvtPeriodical extends SkriptEvent {
@@ -45,7 +47,7 @@ public class EvtPeriodical extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		period = ((Literal<Timespan>) args[0]).getSingle();
 		if (args.length > 1 && args[1] != null)
 			worlds = ((Literal<World>) args[1]).getArray();
@@ -82,7 +84,7 @@ public class EvtPeriodical extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		throw new UnsupportedOperationException();
 	}
 

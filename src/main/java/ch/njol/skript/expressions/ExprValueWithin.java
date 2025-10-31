@@ -116,4 +116,9 @@ public class ExprValueWithin extends WrapperExpression<Object> implements KeyPro
 		return (classInfo == null ? "value" : classInfo.toString(event, debug)) + " within " + getExpr();
 	}
 
+	@Override
+	public boolean isSingle() {
+		return false;
+	}
+
 }

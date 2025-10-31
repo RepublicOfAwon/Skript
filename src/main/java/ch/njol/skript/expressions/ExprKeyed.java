@@ -88,4 +88,9 @@ public class ExprKeyed extends WrapperExpression<Object> implements KeyProviderE
 		return "keyed " + getExpr().toString(event, debug);
 	}
 
+	@Override
+	public boolean isSingle() {
+		return false;
+	}
+
 }

@@ -170,7 +170,7 @@ public class ExprTransform extends SimpleExpression<Object> implements InputSour
 
 	@Override
 	public boolean isLoopOf(String candidateString) {
-		return KeyProviderExpression.super.isLoopOf(candidateString)
+		return (canReturnKeys() && isIndexLoop(candidateString)) //=KeyProviderExpression#isLoopOf
 			|| mappingExpr.isLoopOf(candidateString)
 			|| matchesReturnType(candidateString);
 	}

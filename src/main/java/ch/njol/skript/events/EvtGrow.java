@@ -3,10 +3,11 @@ package ch.njol.skript.events;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.ItemUtils;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.LiteralList;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.util.StructureType;
 import ch.njol.util.coll.CollectionUtils;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -57,9 +58,9 @@ public class EvtGrow extends SkriptEvent {
 	}
 	
 	@Nullable
-	private Literal<Object> toTypes;
+	private Expression<Object> toTypes;
 	@Nullable
-	private Literal<Object> fromTypes;
+	private Expression<Object> fromTypes;
 
 	// Restriction on the type of grow event, ANY, STRUCTURE or BLOCK
 	private int eventRestriction;
@@ -69,34 +70,34 @@ public class EvtGrow extends SkriptEvent {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		eventRestriction = parseResult.mark; // ANY, STRUCTURE or BLOCK
 		actionRestriction = matchedPattern; // OF, FROM, INTO, or FROM_INTO
 
 		switch (actionRestriction) {
 			case OF:
 				if (eventRestriction == STRUCTURE) {
-					fromTypes = (Literal<Object>) args[0];
+					fromTypes =  (Expression<Object>) args[0];
 				} else if (eventRestriction == BLOCK) {
-					fromTypes = (Literal<Object>) args[1];
+					fromTypes = (Expression<Object>) args[1];
 				}
 				break;
 			case FROM:
-				fromTypes = (Literal<Object>) args[0];
+				fromTypes = (Expression<Object>) args[0];
 				break;
 			case INTO:
 				if (eventRestriction == STRUCTURE) {
-					toTypes = (Literal<Object>) args[0];
+					toTypes = (Expression<Object>) args[0];
 				} else if (eventRestriction == BLOCK) {
-					toTypes = (Literal<Object>) args[1];
+					toTypes = (Expression<Object>) args[1];
 				}
 				break;
 			case FROM_INTO:
-				fromTypes = (Literal<Object>) args[0];
+				fromTypes = (Expression<Object>) args[0];
 				if (eventRestriction == STRUCTURE) {
-					toTypes = (Literal<Object>) args[1];
+					toTypes = (Expression<Object>) args[1];
 				} else if (eventRestriction == BLOCK) {
-					toTypes = (Literal<Object>) args[2];
+					toTypes = (Expression<Object>) args[2];
 				}
 				break;
 			default:
@@ -107,7 +108,7 @@ public class EvtGrow extends SkriptEvent {
 	}
 	
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		// Exit early if we need fromTypes, but don't have it
 		if (fromTypes == null && actionRestriction != INTO)
 			// We want true for "on grow:", false for anything else
@@ -138,16 +139,14 @@ public class EvtGrow extends SkriptEvent {
 		}
 	}
 
-	private static boolean checkFrom(VirtualFrame frame, Literal<Object> types) {
+	private static boolean checkFrom(Event event, Expression<Object> types) {
 		// treat and lists as or lists
 		if (types.getAnd() && types instanceof LiteralList)
 			((LiteralList<Object>) types).invertAnd();
 
-		Event event = (Event) frame.getArguments()[0];
-
 		if (event instanceof StructureGrowEvent) {
 			Material sapling = ItemUtils.getTreeSapling(((StructureGrowEvent) event).getSpecies());
-			return types.check(frame, type -> {
+			return types.check(ContextlessVirtualFrame.get(event), type -> {
 				if (type instanceof ItemType) {
 					return ((ItemType) type).isOfType(sapling);
 				} else if (type instanceof BlockData) {
@@ -157,7 +156,7 @@ public class EvtGrow extends SkriptEvent {
 			});
 		} else if (event instanceof BlockGrowEvent) {
 			BlockState oldState = ((BlockGrowEvent) event).getBlock().getState();
-			return types.check(frame, type -> {
+			return types.check(ContextlessVirtualFrame.get(event), type -> {
 				if (type instanceof ItemType) {
 					return ((ItemType) type).isOfType(oldState.getBlockData());
 				} else if (type instanceof BlockData) {
@@ -169,16 +168,14 @@ public class EvtGrow extends SkriptEvent {
 		return false;
 	}
 
-	private static boolean checkTo(VirtualFrame frame, Literal<Object> types) {
+	private static boolean checkTo(Event event, Expression<Object> types) {
 		// treat and lists as or lists
 		if (types.getAnd() && types instanceof LiteralList)
 			((LiteralList<Object>) types).invertAnd();
 
-		Event event = (Event) frame.getArguments()[0];
-
 		if (event instanceof StructureGrowEvent) {
 			TreeType species = ((StructureGrowEvent) event).getSpecies();
-			return types.check(frame, type -> {
+			return types.check(ContextlessVirtualFrame.get(event), type -> {
 				if (type instanceof StructureType) {
 					return ((StructureType) type).is(species);
 				}
@@ -186,7 +183,7 @@ public class EvtGrow extends SkriptEvent {
 			});
 		} else if (event instanceof BlockGrowEvent) {
 			BlockState newState = ((BlockGrowEvent) event).getNewState();
-			return types.check(frame, type -> {
+			return types.check(ContextlessVirtualFrame.get(event), type -> {
 				if (type instanceof ItemType) {
 					return ((ItemType) type).isOfType(newState.getBlockData());
 				} else if (type instanceof BlockData) {

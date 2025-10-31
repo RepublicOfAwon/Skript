@@ -12,7 +12,6 @@ import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.structures.StructEvent.EventData;
 import ch.njol.util.coll.iterator.ConsumingIterator;
-import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
@@ -54,7 +53,7 @@ public abstract class SkriptEvent extends Structure {
 	protected Trigger trigger;
 
 	@Override
-	public final SyntaxElement init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
+	public final SyntaxElement init(Expression<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
 		this.expr = parseResult.expr;
 
 		EventData eventData = getParser().getData(EventData.class);
@@ -102,7 +101,7 @@ public abstract class SkriptEvent extends Structure {
 	/**
 	 * Called just after the constructor
 	 */
-	public abstract boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult);
+	public abstract boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult);
 
 	/**
 	 * This method handles the loading of the Structure's syntax elements.
@@ -184,7 +183,7 @@ public abstract class SkriptEvent extends Structure {
 	 * will only be called for events this SkriptEvent is registered for.
 	 * @return true if this is SkriptEvent is represented by the Bukkit Event or false if not
 	 */
-	public abstract boolean check(VirtualFrame event);
+	public abstract boolean check(Event event);
 
 	/**
 	 * Script loader checks this before loading items in event. If false is

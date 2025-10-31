@@ -27,9 +27,9 @@ final class DefaultExpressionUtils {
 			return DefaultExpressionError.NOT_LITERAL;
 		} else if (expr instanceof Literal<?> && (exprInfo.flagMask & SkriptParser.PARSE_LITERALS) == 0) {
 			return DefaultExpressionError.LITERAL;
-		} else if (!exprInfo.isPlural[index] && !expr.isSingle()) {
+		} else if (!exprInfo.isPlural[index] && !((Expression)expr).isSingle()) {
 			return DefaultExpressionError.NOT_SINGLE;
-		} else if (exprInfo.time != 0 && !expr.setTime(exprInfo.time)) {
+		} else if (exprInfo.time != 0 && !((Expression)expr).setTime(exprInfo.time)) {
 			return DefaultExpressionError.TIME_STATE;
 		}
 		return null;

@@ -1,6 +1,8 @@
 package ch.njol.skript.events;
 
+import ch.njol.skript.lang.Expression;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +29,7 @@ public class EvtCommand extends SkriptEvent { // TODO condition to check whether
 
 	@Override
 	@SuppressWarnings("null")
-	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
+	public boolean init(final Expression<?>[] args, final int matchedPattern, final ParseResult parser) {
 		if (args[0] != null) {
 			//noinspection unchecked
 			commandsLit = ((Literal<String>) args[0]);
@@ -42,7 +44,7 @@ public class EvtCommand extends SkriptEvent { // TODO condition to check whether
 
 	@Override
 	@SuppressWarnings("null")
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (event instanceof ServerCommandEvent serverCommandEvent && serverCommandEvent.getCommand().isEmpty())
 			return false;
 
@@ -68,7 +70,7 @@ public class EvtCommand extends SkriptEvent { // TODO condition to check whether
 	
 	@Override
 	public String toString(@Nullable VirtualFrame event, boolean debug) {
-		return "command" + (commandsLit != null ? " " + commandsLit.toString(event, debug) : "");
+		return "command" + (commandsLit != null ? " " + ((Expression)commandsLit).toString(event, debug) : "");
 	}
 	
 }

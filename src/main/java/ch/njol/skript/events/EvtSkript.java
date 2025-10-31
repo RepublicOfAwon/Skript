@@ -3,7 +3,7 @@ package ch.njol.skript.events;
 import ch.njol.skript.Skript;
 import ch.njol.skript.events.bukkit.SkriptStartEvent;
 import ch.njol.skript.events.bukkit.SkriptStopEvent;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
@@ -51,7 +51,7 @@ public class EvtSkript extends SkriptEvent {
 	private boolean isStart;
 	
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		isStart = matchedPattern == 0;
 		if (parseResult.hasTag("server"))
 			Skript.warning(
@@ -73,7 +73,7 @@ public class EvtSkript extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		throw new UnsupportedOperationException();
 	}
 

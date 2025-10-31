@@ -58,7 +58,7 @@ public class ExprAlphabetList extends SimpleExpression<String>{
 
 	@Override
 	public Expression<? extends String> simplify() {
-		if (texts instanceof Literal<String>)
+		if (texts instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

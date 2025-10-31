@@ -2,10 +2,11 @@ package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.LiteralList;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.registrations.EventConverter;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.slot.EquipmentSlot;
@@ -13,6 +14,7 @@ import ch.njol.skript.util.slot.Slot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
@@ -67,23 +69,23 @@ public class EvtEntityShootBow extends SkriptEvent {
 
 	}
 
-	private Literal<EntityData<?>> entityDatas;
+	private Expression<EntityData<?>> entityDatas;
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		//noinspection unchecked
-		entityDatas = (Literal<EntityData<?>>) args[0];
+		entityDatas = (Expression<EntityData<?>>) args[0];
 		if (entityDatas instanceof LiteralList<EntityData<?>> list && list.getAnd())
 			list.invertAnd();
 		return true;
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (!(event instanceof EntityShootBowEvent shootBowEvent))
 			return false;
 		LivingEntity eventEntity = shootBowEvent.getEntity();
-		return entityDatas.check(event, entityData -> entityData.isInstance(eventEntity));
+		return entityDatas.check(ContextlessVirtualFrame.get(event), entityData -> entityData.isInstance(eventEntity));
 	}
 
 	@Override

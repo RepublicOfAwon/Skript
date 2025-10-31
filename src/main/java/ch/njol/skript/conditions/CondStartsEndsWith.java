@@ -81,7 +81,7 @@ public class CondStartsEndsWith extends Condition {
 
 	@Override
 	public Condition simplify() {
-		if (strings instanceof Literal<String> && affix instanceof Literal<String>)
+		if (strings instanceof Literal && affix instanceof Literal)
 			return SimplifiedCondition.fromCondition(this);
 		return this;
 	}

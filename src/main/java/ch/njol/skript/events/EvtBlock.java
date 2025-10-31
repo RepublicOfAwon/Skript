@@ -1,9 +1,12 @@
 package ch.njol.skript.events;
 
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.event.Event;
 import org.bukkit.event.block.*;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingEvent;
@@ -83,7 +86,7 @@ public class EvtBlock extends SkriptEvent {
 	private boolean mine = false;
 	
 	@Override
-	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
+	public boolean init(final Expression<?>[] args, final int matchedPattern, final ParseResult parser) {
 		types = (Literal<Object>) args[0];
 		mine = parser.mark == 1;
 		return true;
@@ -91,7 +94,7 @@ public class EvtBlock extends SkriptEvent {
 	
 	@SuppressWarnings("null")
 	@Override
-	public boolean check(final VirtualFrame event) {
+	public boolean check(final Event event) {
 		if (mine && event instanceof BlockBreakEvent) {
 			if (((BlockBreakEvent) event).getBlock().getDrops(((BlockBreakEvent) event).getPlayer().getItemInHand()).isEmpty())
 				return false;
@@ -122,7 +125,7 @@ public class EvtBlock extends SkriptEvent {
 			item = new ItemType(playerBucketEmptyEvent.getItemStack());
 		} else if (event instanceof HangingEvent hangingEvent) {
 			final EntityData<?> d = EntityData.fromEntity((hangingEvent.getEntity()));
-			return types.check(event, o -> {
+			return ((Expression)types).check(ContextlessVirtualFrame.get(event), o -> {
 				if (o instanceof ItemType)
 					return Relation.EQUAL.isImpliedBy(DefaultComparators.entityItemComparator.compare(d, ((ItemType) o)));
 				return false;
@@ -135,7 +138,7 @@ public class EvtBlock extends SkriptEvent {
 		final ItemType itemF = item;
 		BlockData finalBlockData = blockData;
 
-		return types.check(event, o -> {
+		return ((Expression)types).check(ContextlessVirtualFrame.get(event), o -> {
 			if (o instanceof ItemType)
 				return ((ItemType) o).isSupertypeOf(itemF);
 			else if (o instanceof BlockData && finalBlockData != null)

@@ -58,7 +58,7 @@ public final class ClassInfoReference {
 		if (classInfoExpression instanceof Literal) {
 			Literal<ClassInfo<?>> classInfoLiteral = (Literal<ClassInfo<?>>) classInfoExpression;
 			ClassInfo<?> classInfo = classInfoLiteral.getSingle();
-			return new SimpleLiteral<>(new ClassInfoReference(classInfo, isPlural), classInfoLiteral.isDefault());
+			return new SimpleLiteral<>(new ClassInfoReference(classInfo, isPlural), ((Expression)classInfoLiteral).isDefault());
 		}
 		return new SimpleExpression<ClassInfoReference>() {
 

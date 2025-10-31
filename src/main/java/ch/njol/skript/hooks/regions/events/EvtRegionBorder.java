@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.hooks.regions.RegionsPlugin;
 import ch.njol.skript.hooks.regions.classes.Region;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -104,7 +105,7 @@ public class EvtRegionBorder extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		enter = parseResult.hasTag("enter");
 		regions = args.length == 0 ? null : (Literal<Region>) args[0];
 		return true;
@@ -128,7 +129,7 @@ public class EvtRegionBorder extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -139,7 +140,7 @@ public class EvtRegionBorder extends SkriptEvent {
 
 	@Override
 	public String toString(@Nullable VirtualFrame event, boolean debug) {
-		return (enter ? "enter" : "leave") + " of " + (regions == null ? "a region" : regions.toString(event, debug));
+		return (enter ? "enter" : "leave") + " of " + (regions == null ? "a region" : ((Expression)regions).toString(event, debug));
 	}
 	
 	private boolean applies(RegionBorderEvent event) {
@@ -148,7 +149,7 @@ public class EvtRegionBorder extends SkriptEvent {
 		if (regions == null)
 			return true;
 		Region region = event.getRegion();
-		return regions.check(Truffle.getRuntime().createVirtualFrame(new Object[] {event}, new FrameDescriptor()), r -> r.equals(region));
+		return ((Expression)regions).check(Truffle.getRuntime().createVirtualFrame(new Object[] {event}, new FrameDescriptor()), r -> r.equals(region));
 	}
 	
 }

@@ -79,8 +79,8 @@ public class ExprDefaultValue extends SimpleExpression<Object> {
 
 	@Override
 	public Expression<?> simplify() {
-		if (values instanceof Literal<Object> literal
-			&& (defaultValues instanceof Literal<Object> || literal.getAll().length > 0))
+		if (values instanceof Literal literal
+			&& (defaultValues instanceof Literal || literal.getAll().length > 0))
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

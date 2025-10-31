@@ -3,11 +3,8 @@ package ch.njol.skript.test.runner;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.SyntaxElement;
-import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.lang.TriggerItem;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
@@ -33,7 +30,7 @@ public class StructTestEntryContainer extends Structure {
 
 	@Override
 	public SyntaxElement init(
-		Literal<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer
+            Expression<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer
 	) {
 		assert entryContainer != null;
 		this.entryContainer = entryContainer;

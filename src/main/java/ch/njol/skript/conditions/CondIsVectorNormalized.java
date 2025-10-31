@@ -27,7 +27,7 @@ public class CondIsVectorNormalized extends PropertyCondition<Vector> {
 
 	@Override
 	public Condition simplify() {
-		if (getExpr() instanceof Literal<? extends Vector>)
+		if (getExpr() instanceof Literal)
 			return SimplifiedCondition.fromCondition(this);
 		return this;
 	}

@@ -2,11 +2,14 @@ package org.skriptlang.skript.bukkit.furnace.elements;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.registrations.Classes;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.FurnaceExtractEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
@@ -66,14 +69,14 @@ public class EvtFurnace extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		if (exprs[0] != null)
 			types = (Literal<ItemType>) exprs[0];
 		return true;
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (types == null)
 			return true;
 
@@ -92,7 +95,7 @@ public class EvtFurnace extends SkriptEvent {
 			return false;
 		}
 
-		return types.check(event, itemType -> itemType.isSupertypeOf(item));
+		return ((Expression<ItemType>)types).check(ContextlessVirtualFrame.get(event), itemType -> itemType.isSupertypeOf(item));
 	}
 
 	@Override

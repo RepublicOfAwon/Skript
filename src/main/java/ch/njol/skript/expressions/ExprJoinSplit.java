@@ -56,8 +56,8 @@ public class ExprJoinSplit extends SimpleExpression<String> {
 		strings = (Expression<String>) exprs[0];
 		//noinspection unchecked
 		delimiter = (Expression<String>) exprs[1];
-		if (!join && delimiter instanceof Literal<String> literal) {
-			String stringPattern = literal.getSingle();
+		if (!join && delimiter instanceof Literal literal) {
+			String stringPattern = (String)literal.getSingle();
 			try {
 				this.pattern = compilePattern(stringPattern);
 			} catch (PatternSyntaxException e) {
@@ -101,7 +101,7 @@ public class ExprJoinSplit extends SimpleExpression<String> {
 
 	@Override
 	public Expression<? extends String> simplify() {
-		if (strings instanceof Literal<String> && (delimiter == null || delimiter instanceof Literal<String>))
+		if (strings instanceof Literal && (delimiter == null || delimiter instanceof Literal))
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

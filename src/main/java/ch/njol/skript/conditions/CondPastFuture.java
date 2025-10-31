@@ -78,7 +78,7 @@ public class CondPastFuture extends Condition {
 
 	@Override
 	public Condition simplify() {
-		if (dates instanceof Literal<Date>)
+		if (dates instanceof Literal)
 			return SimplifiedCondition.fromCondition(this);
 		return this;
 	}

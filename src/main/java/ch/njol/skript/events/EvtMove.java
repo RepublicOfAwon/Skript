@@ -2,6 +2,7 @@ package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -71,7 +72,7 @@ public class EvtMove extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		entityData = ((Literal<EntityData<?>>) args[0]).getSingle();
 		isPlayer = Player.class.isAssignableFrom(entityData.getType());
 		if (!HAS_ENTITY_MOVE && !isPlayer) {
@@ -90,7 +91,7 @@ public class EvtMove extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		Location from, to;
 		if (canBePlayer && event instanceof PlayerMoveEvent playerMoveEvent) {
 			from = playerMoveEvent.getFrom();

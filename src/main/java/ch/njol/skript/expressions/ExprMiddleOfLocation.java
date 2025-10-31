@@ -39,7 +39,7 @@ public class ExprMiddleOfLocation extends SimplePropertyExpression<Location, Loc
 
 	@Override
 	public Expression<? extends Location> simplify() {
-		if (getExpr() instanceof Literal<? extends Location>)
+		if (getExpr() instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

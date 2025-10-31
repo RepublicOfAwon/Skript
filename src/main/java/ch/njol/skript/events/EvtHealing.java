@@ -1,7 +1,9 @@
 package ch.njol.skript.events;
 
+import ch.njol.skript.lang.Expression;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.jetbrains.annotations.Nullable;
@@ -35,14 +37,14 @@ public class EvtHealing extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parser) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parser) {
 		entityDatas = (Literal<EntityData<?>>) args[0];
 		healReasons = (Literal<RegainReason>) args[1];
 		return true;
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (!(event instanceof EntityRegainHealthEvent))
 			return false;
 		EntityRegainHealthEvent healthEvent = (EntityRegainHealthEvent) event;
@@ -75,8 +77,8 @@ public class EvtHealing extends SkriptEvent {
 
 	@Override
 	public String toString(@Nullable VirtualFrame event, boolean debug) {
-		return "heal" + (entityDatas != null ? " of " + entityDatas.toString(event, debug) : "") +
-				(healReasons != null ? " by " + healReasons.toString(event, debug) : "");
+		return "heal" + (entityDatas != null ? " of " + ((Expression)entityDatas).toString(event, debug) : "") +
+				(healReasons != null ? " by " + ((Expression)healReasons).toString(event, debug) : "");
 	}
 
 }

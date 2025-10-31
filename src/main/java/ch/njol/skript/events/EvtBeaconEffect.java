@@ -1,11 +1,14 @@
 package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import com.destroystokyo.paper.event.block.BeaconEffectEvent;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +39,7 @@ public class EvtBeaconEffect extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		potionTypes = (Literal<PotionEffectType>) exprs[0];
 		if (parseResult.hasTag("primary")) {
 			primaryCheck = true;
@@ -47,20 +50,20 @@ public class EvtBeaconEffect extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (!(event instanceof BeaconEffectEvent effectEvent))
 			return false;
 		if (primaryCheck != null && effectEvent.isPrimary() != primaryCheck)
 			return false;
 		if (potionTypes != null)
-			return potionTypes.check(event, type -> effectEvent.getEffect().getType() == type);
+			return ((Expression<PotionEffectType>)potionTypes).check(ContextlessVirtualFrame.get(event), type -> effectEvent.getEffect().getType() == type);
 		return true;
 	}
 
 	@Override
 	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		return (primaryCheck == null ? "" : primaryCheck ? "primary " : "secondary ") +
-			"beacon effect" + (potionTypes == null ? "" : " of " + potionTypes.toString(event, debug));
+			"beacon effect" + (potionTypes == null ? "" : " of " + ((Expression)potionTypes).toString(event, debug));
 	}
 
 }

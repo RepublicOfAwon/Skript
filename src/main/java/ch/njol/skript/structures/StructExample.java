@@ -4,7 +4,7 @@ import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.*;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.function.FunctionEvent;
@@ -45,7 +45,7 @@ public class StructExample extends Structure implements SimpleExperimentalSyntax
 	private SectionNode source;
 
 	@Override
-	public SyntaxElement init(Literal<?>[] literals, int matchedPattern, ParseResult parseResult,
+	public SyntaxElement init(Expression<?>[] literals, int matchedPattern, ParseResult parseResult,
                               @Nullable EntryContainer entryContainer) {
 		assert entryContainer != null; // cannot be null for non-simple structures
 		this.source = entryContainer.getSource();

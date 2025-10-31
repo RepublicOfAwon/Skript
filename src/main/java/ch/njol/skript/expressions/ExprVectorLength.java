@@ -98,7 +98,7 @@ public class ExprVectorLength extends SimplePropertyExpression<Vector, Number> {
 
 	@Override
 	public Expression<? extends Number> simplify() {
-		if (getExpr() instanceof Literal<? extends Vector>)
+		if (getExpr() instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

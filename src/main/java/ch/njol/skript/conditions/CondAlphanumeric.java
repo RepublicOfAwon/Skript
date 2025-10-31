@@ -44,7 +44,7 @@ public class CondAlphanumeric extends Condition {
 
 	@Override
 	public Condition simplify() {
-		if (strings instanceof Literal<String>)
+		if (strings instanceof Literal)
 			return SimplifiedCondition.fromCondition(this);
 		return this;
 	}

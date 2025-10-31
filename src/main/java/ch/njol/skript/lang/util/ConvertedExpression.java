@@ -127,7 +127,7 @@ public class ConvertedExpression<F, T> extends Expression<T> {
 
 			// noinspection rawtypes, unchecked
 			return from instanceof KeyProviderExpression<?> keyProvider
-					? new ConvertedKeyProviderExpression(keyProvider, converterTypes, infos, true)
+					? new ConvertedKeyProviderExpression(from, converterTypes, infos, true)
 					: new ConvertedExpression(from, converterTypes, infos, true);
 		}
 

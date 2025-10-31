@@ -133,7 +133,7 @@ public class StructCommand extends Structure {
 	private ScriptCommand scriptCommand;
 
 	@Override
-	public SyntaxElement init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
+	public SyntaxElement init(Expression<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
 		assert entryContainer != null; // cannot be null for non-simple structures
 		this.entryContainer = entryContainer;
 		return this;

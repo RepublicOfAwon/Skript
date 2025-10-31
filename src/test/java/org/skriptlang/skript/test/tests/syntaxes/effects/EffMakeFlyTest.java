@@ -38,7 +38,7 @@ public class EffMakeFlyTest extends SkriptJUnitTest {
 		testPlayer.setFlying(true);
 		EasyMock.expectLastCall();
 		EasyMock.replay(testPlayer);
-		startFlyingEffect.run(event);
+		startFlyingEffect.execute(event);
 		EasyMock.verify(testPlayer);
 
 		EasyMock.resetToNice(testPlayer);
@@ -47,7 +47,7 @@ public class EffMakeFlyTest extends SkriptJUnitTest {
 		testPlayer.setFlying(false);
 		EasyMock.expectLastCall();
 		EasyMock.replay(testPlayer);
-		stopFlyingEffect.run(event);
+		stopFlyingEffect.execute(event);
 		EasyMock.verify(testPlayer);
 	}
 

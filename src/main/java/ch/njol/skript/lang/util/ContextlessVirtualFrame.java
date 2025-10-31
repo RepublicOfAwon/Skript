@@ -19,20 +19,29 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class ContextlessVirtualFrame implements VirtualFrame {
 
-	private final Object[] args = new Object[] { new Event() {
-		@Override
-		public @NotNull HandlerList getHandlers() {
-			return null;
-		}
-	}};
+	private final Object[] args = new Object[1];
 
-	private ContextlessVirtualFrame() { }
+	private ContextlessVirtualFrame() {
+		args[0] = ContextlessEvent.get();
+	}
+
+	private ContextlessVirtualFrame(Event event) {
+		args[0] = event;
+	}
 
 	/**
 	 * @return A new ContextlessEvent instance to be used for context-less {@link ch.njol.skript.lang.SyntaxElement}s.
 	 */
 	public static ContextlessVirtualFrame get() {
-		return new ContextlessVirtualFrame();
+		object.args[0] = ContextlessEvent.get();
+		return object;
+	}
+
+	private static final ContextlessVirtualFrame object = new ContextlessVirtualFrame();
+
+	public static ContextlessVirtualFrame get(Event event) {
+		object.args[0] = event;
+		return object;
 	}
 
 	@Override

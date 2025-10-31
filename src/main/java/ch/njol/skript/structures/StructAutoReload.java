@@ -22,7 +22,6 @@ import com.google.common.collect.Lists;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
@@ -71,7 +70,7 @@ public class StructAutoReload extends Structure {
 	private Task task;
 
 	@Override
-	public SyntaxElement init(Literal<?> @NotNull [] arguments, int pattern, ParseResult result, EntryContainer container) {
+	public SyntaxElement init(Expression<?>[] arguments, int pattern, ParseResult result, EntryContainer container) {
 		if (!ScriptLoader.isAsync()) {
 			Skript.error(Language.get("log.auto reload.async required"));
 			return null;
@@ -86,11 +85,11 @@ public class StructAutoReload extends Structure {
 			Expression<String> expression = (Expression<String>) container.getOptional("recipients", false); // Must be false otherwise the API will throw an exception.
 			List<String> strings = new ArrayList<>();
 			if (expression instanceof LiteralString literal) {
-				strings.add(literal.getSingle());
+				strings.add(literal.executeSingle(null));
 			} else if (expression instanceof ExpressionList<String> list) {
 				list.getAllExpressions().forEach(expr -> {
 					if (expr instanceof LiteralString literalString)
-						strings.add(literalString.getSingle());
+						strings.add(literalString.executeSingle(null));
 				});
 			}
 			if (!strings.isEmpty()) {

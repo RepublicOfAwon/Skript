@@ -69,7 +69,7 @@ public class ExprPercent extends SimpleExpression<Number> {
 
 	@Override
 	public Expression<? extends Number> simplify() {
-		if (percent instanceof Literal<Number> && numbers instanceof Literal<Number>)
+		if (percent instanceof Literal && numbers instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

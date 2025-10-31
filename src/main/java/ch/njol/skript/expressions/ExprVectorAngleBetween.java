@@ -64,7 +64,7 @@ public class ExprVectorAngleBetween extends SimpleExpression<Number> {
 
 	@Override
 	public Expression<? extends Number> simplify() {
-		if (first instanceof Literal<Vector> && second instanceof Literal<Vector>)
+		if (first instanceof Literal && second instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

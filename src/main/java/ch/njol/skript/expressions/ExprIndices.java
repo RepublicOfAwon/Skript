@@ -42,7 +42,7 @@ public class ExprIndices extends SimpleExpression<String> {
 		);
 	}
 
-	private KeyProviderExpression<?> keyedExpression;
+	private Expression<?> keyedExpression;
 
 	private boolean sort;
 	private boolean descending;
@@ -59,7 +59,7 @@ public class ExprIndices extends SimpleExpression<String> {
 			return null;
 		}
 
-		keyedExpression = (KeyProviderExpression<?>) exprs[0];
+		keyedExpression = exprs[0];
 		return this;
 
 	}
@@ -68,7 +68,7 @@ public class ExprIndices extends SimpleExpression<String> {
 	@Override
 	protected String[] execute(VirtualFrame event) {
 		Object[] values = keyedExpression.executeArray(event);
-		String[] keys = keyedExpression.getArrayKeys(event);
+		String[] keys = ((KeyProviderExpression<?>) keyedExpression).getArrayKeys(event);
 		if (sort) {
 			int direction = descending ? -1 : 1;
 			return Arrays.stream(KeyedValue.zip(values, keys))

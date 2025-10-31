@@ -71,8 +71,8 @@ public class EffRegisterTag extends Effect {
 	public SyntaxElement init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		//noinspection unchecked
 		name = (Expression<String>) expressions[0];
-		if (name instanceof Literal<String> literal) {
-			String key = removeSkriptNamespace(literal.getSingle());
+		if (name instanceof Literal literal) {
+			String key = removeSkriptNamespace((String) literal.getSingle());
 			if (!KEY_PATTERN.matcher(key).matches()) {
 				Skript.error("Tag names can only contain the following characters: letters, numbers, and some symbols: " +
 						"'/', '.', '_', and '-'");

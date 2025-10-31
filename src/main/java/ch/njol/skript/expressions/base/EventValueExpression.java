@@ -381,7 +381,7 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (!debug || event == null)
 			return "event-" + Classes.getSuperClassInfo(componentType).getName().toString(!single);
-		return Classes.getDebugMessage(getValue(event));
+		return Classes.getDebugMessage(getValue((Event) event.getArguments()[0]));
 	}
 
 }

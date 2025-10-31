@@ -73,7 +73,7 @@ public class CondMethodExists extends PropertyCondition<String> {
 
 	@Override
 	public Condition simplify() {
-		if (!(signatures instanceof Literal<String>))
+		if (!(signatures instanceof Literal))
 			return this;
 		return SimplifiedCondition.fromCondition(this);
 	}

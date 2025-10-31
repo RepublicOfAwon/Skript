@@ -1,12 +1,13 @@
 package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,12 +35,12 @@ public class EvtPlayerCommandSend extends SkriptEvent {
 	private final Collection<String> originalCommands = new ArrayList<>();
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		return true;
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		originalCommands.clear();
 		originalCommands.addAll(((PlayerCommandSendEvent) event).getCommands());
 		return true;

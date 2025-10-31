@@ -76,7 +76,7 @@ public class ExprRound extends PropertyExpression<Number, Long> {
 
 	@Override
 	public Expression<? extends Long> simplify() {
-		if (getExpr() instanceof Literal<? extends Number>)
+		if (getExpr() instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

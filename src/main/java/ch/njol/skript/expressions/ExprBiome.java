@@ -79,7 +79,7 @@ public class ExprBiome extends PropertyExpression<Location, Biome> {
 
 	@Override
 	public Expression<? extends Biome> simplify() {
-		if (getExpr() instanceof Literal<? extends Location>)
+		if (getExpr() instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

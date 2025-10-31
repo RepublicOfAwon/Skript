@@ -1,6 +1,6 @@
 package org.skriptlang.skript.bukkit.registration;
 
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptEvent.ListeningBehavior;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -26,12 +26,12 @@ public class EventSyntaxInfoTest extends BaseSyntaxInfoTests<MockSkriptEvent, Bu
 	public static final class MockSkriptEvent extends SkriptEvent {
 
 		@Override
-		public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+		public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public boolean check(VirtualFrame event) {
+		public boolean check(Event event) {
 			throw new UnsupportedOperationException();
 		}
 

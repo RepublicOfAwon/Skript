@@ -76,7 +76,7 @@ public class CondMatches extends Condition {
 
 	@Override
 	public Condition simplify() {
-		if (strings instanceof Literal<String> && regex instanceof Literal<String>)
+		if (strings instanceof Literal && regex instanceof Literal)
 			return SimplifiedCondition.fromCondition(this);
 		return this;
 	}

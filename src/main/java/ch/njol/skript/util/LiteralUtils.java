@@ -37,7 +37,7 @@ public class LiteralUtils {
 			}
 			return new ExpressionList<>(newExpressions, (Class<T>) Classes.getSuperClassInfo(returnTypes).getC(), returnTypes, expr.getAnd());
 		} else if (expr instanceof UnparsedLiteral) {
-			Literal<?> parsedLiteral = ((UnparsedLiteral) expr).getConvertedExpression(Object.class);
+			Expression<?> parsedLiteral = expr.getConvertedExpression(Object.class);
 			return (Expression<T>) (parsedLiteral == null ? expr : parsedLiteral);
 		}
 		return (Expression<T>) expr;

@@ -2,7 +2,7 @@ package ch.njol.skript.structures;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.*;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptEvent.ListeningBehavior;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -66,7 +66,7 @@ public class StructEvent extends Structure {
 
 	@Override
 	@SuppressWarnings("ConstantConditions")
-	public SyntaxElement init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
+	public SyntaxElement init(Expression<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
 		String expr = parseResult.regexes.get(0).group();
 
 		EventData data = getParser().getData(EventData.class);

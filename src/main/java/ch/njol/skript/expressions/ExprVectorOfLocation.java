@@ -63,7 +63,7 @@ public class ExprVectorOfLocation extends SimpleExpression<Vector> {
 
 	@Override
 	public Expression<? extends Vector> simplify() {
-		if (location instanceof Literal<Location>)
+		if (location instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

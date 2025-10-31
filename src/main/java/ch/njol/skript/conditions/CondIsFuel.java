@@ -36,7 +36,7 @@ public class CondIsFuel extends PropertyCondition<ItemType> {
 
 	@Override
 	public Condition simplify() {
-		if (getExpr() instanceof Literal<? extends ItemType>)
+		if (getExpr() instanceof Literal)
 			return SimplifiedCondition.fromCondition(this);
 		return this;
 	}

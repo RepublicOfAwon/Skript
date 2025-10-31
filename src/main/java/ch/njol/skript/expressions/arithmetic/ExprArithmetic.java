@@ -296,10 +296,10 @@ public class ExprArithmetic<L, R, T> extends SimpleExpression<T> {
 			&& first instanceof ExprArgument argument && argument.couldCauseArithmeticConfusion()
 			// this ambiguity only occurs when the code is parsed as `arg - (1 * 2)` or a similar PEMDAS priority.
 			&& second instanceof ExprArithmetic<?, ?, ?> secondArith && secondArith.first instanceof Literal<?> literal
-			&& literal.canReturn(Number.class)) {
+			&& ((Expression)literal).canReturn(Number.class)) {
 			// ensure that the second literal is a 1
-			Literal<?> secondLiteral = (Literal<?>) LiteralUtils.defendExpression(literal);
-			if (LiteralUtils.canInitSafely(secondLiteral)) {
+			Literal<?> secondLiteral = (Literal<?>) LiteralUtils.defendExpression(((Expression)literal));
+			if (LiteralUtils.canInitSafely(((Expression)secondLiteral))) {
 				double number = ((Number) secondLiteral.getSingle()).doubleValue();
 				if (number == 1)
 					Skript.warning("This subtraction is ambiguous and could be interpreted as either the " +

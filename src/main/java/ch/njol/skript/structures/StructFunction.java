@@ -7,7 +7,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.function.FunctionEvent;
@@ -61,7 +61,7 @@ public class StructFunction extends Structure {
 	private boolean local;
 
 	@Override
-	public SyntaxElement init(Literal<?>[] literals, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
+	public SyntaxElement init(Expression<?>[] literals, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
 		assert entryContainer != null; // cannot be null for non-simple structures
 		this.source = entryContainer.getSource();
 		local = parseResult.hasTag("local");

@@ -34,7 +34,7 @@ public class ExprVectorSquaredLength extends SimplePropertyExpression<Vector, Nu
 
 	@Override
 	public Expression<? extends Number> simplify() {
-		if (getExpr() instanceof Literal<? extends Vector>)
+		if (getExpr() instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

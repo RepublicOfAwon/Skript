@@ -2,10 +2,11 @@ package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
@@ -29,20 +30,20 @@ public class EvtEntityPotion extends SkriptEvent {
 	private Expression<EntityPotionEffectEvent.Cause> cause;
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		potionEffects = (Expression<PotionEffectType>) args[0];
 		cause = (Expression<EntityPotionEffectEvent.Cause>) args[1];
 		return true;
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		EntityPotionEffectEvent potionEvent = (EntityPotionEffectEvent) event;
 		boolean effectMatches = potionEffects == null ||
-			(potionEvent.getOldEffect() != null && potionEffects.check(event, effectType -> effectType.equals(potionEvent.getOldEffect().getType()))) ||
-			(potionEvent.getNewEffect() != null && potionEffects.check(event, effectType -> effectType.equals(potionEvent.getNewEffect().getType())));
+			(potionEvent.getOldEffect() != null && potionEffects.check(ContextlessVirtualFrame.get(event), effectType -> effectType.equals(potionEvent.getOldEffect().getType()))) ||
+			(potionEvent.getNewEffect() != null && potionEffects.check(ContextlessVirtualFrame.get(event), effectType -> effectType.equals(potionEvent.getNewEffect().getType())));
 
-		boolean causeMatches = cause == null || cause.check(event, cause -> cause.equals(potionEvent.getCause()));
+		boolean causeMatches = cause == null || cause.check(ContextlessVirtualFrame.get(event), cause -> cause.equals(potionEvent.getCause()));
 
 		return effectMatches && causeMatches;
 	}

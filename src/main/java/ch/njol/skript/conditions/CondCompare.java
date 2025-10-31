@@ -247,7 +247,7 @@ public class CondCompare extends Condition implements VerboseAssert {
 	 * @return The newly formed Literal, will be SimpleLiteral in most cases.
 	 */
 	@SuppressWarnings("unchecked")
-	private Literal<?> attemptReconstruction(UnparsedLiteral one, Expression<?> two) {
+	private Expression<?> attemptReconstruction(UnparsedLiteral one, Expression<?> two) {
 		Expression<?> expression = null;
 		// Must handle numbers first.
 		expression = one.getConvertedExpression(Number.class);
@@ -269,7 +269,7 @@ public class CondCompare extends Condition implements VerboseAssert {
 		}
 		if (expression == null)
 			expression = one.getConvertedExpression(two.getReturnType());
-		return (Literal<?>) expression;
+		return expression;
 	}
 
 	/*

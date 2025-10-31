@@ -2,6 +2,7 @@ package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptEventHandler;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -48,7 +49,7 @@ public class EvtRealTime extends SkriptEvent {
 	private final List<TimerTask> timerTasks = new ArrayList<>();
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		//noinspection unchecked
 		times = (Literal<Time>) args[0];
 		return true;
@@ -91,7 +92,7 @@ public class EvtRealTime extends SkriptEvent {
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -118,7 +119,7 @@ public class EvtRealTime extends SkriptEvent {
 
 	@Override
 	public String toString(@Nullable VirtualFrame event, boolean debug) {
-		return "at " + times.toString(event, debug) + " in real time";
+		return "at " + ((Expression)times).toString(event, debug) + " in real time";
 	}
 
 }

@@ -350,8 +350,7 @@ public class ExpressionList<T> extends Expression<T> {
 			isLiteralList &= expressions[i] instanceof Literal;
 		}
 		if (isLiteralList) {
-			Literal<? extends T>[] ls = Arrays.copyOf(expressions, expressions.length, Literal[].class);
-			return new LiteralList<>(ls, returnType, and);
+			return new LiteralList<>(expressions, returnType, and);
 		}
 		return this;
 	}

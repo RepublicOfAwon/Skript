@@ -127,7 +127,7 @@ public interface KeyProviderExpression<T> {
 	 * @return An iterator over the key-value pairs of this expression
 	 */
 	default Iterator<KeyedValue<T>> keyedIterator(VirtualFrame event) {
-		return new ArrayIterator<>(KeyedValue.zip(getArray(event), getArrayKeys(event)));
+		return new ArrayIterator<>(KeyedValue.zip(((Expression<T>) this).executeArray(event), getArrayKeys(event)));
 	}
 
 	/**
@@ -156,11 +156,6 @@ public interface KeyProviderExpression<T> {
 	 */
 	default boolean areKeysRecommended() {
 		return true;
-	}
-
-	@Override
-	default boolean isLoopOf(String input) {
-		return canReturnKeys() && isIndexLoop(input);
 	}
 
 

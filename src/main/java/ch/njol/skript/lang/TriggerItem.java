@@ -6,7 +6,10 @@ import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import org.bukkit.event.Event;
+import org.graalvm.polyglot.Context;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 /**
  * Represents a trigger item, i.e. a trigger section, a condition or an effect.
@@ -36,22 +39,31 @@ public abstract class TriggerItem extends Node implements Debuggable {
 	 * @param event The event to run the items with
 	 * @return false if an exception occurred
 	 */
-	public static boolean walk(Trigger start, Event event) {
+	public static boolean walk(Trigger start, Event event, Map<String, Object> params) {
+		Context context = Context.newBuilder("skript")
+			.allowAllAccess(true)
+			.build();
+		context.enter();
 		try {
-			start.getCallTarget().call(event);
-			return true;
-		} catch (StackOverflowError err) {
-			if (Skript.debug())
-				err.printStackTrace();
-		} catch (Exception ex) {
-			if (ex.getStackTrace().length != 0) // empty exceptions have already been printed
-				Skript.exception(ex, start.toString(null, Skript.debug()));
-		} catch (Throwable throwable) {
-			// not all Throwables are Exceptions, but we usually don't want to catch them (without rethrowing)
-			Skript.markErrored();
-			throw throwable;
+			start.getCallTarget().call(event, params);
+		} finally {
+			context.leave();
 		}
-		return false;
+//		try {
+//			start.getCallTarget().call(event, params);
+//			return true;
+//		} catch (StackOverflowError err) {
+//			if (Skript.debug())
+//				err.printStackTrace();
+//		} catch (Exception ex) {
+//			if (ex.getStackTrace().length != 0) // empty exceptions have already been printed
+//				Skript.exception(ex, start.toString(null, Skript.debug()));
+//		} catch (Throwable throwable) {
+//			// not all Throwables are Exceptions, but we usually don't want to catch them (without rethrowing)
+//			Skript.markErrored();
+//			throw throwable;
+//		}
+		return true;
 	}
 
 	/**

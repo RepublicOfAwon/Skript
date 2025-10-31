@@ -1,7 +1,10 @@
 package ch.njol.skript.events;
 
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import io.papermc.paper.event.player.PlayerStonecutterRecipeSelectEvent;
+import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -129,7 +132,7 @@ public class EvtItem extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
+	public boolean init(final Expression<?>[] args, final int matchedPattern, final ParseResult parser) {
 		types = (Literal<ItemType>) args[0];
 		entity = parser.mark == 1;
 		return true;
@@ -137,7 +140,7 @@ public class EvtItem extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("null")
-	public boolean check(final VirtualFrame event) {
+	public boolean check(final Event event) {
 		if (event instanceof ItemSpawnEvent itemSpawnEvent) // To make 'last dropped item' possible.
 			EffSecSpawn.lastSpawned = itemSpawnEvent.getEntity();
 		if ((!entity && event instanceof EntityPickupItemEvent) || (entity && event instanceof PlayerPickupItemEvent))
@@ -192,7 +195,7 @@ public class EvtItem extends SkriptEvent {
 		}
 		if (itemStack == null)
 			return false;
-		return types.check(event, itemType -> itemType.isOfType(itemStack));
+		return ((Expression<ItemType>)types).check(ContextlessVirtualFrame.get(event), itemType -> itemType.isOfType(itemStack));
 	}
 	
 	@Override

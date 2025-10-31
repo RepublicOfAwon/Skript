@@ -154,7 +154,7 @@ public final class SkriptParser {
 	 * <p>
 	 * Prints errors.
 	 */
-	public static <T> @Nullable Literal<? extends T> parseLiteral(String expr, Class<T> expectedClass, ParseContext context) {
+	public static <T> @Nullable Expression<? extends T> parseLiteral(String expr, Class<T> expectedClass, ParseContext context) {
 		expr = "" + expr.trim();
 		if (expr.isEmpty())
 			return null;
@@ -258,7 +258,7 @@ public final class SkriptParser {
 								}
 								if (matchedExpr == null)
 									continue patternsLoop;
-								parseResult.exprs[i] = matchedExpr;
+								parseResult.exprs[i] = (Expression<?>) matchedExpr;
 							}
 						}
 					}
@@ -1145,7 +1145,7 @@ public final class SkriptParser {
 
 		if (isLiteralList) {
 			//noinspection SuspiciousToArrayCall
-			Literal<?>[] literals = parsedExpressions.toArray(new Literal[0]);
+			Expression<?>[] literals = parsedExpressions.toArray(new Expression[0]);
 			//noinspection unchecked, rawtypes
 			return new LiteralList(literals, superReturnType, returnTypes, !and.isFalse());
 		} else {

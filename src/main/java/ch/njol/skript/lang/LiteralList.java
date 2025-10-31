@@ -10,20 +10,43 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LiteralList<T> extends ExpressionList<T> implements Literal<T> {
 
-	public LiteralList(Literal<? extends T>[] literals, Class<T> returnType, boolean and) {
+	public LiteralList(Expression<? extends T>[] literals, Class<T> returnType, boolean and) {
 		super(literals, returnType, and);
 	}
 
-	public LiteralList(Literal<? extends T>[] literals, Class<T> returnType, Class<?>[] possibleReturnTypes, boolean and) {
+	public LiteralList(Expression<? extends T>[] literals, Class<T> returnType, Class<?>[] possibleReturnTypes, boolean and) {
 		super(literals, returnType, possibleReturnTypes, and);
 	}
 
-	public LiteralList(Literal<? extends T>[] literals, Class<T> returnType, boolean and, LiteralList<?> source) {
+	public LiteralList(Expression<? extends T>[] literals, Class<T> returnType, boolean and, LiteralList<?> source) {
 		super(literals, returnType, and, source);
 	}
 
-	public LiteralList(Literal<? extends T>[] literals, Class<T> returnType, Class<?>[] possibleReturnTypes, boolean and, LiteralList<?> source) {
+	public LiteralList(Expression<? extends T>[] literals, Class<T> returnType, Class<?>[] possibleReturnTypes, boolean and, LiteralList<?> source) {
 		super(literals, returnType, possibleReturnTypes, and, source);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <R> @Nullable LiteralList<? extends R> getConvertedExpression(final Class<R>... to) {
+		Expression<? extends R>[] exprs = new Expression[expressions.length];
+		Class<?>[] returnTypes = new Class[expressions.length];
+		for (int i = 0; i < exprs.length; i++) {
+			if ((exprs[i] = expressions[i].getConvertedExpression(to)) == null)
+				return null;
+			returnTypes[i] = ((Expression) exprs[i]).getReturnType();
+		}
+		return new LiteralList<>(exprs, (Class<R>) Classes.getSuperClassInfo(returnTypes).getC(), returnTypes, and, this);
+	}
+
+	@Override
+	public Expression<? extends T>[] getExpressions() {
+		return super.getExpressions();
+	}
+
+	@Override
+	public Expression<T> simplify() {
+		return this;
 	}
 
 	@Override
@@ -40,28 +63,4 @@ public class LiteralList<T> extends ExpressionList<T> implements Literal<T> {
 	public T[] getAll() {
 		return executeAll(null);
 	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public <R> @Nullable Literal<? extends R> getConvertedExpression(final Class<R>... to) {
-		Literal<? extends R>[] exprs = new Literal[expressions.length];
-		Class<?>[] returnTypes = new Class[expressions.length];
-		for (int i = 0; i < exprs.length; i++) {
-			if ((exprs[i] = (Literal<? extends R>) expressions[i].getConvertedExpression(to)) == null)
-				return null;
-			returnTypes[i] = exprs[i].getReturnType();
-		}
-		return new LiteralList<>(exprs, (Class<R>) Classes.getSuperClassInfo(returnTypes).getC(), returnTypes, and, this);
-	}
-
-	@Override
-	public Literal<? extends T>[] getExpressions() {
-		return (Literal<? extends T>[]) super.getExpressions();
-	}
-
-	@Override
-	public Expression<T> simplify() {
-		return this;
-	}
-
 }

@@ -79,7 +79,7 @@ public class ExprHash extends PropertyExpression<String, String> {
 
 	@Override
 	public Expression<? extends String> simplify() {
-		if (getExpr() instanceof Literal<? extends String>)
+		if (getExpr() instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

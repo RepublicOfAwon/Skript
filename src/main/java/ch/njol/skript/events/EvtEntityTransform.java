@@ -1,6 +1,9 @@
 package ch.njol.skript.events;
 
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.jetbrains.annotations.Nullable;
@@ -33,20 +36,20 @@ public class EvtEntityTransform extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		datas = (Literal<EntityData<?>>) args[0];
 		reasons = (Literal<TransformReason>) args[1];
 		return true;
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (!(event instanceof EntityTransformEvent))
 			return false;
 		EntityTransformEvent transformEvent = (EntityTransformEvent) event;
-		if (reasons != null && !reasons.check(event, reason -> transformEvent.getTransformReason().equals(reason)))
+		if (reasons != null && !((Expression<TransformReason>)reasons).check(ContextlessVirtualFrame.get(event), reason -> transformEvent.getTransformReason().equals(reason)))
 			return false;
-		if (datas != null && !datas.check(event, data -> data.isInstance(transformEvent.getEntity())))
+		if (datas != null && !((Expression<EntityData<?>>)datas).check(ContextlessVirtualFrame.get(event), data -> data.isInstance(transformEvent.getEntity())))
 			return false;
 		return true;
 	}
@@ -54,8 +57,8 @@ public class EvtEntityTransform extends SkriptEvent {
 	@Override
 	public String toString(@Nullable VirtualFrame event, boolean debug) {
 		if (datas == null)
-			return "entities transforming" + (reasons == null ? "" : " due to " + reasons.toString(event, debug));
-		return datas.toString(event, debug) + " transforming" + (reasons == null ? "" : " due to " + reasons.toString(event, debug));
+			return "entities transforming" + (reasons == null ? "" : " due to " + ((Expression)reasons).toString(event, debug));
+		return ((Expression)datas).toString(event, debug) + " transforming" + (reasons == null ? "" : " due to " + ((Expression)reasons).toString(event, debug));
 	}
 
 }

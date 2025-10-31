@@ -53,7 +53,7 @@ public class ExprCodepoint extends SimplePropertyExpression<String, Integer> {
 
 	@Override
 	public Expression<? extends Integer> simplify() {
-		if (getExpr() instanceof Literal<? extends String>)
+		if (getExpr() instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

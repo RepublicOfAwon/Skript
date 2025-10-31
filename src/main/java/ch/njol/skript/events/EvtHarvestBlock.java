@@ -2,6 +2,7 @@ package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -12,6 +13,7 @@ import ch.njol.skript.util.slot.Slot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerHarvestBlockEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -52,13 +54,13 @@ public class EvtHarvestBlock extends SkriptEvent {
 	private Literal<?> types = null;
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
-		types = args[0];
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
+		types = (Literal<?>) args[0];
 		return true;
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (!(event instanceof PlayerHarvestBlockEvent harvestBlockEvent))
 			return false;
 		if (types == null)

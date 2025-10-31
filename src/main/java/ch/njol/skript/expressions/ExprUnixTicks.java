@@ -34,7 +34,7 @@ public class ExprUnixTicks extends SimplePropertyExpression<Date, Number> {
 
 	@Override
 	public Expression<? extends Number> simplify() {
-		if (getExpr() instanceof Literal<? extends Date>)
+		if (getExpr() instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

@@ -16,7 +16,11 @@ import ch.njol.skript.util.Container.ContainerType;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.PeekingIterator;
+import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.LoopNode;
+import com.oracle.truffle.api.nodes.Node;
+import com.oracle.truffle.api.nodes.RepeatingNode;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -74,6 +78,7 @@ public class SecLoop extends LoopSection {
 		Skript.registerSection(SecLoop.class, "loop %objects%");
 	}
 
+	@Child
 	protected @UnknownNullability Expression<?> expression;
 
 	private final transient Map<VirtualFrame, Object> current = new WeakHashMap<>();
@@ -85,6 +90,8 @@ public class SecLoop extends LoopSection {
 	private boolean loopPeeking;
 	protected boolean iterableSingle;
 	protected boolean keyed;
+
+	@Child private LoopNode loopNode;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -122,56 +129,14 @@ public class SecLoop extends LoopSection {
 		keyed = KeyProviderExpression.canReturnKeys(expression);
 		loadOptionalCode(sectionNode);
 
+		loopNode = Truffle.getRuntime().createLoopNode(new RepeatNode());
+
 		return this;
 	}
 
 	@Override
 	public Object execute(VirtualFrame frame) {
-		while (true) {
-			Iterator<?> iter = iteratorMap.get(frame);
-			if (iter == null) {
-				if (iterableSingle) {
-					Object value = expression.executeSingle(frame);
-					if (value instanceof Container<?> container) {
-						// Container may have special behaviour over regular iterator
-						iter = container.containerIterator();
-					} else if (value instanceof Iterable<?> iterable) {
-						iter = iterable.iterator();
-					} else {
-						iter = Collections.singleton(value).iterator();
-					}
-				} else {
-					iter = keyed
-						? ((KeyProviderExpression<?>) expression).keyedIterator(frame)
-						: expression.iterator(frame);
-					if (iter != null && iter.hasNext()) {
-						iteratorMap.put(frame, iter);
-					} else {
-						iter = null;
-					}
-				}
-			}
-
-			if (iter == null || (!iter.hasNext() && nextValue == null)) {
-				exit(frame);
-				return null;
-			} else {
-				previous.put(frame, current.get(frame));
-				if (nextValue != null) {
-					this.store(frame, nextValue);
-					nextValue = null;
-				} else if (iter.hasNext()) {
-					this.store(frame, iter.next());
-				}
-				try {
-					super.execute(frame);
-				} catch (ContinueException ignored) {
-					continue;
-				} catch (BreakException ignored) {
-					break;
-				}
-			}
-		}
+		loopNode.execute(frame);
 		return null;
 	}
 
@@ -261,6 +226,57 @@ public class SecLoop extends LoopSection {
 
 	public Expression<?> getExpression() {
 		return expression;
+	}
+
+	class RepeatNode extends Node implements RepeatingNode {
+
+		@Override
+		public boolean executeRepeating(VirtualFrame frame) {
+			Iterator<?> iter = iteratorMap.get(frame);
+			if (iter == null) {
+				if (iterableSingle) {
+					Object value = expression.executeSingle(frame);
+					if (value instanceof Container<?> container) {
+						// Container may have special behaviour over regular iterator
+						iter = container.containerIterator();
+					} else if (value instanceof Iterable<?> iterable) {
+						iter = iterable.iterator();
+					} else {
+						iter = Collections.singleton(value).iterator();
+					}
+				} else {
+					iter = keyed
+						? ((KeyProviderExpression<?>) expression).keyedIterator(frame)
+						: expression.iterator(frame);
+					if (iter != null && iter.hasNext()) {
+						iteratorMap.put(frame, iter);
+					} else {
+						iter = null;
+					}
+				}
+			}
+
+			if (iter == null || (!iter.hasNext() && nextValue == null)) {
+				exit(frame);
+				return false;
+			} else {
+				previous.put(frame, current.get(frame));
+				if (nextValue != null) {
+					store(frame, nextValue);
+					nextValue = null;
+				} else if (iter.hasNext()) {
+					store(frame, iter.next());
+				}
+				try {
+					SecLoop.super.execute(frame);
+				} catch (ContinueException ignored) {
+
+				} catch (BreakException ignored) {
+					return false;
+				}
+			}
+			return true;
+		}
 	}
 
 }

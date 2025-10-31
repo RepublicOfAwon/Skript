@@ -71,7 +71,7 @@ public class ExprDateAgoLater extends SimpleExpression<Date> {
 
 	@Override
 	public Expression<? extends Date> simplify() {
-		if (date instanceof Literal<Date> && timespan instanceof Literal<Timespan>)
+		if (date instanceof Literal && timespan instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

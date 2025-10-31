@@ -4,6 +4,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import ch.njol.skript.test.runner.SkriptJUnitTest;
 import ch.njol.skript.variables.Variables;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
 import org.easymock.Capture;
@@ -29,7 +30,7 @@ public class EffSendEffConnectConflict7517Test extends SkriptJUnitTest {
 
 	@Test
 	public void test() {
-		Event event = ContextlessVirtualFrame.get();
+		VirtualFrame event = ContextlessVirtualFrame.get();
 		Variables.setVariable("sender", sender, event, true);
 		Variables.setVariable("message", MESSAGE, event, true);
 
@@ -37,7 +38,7 @@ public class EffSendEffConnectConflict7517Test extends SkriptJUnitTest {
 		sender.sendMessage(EasyMock.capture(messageCapture));
 		EasyMock.replay(sender);
 
-		sendEffect.run(event);
+		sendEffect.execute(event);
 		EasyMock.verify(sender);
 		Assert.assertEquals(MESSAGE, messageCapture.getValue());
 	}

@@ -64,7 +64,7 @@ public class ExprVectorNormalize extends SimpleExpression<Vector> {
 
 	@Override
 	public Expression<? extends Vector> simplify() {
-		if (vector instanceof Literal<Vector>)
+		if (vector instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

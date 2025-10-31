@@ -62,7 +62,7 @@ public class ExprVectorCrossProduct extends SimpleExpression<Vector> {
 
 	@Override
 	public Expression<? extends Vector> simplify() {
-		if (first instanceof Literal<Vector> && second instanceof Literal<Vector>)
+		if (first instanceof Literal&& second instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

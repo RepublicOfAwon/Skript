@@ -1,10 +1,11 @@
 package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,12 +21,12 @@ public class EvtPlayerChunkEnter extends SkriptEvent {
 	}
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		return true;
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		PlayerMoveEvent moveEvent = ((PlayerMoveEvent) event);
 		return !moveEvent.getFrom().getChunk().equals(moveEvent.getTo().getChunk());
 	}

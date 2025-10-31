@@ -259,8 +259,8 @@ public class ExprElement<T> extends SimpleExpression<T> {
 	public Expression<? extends T> simplify() {
 		if (!queue && expr instanceof Literal<?>
 			&& type != ElementType.RANDOM
-			&& (startIndex == null || startIndex instanceof Literal<Integer>)
-			&& (endIndex == null || endIndex instanceof Literal<Integer>)) {
+			&& (startIndex == null || startIndex instanceof Literal)
+			&& (endIndex == null || endIndex instanceof Literal)) {
 			return SimplifiedLiteral.fromExpression(this);
 		}
 		return this;

@@ -1,12 +1,13 @@
 package ch.njol.skript.events;
 
+import ch.njol.skript.lang.Expression;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.coll.CollectionUtils;
@@ -37,13 +38,13 @@ public class EvtPortal extends SkriptEvent {
 	private boolean isPlayer;
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+	public boolean init(Expression<?>[] args, int matchedPattern, ParseResult parseResult) {
 		isPlayer = matchedPattern == 0;
 		return true;
 	}
 
 	@Override
-	public boolean check(VirtualFrame event) {
+	public boolean check(Event event) {
 		if (isPlayer)
 			return event instanceof PlayerPortalEvent;
 		return event instanceof EntityPortalEvent;

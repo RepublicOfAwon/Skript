@@ -51,7 +51,7 @@ public class EffActionBarTest extends SkriptJUnitTest {
 		ContextlessVirtualFrame event = ContextlessVirtualFrame.get();
 		Variables.setVariable("content", expectedActionBarContent, event, true);
 		Variables.setVariable("player", testPlayer, event, true);
-		actionBarEffect.run(event);
+		actionBarEffect.execute(event);
 
 		EasyMock.verify(testPlayer, testSpigotPlayer);
 	}

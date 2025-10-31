@@ -48,7 +48,7 @@ public class ExprCharacterFromCodepoint extends SimplePropertyExpression<Integer
 
 	@Override
 	public Expression<? extends String> simplify() {
-		if (getExpr() instanceof Literal<? extends Integer>)
+		if (getExpr() instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

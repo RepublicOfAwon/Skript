@@ -139,7 +139,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 
 	@Override
 	public Expression<? extends String> simplify() {
-		if (expr instanceof Literal<String>)
+		if (expr instanceof Literal)
 			return SimplifiedLiteral.fromExpression(this);
 		return this;
 	}

@@ -1,6 +1,9 @@
 package ch.njol.skript.events;
 
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.util.ContextlessVirtualFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent.Status;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +39,7 @@ public class EvtResourcePackResponse extends SkriptEvent {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
+	public boolean init(final Expression<?>[] args, final int matchedPattern, final ParseResult parser) {
 		if (matchedPattern == 1)
 			states = (Literal<Status>) args[0];
 		return true;
@@ -44,17 +47,17 @@ public class EvtResourcePackResponse extends SkriptEvent {
 
 	@Override
 	@SuppressWarnings("null")
-	public boolean check(final VirtualFrame e) {
+	public boolean check(final Event e) {
 		if (states != null) {
 			Status state = ((PlayerResourcePackStatusEvent) e).getStatus();
-			return states.check(e, state::equals);
+			return ((Expression<PlayerResourcePackStatusEvent.Status>)states).check(ContextlessVirtualFrame.get(e), state::equals);
 		}
 		return true;
 	}
 
 	@Override
 	public String toString(final @Nullable VirtualFrame e, final boolean debug) {
-		return states != null ? "resource pack " + states.toString(e, debug) : "resource pack request response";
+		return states != null ? "resource pack " + ((Expression)states).toString(e, debug) : "resource pack request response";
 	}
 
 }

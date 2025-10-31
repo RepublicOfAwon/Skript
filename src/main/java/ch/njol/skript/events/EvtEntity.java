@@ -1,9 +1,11 @@
 package ch.njol.skript.events;
 
+import ch.njol.skript.lang.Expression;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +48,7 @@ public final class EvtEntity extends SkriptEvent {
 	
 	@SuppressWarnings("null")
 	@Override
-	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
+	public boolean init(final Expression<?>[] args, final int matchedPattern, final ParseResult parser) {
 		types = args[0] == null ? null : ((Literal<EntityData<?>>) args[0]).getAll();
 		spawn = StringUtils.startsWithIgnoreCase(parser.expr, "spawn");
 		if (types != null) {
@@ -71,7 +73,7 @@ public final class EvtEntity extends SkriptEvent {
 	
 	@SuppressWarnings("null")
 	@Override
-	public boolean check(final VirtualFrame e) {
+	public boolean check(final Event e) {
 		if (types == null)
 			return true;
 		final Entity en = e instanceof EntityDeathEvent ? ((EntityDeathEvent) e).getEntity() : ((EntitySpawnEvent) e).getEntity();

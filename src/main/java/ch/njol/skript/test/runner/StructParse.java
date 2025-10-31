@@ -10,7 +10,6 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.ContextlessEvent;
@@ -47,7 +46,7 @@ public class StructParse extends Structure {
 	private Expression<?> resultsExpression;
 
 	@Override
-	public SyntaxElement init(Literal<?>[] args, int matchedPattern,
+	public SyntaxElement init(Expression<?>[] args, int matchedPattern,
                               ParseResult parseResult, EntryContainer entryContainer) {
 		SectionNode parseStructureSectionNode = entryContainer.getSource();
 
